@@ -395,8 +395,20 @@ function BlogModal({ t, onClose, onSubmit, showToast }) {
 }
 function ContactForm({ t, showToast }) {
   const [f, setF] = useState({ name: "", email: "", country: "", message: "" });
+  const [sending, setSending] = useState(false);
   const set = (k, v) => setF(x => ({ ...x, [k]: v }));
-  const send = () => { if (!f.name || !f.email || !f.message) { showToast(t.toast.fill); return; } setF({ name: "", email: "", country: "", message: "" }); showToast(t.toast.contact); };
+  const send = async () => {
+    if (!f.name || !f.email || !f.message) { showToast(t.toast.fill); return; }
+    setSending(true);
+    await fetch("https://formspree.io/f/xvzvqbae", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: f.name, email: f.email, country: f.country, message: f.message }),
+    });
+    setSending(false);
+    setF({ name: "", email: "", country: "", message: "" });
+    showToast(t.toast.contact);
+  };
   return (
     <div style={{ background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 12, padding: "1.5rem" }}>
       <h3 style={{ fontWeight: 700, fontSize: "0.97rem", color: "#0d3a1e", marginBottom: "0.25rem" }}>{t.contact.formTitle}</h3>
@@ -405,7 +417,7 @@ function ContactForm({ t, showToast }) {
       <FG label={t.contact.emailL}><input value={f.email} onChange={e => set("email", e.target.value)} type="email" style={inpSt()} placeholder="your@email.com" /></FG>
       <FG label={t.contact.countryL}><select value={f.country} onChange={e => set("country", e.target.value)} style={selSt()}><option value="">Select country</option><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
       <FG label={t.contact.msgL}><textarea value={f.message} onChange={e => set("message", e.target.value)} style={{ ...inpSt(), minHeight: 90, resize: "vertical" }} placeholder="How can we help?" /></FG>
-      <button onClick={send} style={{ width: "100%", background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.65rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.85rem", cursor: "pointer", marginTop: "0.25rem" }}>{t.contact.send}</button>
+      <button onClick={send} disabled={sending} style={{ width: "100%", background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.65rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.85rem", cursor: "pointer", marginTop: "0.25rem", opacity: sending ? 0.7 : 1 }}>{sending ? "Sending..." : t.contact.send}</button>
     </div>
   );
 }
