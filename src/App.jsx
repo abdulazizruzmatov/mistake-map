@@ -452,7 +452,7 @@ function AIChatWidget({ t, problems }) {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-api-key": import.meta.env.VITE_ANTHROPIC_KEY || "", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-        body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: `You are a helpful AI business advisor for MistakeMap. Here are real cases:\n\n${context}\n\nBe concise and practical. Respond in the user's language.`, messages: messages.concat({ role: "user", content: userMsg }) }),
+        body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1000, system: `You are a helpful AI business advisor for MistakeMap. Here are real cases:\n\n${context}\n\nBe concise and practical. Respond in the user's language.`, messages: messages.concat({ role: "user", content: userMsg }) }),
       });
       const data = await res.json();
       setMessages(prev => [...prev, { role: "assistant", content: data.content?.[0]?.text || "Sorry, try again." }]);
@@ -512,7 +512,7 @@ function IdeaValidatorPage({ t }) {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": import.meta.env.VITE_ANTHROPIC_KEY || "", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 600, messages: [{ role: "user", content: prompt }] }),
+      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 600, messages: [{ role: "user", content: prompt }] }),
     });
     const data = await res.json();
     return data.content?.[0]?.text || "Analysis unavailable.";
