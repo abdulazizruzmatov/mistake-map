@@ -98,6 +98,92 @@ const RESOURCES = {
   ],
 };
 
+const GRAVEYARD = [
+  // MEGA FAILURES ($1B+)
+  { name: "FTX", industry: "Crypto/Fintech", country: "🇧🇸 Bahamas", founded: 2019, died: 2022, raised: 1800000000, lost: 32000000000, reason: "Fraud and misuse of customer funds. Founder Sam Bankman-Fried convicted of wire fraud.", lesson: "Never commingle customer funds with operations. Transparency and audits matter more than growth." },
+  { name: "Theranos", industry: "Healthcare/Biotech", country: "🇺🇸 USA", founded: 2003, died: 2018, raised: 945000000, lost: 700000000, reason: "Fraudulent technology claims. Blood testing devices never worked as advertised.", lesson: "Validate technical claims before scaling. Hype kills companies when reality catches up." },
+  { name: "WeWork", industry: "Real Estate", country: "🇺🇸 USA", founded: 2010, died: 2023, raised: 22000000000, lost: 11500000000, reason: "Aggressive growth, unsustainable lease commitments, founder governance issues.", lesson: "Real estate isn't tech. Don't dress up traditional businesses as software valuations." },
+  { name: "Quibi", industry: "Media/Entertainment", country: "🇺🇸 USA", founded: 2018, died: 2020, raised: 1750000000, lost: 1750000000, reason: "Built short-form mobile video during pandemic when users wanted long content on TVs. No market need.", lesson: "Validate market timing. $1.75B and famous founders can't save a wrong product." },
+  { name: "Byju's", industry: "EdTech", country: "🇮🇳 India", founded: 2011, died: 2024, raised: 5500000000, lost: 22000000000, reason: "Aggressive sales tactics, accounting irregularities, post-COVID demand collapse.", lesson: "Growth at all costs creates fragile businesses. Sustainable unit economics > vanity metrics." },
+  { name: "Wirecard", industry: "Fintech/Payments", country: "🇩🇪 Germany", founded: 1999, died: 2020, raised: 1900000000, lost: 1900000000, reason: "$2B accounting fraud — funds simply didn't exist. CEO arrested.", lesson: "Audit everything. Big-name auditors miss massive fraud — boards must dig deeper." },
+  { name: "Juul Labs", industry: "Consumer/Health", country: "🇺🇸 USA", founded: 2015, died: 2024, raised: 15000000000, lost: 15000000000, reason: "Targeted teens with marketing, regulatory backlash, FDA bans, lawsuits.", lesson: "Regulatory risk is existential. Build products that survive scrutiny, not exploit gaps." },
+  { name: "Northvolt", industry: "CleanTech/Batteries", country: "🇸🇪 Sweden", founded: 2016, died: 2024, raised: 13800000000, lost: 13800000000, reason: "Couldn't compete with Chinese battery makers on cost and scale despite massive funding.", lesson: "Hardware moats are hard. Capital alone can't beat 10-year manufacturing experience curves." },
+  { name: "Argo AI", industry: "Autonomous Vehicles", country: "🇺🇸 USA", founded: 2016, died: 2022, raised: 3600000000, lost: 3600000000, reason: "Self-driving timeline pushed back, investors Ford and VW pulled funding.", lesson: "Don't depend on a few corporate investors. They cut losses faster than VCs do." },
+  { name: "OneWeb", industry: "Telecom/Satellite", country: "🇬🇧 UK", founded: 2012, died: 2020, raised: 3400000000, lost: 3400000000, reason: "Couldn't raise enough capital to deploy full constellation. Filed for bankruptcy.", lesson: "Capital-intensive moonshots need 10x the funding founders estimate." },
+  { name: "Faraday Future", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 3000000000, lost: 3000000000, reason: "Endless delays, leadership chaos, never delivered cars at scale.", lesson: "Building cars is brutally hard. Don't underestimate manufacturing complexity." },
+  { name: "Vice Media", industry: "Media/News", country: "🇺🇸 USA", founded: 1994, died: 2023, raised: 2500000000, lost: 2500000000, reason: "Couldn't monetize digital media, advertising decline, mismanaged growth.", lesson: "Digital ad-supported media at scale is broken. Subscription/diversified revenue is essential." },
+  { name: "Katerra", industry: "Construction Tech", country: "🇺🇸 USA", founded: 2015, died: 2021, raised: 2000000000, lost: 2000000000, reason: "Tried to disrupt construction with software approach. Manufacturing issues, project failures.", lesson: "Software thinking doesn't translate to physical industries with regulatory and labour complexity." },
+  { name: "Nikola Motor", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 1000000000, lost: 1000000000, reason: "Founder fraud — fake truck demo videos. SEC charges, bankruptcy.", lesson: "Don't fake it till you make it with hardware. Investors will eventually see the truth." },
+  { name: "Quirky", industry: "Hardware/Consumer", country: "🇺🇸 USA", founded: 2009, died: 2015, raised: 200000000, lost: 200000000, reason: "Launched 50 products/year — too many to support. Burned cash on marketing.", lesson: "Focus beats breadth. Better to nail one product than launch 50 mediocre ones." },
+  { name: "Solyndra", industry: "CleanTech/Solar", country: "🇺🇸 USA", founded: 2005, died: 2011, raised: 1100000000, lost: 1100000000, reason: "Chinese solar panels became cheaper than Solyndra's manufacturing cost.", lesson: "Watch global commodity prices. Chinese manufacturing scale crushes Western hardware startups." },
+  { name: "Better Place", industry: "EV/CleanTech", country: "🇮🇱 Israel", founded: 2007, died: 2013, raised: 850000000, lost: 850000000, reason: "Battery-swap network too expensive. EV charging tech evolved past their solution.", lesson: "Don't bet the company on infrastructure assumptions. Tech changes faster than CapEx pays back." },
+  { name: "Fisker (1.0)", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2007, died: 2013, raised: 1400000000, lost: 1400000000, reason: "Manufacturing problems, battery supplier bankruptcy, couldn't scale production.", lesson: "Single-supplier dependency is fatal in hardware. Always have backups." },
+  { name: "Webvan", industry: "E-commerce/Grocery", country: "🇺🇸 USA", founded: 1996, died: 2001, raised: 830000000, lost: 830000000, reason: "Built $1B+ warehouse infrastructure before validating demand. Dot-com bust.", lesson: "Don't build infrastructure for hypothetical demand. Validate first, scale second." },
+  { name: "Jawbone", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 1999, died: 2017, raised: 930000000, lost: 930000000, reason: "Lost wearables war to Fitbit and Apple. Product issues, customer complaints.", lesson: "Hardware needs continuous quality improvement. One bad product cycle can kill the brand." },
+
+  // MAJOR FAILURES ($100M-$1B)
+  { name: "MoviePass", industry: "Entertainment", country: "🇺🇸 USA", founded: 2011, died: 2020, raised: 300000000, lost: 300000000, reason: "Unsustainable $9.95/month for unlimited movies. Lost money on every customer.", lesson: "If unit economics are negative, scaling makes losses worse, not better." },
+  { name: "Hopin", industry: "Events/SaaS", country: "🇬🇧 UK", founded: 2019, died: 2024, raised: 1600000000, lost: 1600000000, reason: "Built virtual events platform during COVID, demand collapsed when pandemic ended.", lesson: "Don't bet the company on temporary tailwinds. Build for normal times." },
+  { name: "Convoy", industry: "Logistics", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 900000000, lost: 900000000, reason: "Freight market collapse, couldn't sustain unit economics, ran out of cash.", lesson: "Marketplace businesses need positive contribution margins per transaction." },
+  { name: "Bird", industry: "Micromobility", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 776000000, lost: 776000000, reason: "Scooter unit economics never worked. Maintenance costs ate revenue.", lesson: "Real-world hardware in public spaces gets destroyed. Account for that in unit economics." },
+  { name: "Zume Pizza", industry: "Food Tech/Robotics", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 445000000, lost: 445000000, reason: "Robotic pizza-making in delivery trucks. Cheese slid off in transit.", lesson: "Pilot the physics before raising hundreds of millions. Sometimes the laws of nature win." },
+  { name: "Compass Real Estate", industry: "Real Estate", country: "🇺🇸 USA", founded: 2012, died: 2024, raised: 1500000000, lost: 1500000000, reason: "Tech-disguised real estate brokerage. Profit margins same as competitors.", lesson: "Putting 'tech' in your pitch doesn't change underlying business margins." },
+  { name: "Olive AI", industry: "Healthcare AI", country: "🇺🇸 USA", founded: 2012, died: 2023, raised: 856000000, lost: 856000000, reason: "Healthcare AI promised more than it delivered. Long sales cycles, low retention.", lesson: "Enterprise healthcare AI is harder than founders think. Sales cycles take years." },
+  { name: "Zenefits", industry: "HR Tech/SaaS", country: "🇺🇸 USA", founded: 2013, died: 2022, raised: 584000000, lost: 584000000, reason: "Cheating insurance compliance training. Founder ousted, valuation crashed.", lesson: "Compliance shortcuts kill regulated businesses. Do it right or don't do it." },
+  { name: "Outcome Health", industry: "HealthTech/AdTech", country: "🇺🇸 USA", founded: 2006, died: 2019, raised: 487000000, lost: 487000000, reason: "Founders inflated metrics to deceive advertisers. Fraud charges.", lesson: "Don't fake metrics to investors or customers. The truth always comes out." },
+  { name: "Quibi", industry: "Streaming", country: "🇺🇸 USA", founded: 2018, died: 2020, raised: 1750000000, lost: 1750000000, reason: "Mobile-only short videos during lockdown when people watched TV at home.", lesson: "Test product-market fit before $1.75B in funding. No amount of money fixes wrong product." },
+  { name: "Magic Leap", industry: "AR/VR Hardware", country: "🇺🇸 USA", founded: 2010, died: 2020, raised: 3500000000, lost: 3500000000, reason: "Technology never matched the hype. Sold 6,000 units against 1M target.", lesson: "Don't build to demos. Ship products customers will actually buy and use." },
+  { name: "Beepi", industry: "Auto Marketplace", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 148000000, lost: 148000000, reason: "Executives spent $7M/month on salaries and perks. Burn rate killed company.", lesson: "Founder/exec extravagance kills startups. Conserve cash like it's your last dollar." },
+  { name: "Sprig", industry: "Food Delivery", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 56000000, lost: 56000000, reason: "Burned $850k/month on meal delivery. Couldn't make individual deliveries profitable.", lesson: "On-demand food delivery has terrible unit economics. Most participants lose money." },
+  { name: "Shyp", industry: "On-demand Shipping", country: "🇺🇸 USA", founded: 2013, died: 2018, raised: 62000000, lost: 62000000, reason: "Growth-at-all-costs mentality. Couldn't slow growth fast enough when demand stalled.", lesson: "Growth over profitability eventually runs out of road. Pivot before it's too late." },
+  { name: "Doppler Labs", industry: "Hardware/Audio", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 51000000, lost: 51000000, reason: "Smart earbuds delayed past AirPods launch. Battery life half of competitors.", lesson: "Hardware timing is everything. Six months late means dead." },
+  { name: "Pebble", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2011, died: 2016, raised: 43000000, lost: 43000000, reason: "Smartwatch pioneer crushed by Apple Watch. Couldn't compete with iPhone integration.", lesson: "Big platforms can crush you. Build defensibility against your platform partners." },
+  { name: "Yik Yak", industry: "Social Media", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 73500000, lost: 73500000, reason: "Anonymous app became toxic. Cyberbullying drove users away.", lesson: "Anonymous social products have inherent moderation problems. Plan for abuse early." },
+  { name: "Pets.com", industry: "E-commerce", country: "🇺🇸 USA", founded: 1998, died: 2000, raised: 300000000, lost: 300000000, reason: "Selling pet food online with shipping costs higher than products. Dot-com poster child.", lesson: "Heavy products with low margins don't ship economically. Math matters." },
+  { name: "Better Place (EV)", industry: "EV/Automotive", country: "🇮🇱 Israel", founded: 2007, died: 2013, raised: 850000000, lost: 850000000, reason: "Battery-swap stations cost too much, couldn't compete with home charging.", lesson: "Infrastructure-heavy bets in evolving tech industries are fragile." },
+  { name: "Color Labs", industry: "Mobile App", country: "🇺🇸 USA", founded: 2010, died: 2012, raised: 41000000, lost: 41000000, reason: "Confusing UX, no product-market fit. Refused $200M Google offer, sold to Apple for $7M.", lesson: "Take the offer when you can. Pride doesn't pay bills." },
+  { name: "Munchery", industry: "Food Delivery", country: "🇺🇸 USA", founded: 2010, died: 2019, raised: 125000000, lost: 125000000, reason: "Premium meal delivery couldn't beat DoorDash/UberEats on convenience or price.", lesson: "Premium food delivery is a niche. Mass market beats premium in food." },
+  { name: "Karhoo", industry: "Ride-hailing", country: "🇬🇧 UK", founded: 2014, died: 2016, raised: 250000000, lost: 250000000, reason: "Taxi comparison app. Closed 6 months after launch despite raising $250M.", lesson: "Massive funding can't fix bad product. Validate before scaling." },
+  { name: "PepperTap", industry: "Grocery Delivery", country: "🇮🇳 India", founded: 2014, died: 2016, raised: 51000000, lost: 51000000, reason: "Lost money on every order chasing market share. Closed before running out completely.", lesson: "Sometimes the smart move is shutting down with money left, not zero." },
+  { name: "Homejoy", industry: "On-demand Cleaning", country: "🇺🇸 USA", founded: 2012, died: 2015, raised: 40000000, lost: 40000000, reason: "Customer retention 25%. Lawsuits over worker classification.", lesson: "Without retention, you're filling a leaky bucket. Fix retention before scaling acquisition." },
+  { name: "Washio", industry: "On-demand Laundry", country: "🇺🇸 USA", founded: 2013, died: 2016, raised: 17000000, lost: 17000000, reason: "Laundry pickup unit economics never worked. Burned through cash.", lesson: "On-demand for low-margin services rarely works. Pick verticals carefully." },
+  { name: "HQ Trivia", industry: "Mobile Gaming", country: "🇺🇸 USA", founded: 2017, died: 2020, raised: 15000000, lost: 15000000, reason: "Live trivia game peaked fast then declined. Couldn't monetize fad.", lesson: "Viral fads aren't businesses. Build for sustained engagement." },
+  { name: "Vine", industry: "Social Media", country: "🇺🇸 USA", founded: 2012, died: 2017, raised: 30000000, lost: 30000000, reason: "Twitter shut down its 6-second video app. Failed to monetize creators.", lesson: "Creator platforms must share revenue early. Otherwise creators leave for competitors." },
+  { name: "Rdio", industry: "Music Streaming", country: "🇺🇸 USA", founded: 2008, died: 2015, raised: 118000000, lost: 118000000, reason: "Lost to Spotify and Apple Music. Couldn't compete on catalogue or marketing.", lesson: "In platform wars, second place usually means dead. Build moats or exit early." },
+  { name: "Friendster", industry: "Social Media", country: "🇺🇸 USA", founded: 2002, died: 2015, raised: 50000000, lost: 50000000, reason: "Slow site, technical issues, lost users to MySpace then Facebook.", lesson: "Performance matters. Slow products lose to fast ones every time." },
+  { name: "Aereo", industry: "Streaming", country: "🇺🇸 USA", founded: 2012, died: 2014, raised: 97000000, lost: 97000000, reason: "TV streaming startup ruled illegal by Supreme Court. Business model died overnight.", lesson: "Don't build companies on legal grey areas. One court ruling can kill you." },
+  { name: "Boo.com", industry: "E-commerce/Fashion", country: "🇬🇧 UK", founded: 1998, died: 2000, raised: 135000000, lost: 135000000, reason: "Premature scaling, complex tech, expensive lifestyle marketing. Burned $135M in 18 months.", lesson: "The original cautionary tale of premature scaling. Walk before you run." },
+  { name: "Juicero", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 120000000, lost: 120000000, reason: "$400 juice machine when juice packets could be squeezed by hand.", lesson: "Test if your hardware actually adds value vs a $1 alternative." },
+  { name: "Fab.com", industry: "E-commerce", country: "🇺🇸 USA", founded: 2011, died: 2015, raised: 336000000, lost: 336000000, reason: "Hyper-growth pivot from gay social network to flash sales. Lost focus.", lesson: "Pivot carefully. Multiple identity changes confuse customers and burn capital." },
+  { name: "Anki", industry: "Robotics/Toys", country: "🇺🇸 USA", founded: 2010, died: 2019, raised: 182000000, lost: 182000000, reason: "Couldn't raise next round despite $100M revenue. Hardware margins too thin.", lesson: "Even with revenue, hardware companies need constant capital injection." },
+  { name: "Jibo", industry: "Robotics/Consumer", country: "🇺🇸 USA", founded: 2012, died: 2018, raised: 73000000, lost: 73000000, reason: "Social home robot couldn't compete with cheaper Alexa/Google Home.", lesson: "Don't ignore platform competitors with better distribution and lower prices." },
+  { name: "Essential Products", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2015, died: 2020, raised: 330000000, lost: 330000000, reason: "Andy Rubin's smartphone couldn't dent Apple/Samsung duopoly. Personal scandals.", lesson: "Smartphone hardware market is closed. Don't enter saturated commodity markets." },
+  { name: "Quanergy", industry: "Hardware/LiDAR", country: "🇺🇸 USA", founded: 2012, died: 2022, raised: 350000000, lost: 350000000, reason: "Self-driving LiDAR maker couldn't deliver promised technology, missed milestones.", lesson: "Don't promise what you can't deliver. Underpromise and overdeliver." },
+  { name: "Daqri", industry: "AR/Hardware", country: "🇺🇸 USA", founded: 2010, died: 2019, raised: 275000000, lost: 275000000, reason: "Industrial AR helmets too early. Market not ready, sales slow.", lesson: "Being too early is the same as being wrong. Time to market matters." },
+  { name: "Brandless", industry: "E-commerce/DTC", country: "🇺🇸 USA", founded: 2016, died: 2020, raised: 292000000, lost: 292000000, reason: "Generic products at $3 couldn't sustain unit economics. Acquisition costs too high.", lesson: "Cheap products + high CAC = death. Pricing must support customer acquisition costs." },
+  { name: "Casper", industry: "DTC/Mattresses", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 340000000, lost: 340000000, reason: "Mattress DTC saturated. Marketing costs ate margins. Went private at fraction of valuation.", lesson: "DTC categories get crowded fast. First-mover advantage doesn't last." },
+  { name: "Allbirds", industry: "DTC/Fashion", country: "🇺🇸 USA", founded: 2015, died: 2024, raised: 202000000, lost: 202000000, reason: "Sustainable shoes brand failed to expand product line successfully. Retail expansion failed.", lesson: "Single-product DTC brands struggle to expand. Build category-defining products, not single SKUs." },
+  { name: "Casper Sleep", industry: "DTC/Sleep", country: "🇺🇸 USA", founded: 2014, died: 2021, raised: 340000000, lost: 340000000, reason: "Marketing spend per mattress sold exceeded gross margin per mattress.", lesson: "If CAC > LTV, more growth = more loss. Get to positive contribution margin first." },
+  { name: "Outdoor Voices", industry: "DTC/Fashion", country: "🇺🇸 USA", founded: 2013, died: 2024, raised: 64000000, lost: 64000000, reason: "Burning $2M/month with no profitability path. Founder departures.", lesson: "DTC apparel is brutally hard. Most attempts fail eventually." },
+
+  // RECENT FAILURES (2023-2025)
+  { name: "Zume", industry: "Food Tech", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 445000000, lost: 445000000, reason: "Pizza-making robots in trucks. Patents on robotic pizza preparation didn't matter.", lesson: "Solving non-problems with expensive tech is a recipe for failure." },
+  { name: "Inflection AI", industry: "AI/ML", country: "🇺🇸 USA", founded: 2022, died: 2024, raised: 1500000000, lost: 1500000000, reason: "Pi chatbot couldn't compete with ChatGPT. Microsoft acqui-hired team.", lesson: "AI consumer products need 10x better experience to dethrone incumbents." },
+  { name: "Stability AI", industry: "AI/ML", country: "🇬🇧 UK", founded: 2019, died: 2024, raised: 260000000, lost: 260000000, reason: "Stable Diffusion creator burned cash, founder governance issues, leadership exits.", lesson: "Open-source AI is hard to monetize. Free competitors crush you on price." },
+  { name: "Builder.ai", industry: "AI/SaaS", country: "🇬🇧 UK", founded: 2016, died: 2025, raised: 445000000, lost: 445000000, reason: "AI app builder claimed AI did the work — humans actually built apps. Misleading marketing.", lesson: "Don't fake your AI. The cost to discover is too high once at scale." },
+  { name: "Bolt Financial", industry: "Fintech", country: "🇺🇸 USA", founded: 2014, died: 2025, raised: 1000000000, lost: 1000000000, reason: "1-click checkout couldn't get adoption. Founder lawsuit drama.", lesson: "Payment infrastructure has high switching costs. New entrants must offer 10x value." },
+  { name: "Forward Health", industry: "Healthcare", country: "🇺🇸 USA", founded: 2016, died: 2024, raised: 650000000, lost: 650000000, reason: "AI-powered primary care clinics. Couldn't make unit economics work.", lesson: "Reinventing healthcare with tech is way more expensive and slower than founders think." },
+  { name: "Cerebral", industry: "Telehealth", country: "🇺🇸 USA", founded: 2020, died: 2024, raised: 300000000, lost: 300000000, reason: "Over-prescribed ADHD medications. DEA investigation, executive turnover.", lesson: "Speed in healthcare leads to compliance failure. Move slowly with prescriptions." },
+  { name: "Plenty", industry: "AgTech/Vertical Farming", country: "🇺🇸 USA", founded: 2014, died: 2025, raised: 941000000, lost: 941000000, reason: "Vertical farming energy costs higher than traditional agriculture.", lesson: "Tech-enabled agriculture can't beat the sun in cost-per-pound." },
+  { name: "Hyperloop One", industry: "Transportation", country: "🇺🇸 USA", founded: 2014, died: 2023, raised: 450000000, lost: 450000000, reason: "Vacuum tube transport never reached commercial viability. Tech challenges insurmountable.", lesson: "Some ideas remain science fiction for a reason. Validate physics before investing $450M." },
+  { name: "Olive AI", industry: "Healthcare AI", country: "🇺🇸 USA", founded: 2012, died: 2023, raised: 856000000, lost: 856000000, reason: "RPA company rebranded as AI. Couldn't deliver on AI promises to hospitals.", lesson: "Don't rebrand boring tech as AI. Customers eventually see through it." },
+  { name: "Babylon Health", industry: "Telehealth", country: "🇬🇧 UK", founded: 2013, died: 2023, raised: 1200000000, lost: 1200000000, reason: "AI-driven telehealth couldn't sustain unit economics. NHS contract ended.", lesson: "Healthcare margins are thin. AI promises don't change underlying economics." },
+  { name: "Convoy", industry: "Logistics/Freight", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 900000000, lost: 900000000, reason: "Freight market crash, couldn't sustain scale, ran out of cash.", lesson: "Cyclical industries kill startups during downturns. Build cash buffers." },
+  { name: "IRL", industry: "Social Media", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 170000000, lost: 170000000, reason: "95% of users were fake bots. Founder fraud allegations.", lesson: "Real engagement metrics matter. Vanity numbers eventually catch up." },
+  { name: "Frank", industry: "Fintech/EdTech", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 20000000, lost: 175000000, reason: "Founder Charlie Javice fabricated 4M users for JPMorgan acquisition. Fraud charges.", lesson: "Don't fabricate users. Acquisition due diligence will find out." },
+  { name: "Fast", industry: "Fintech", country: "🇺🇸 USA", founded: 2019, died: 2022, raised: 120000000, lost: 120000000, reason: "1-click checkout. Burning $10M/month with $600k revenue. CEO ousted.", lesson: "Burn must match revenue trajectory. 100x ratio is suicide." },
+];
+
 // ── CSS KEYFRAMES ──
 const STYLES = `
 @keyframes moneyFall {
@@ -138,7 +224,7 @@ if (!document.getElementById("mm-styles")) {
 
 const T = {
   en: {
-    nav: { browse: "Browse", blog: "Blog", contact: "Contact", validate: "🧪 Validate Idea", share: "+ Share a Mistake", login: "Sign In", logout: "Sign Out" },
+    nav: { browse: "Browse", graveyard: "🪦 Graveyard", blog: "Blog", contact: "Contact", validate: "🧪 Validate Idea", share: "+ Share a Mistake", login: "Sign In", logout: "Sign Out" },
     hero: { tag: "🇬🇧 UK & 🇺🇿 Uzbekistan", h1a: "Stop Making", h1b: "Mistakes", h1c: "Others Already Made", sub: "A community where business owners share real failures — so you can learn before it costs you.", cta: "Share Your Story →", browse: "Browse Problems" },
     stats: { problems: "Stories shared", upvotes: "Total upvotes", countries: "Countries", live: "● Live" },
     sidebar: { country: "Country", both: "🌍 Both Countries", uk: "🇬🇧 United Kingdom", uz: "🇺🇿 Uzbekistan", industry: "Industry", all: "All Industries", chart: "By Industry", leaderboard: "🏆 Monthly Top Contributors", leaderboardSub: "Top 5 this month" },
@@ -155,6 +241,27 @@ const T = {
     impact: { high: "High", medium: "Medium", low: "Low" },
     chat: { title: "AI Business Advisor", placeholder: "Ask about business mistakes...", send: "Send", thinking: "Thinking...", open: "Ask AI", close: "Close", welcome: "Hi! I'm your AI business advisor. Ask me anything about business mistakes and how to avoid them." },
     failAnim: { title: "Every Day Businesses Fail", sub: "Don't be a statistic. Learn from those who've been there.", stat1: "90% of startups fail", stat2: "38% run out of cash", stat3: "35% no market need", stat4: "$1.4M avg loss", stat5: "20% fail year one", cta: "See Real $100k+ Cases →" },
+    graveyard: {
+      title: "🪦 The Startup Graveyard",
+      sub: "78+ real startup failures · $80B+ in lessons · Don't repeat their mistakes",
+      filterAll: "All",
+      filterMega: "Mega ($1B+)",
+      filterMajor: "Major ($100M-$1B)",
+      filterRecent: "Recent (2023+)",
+      sortBy: "Sort by",
+      sortLost: "💰 Money Lost",
+      sortYear: "📅 Year Died",
+      sortName: "🔤 Name",
+      raised: "Raised",
+      lost: "Lost",
+      reason: "Why it died",
+      lesson: "Lesson",
+      yearsAlive: "years alive",
+      showing: "Showing",
+      of: "of",
+      stats: { buried: "startups buried", lost: "total lost", avg: "avg lifespan" },
+      searchPh: "Search startups...",
+    },
     validator: {
       title: "🧪 Business Idea Validator",
       sub: "Test your idea against the Uzbekistan market before you invest",
@@ -174,7 +281,7 @@ const T = {
     },
   },
   uz: {
-    nav: { browse: "Ko'rish", blog: "Blog", contact: "Aloqa", validate: "🧪 Fikrni tekshirish", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
+    nav: { browse: "Ko'rish", graveyard: "🪦 Qabriston", blog: "Blog", contact: "Aloqa", validate: "🧪 Fikrni tekshirish", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
     hero: { tag: "🇬🇧 UK va 🇺🇿 O'zbekiston", h1a: "Boshqalar qilgan", h1b: "Xatolarni", h1c: "Takrorlamang", sub: "Biznes egalari haqiqiy muvaffaqiyatsizliklarini baham ko'radigan jamiyat.", cta: "Hikoyangizni ulashing →", browse: "Muammolarni ko'rish" },
     stats: { problems: "Ulashilgan hikoyalar", upvotes: "Jami ovozlar", countries: "Mamlakatlar", live: "● Jonli" },
     sidebar: { country: "Mamlakat", both: "🌍 Ikkala mamlakat", uk: "🇬🇧 Birlashgan Qirollik", uz: "🇺🇿 O'zbekiston", industry: "Soha", all: "Barcha sohalar", chart: "Soha bo'yicha", leaderboard: "🏆 Oylik Top Hissadorlar", leaderboardSub: "Bu oyda top 5" },
@@ -191,6 +298,27 @@ const T = {
     impact: { high: "Yuqori", medium: "O'rtacha", low: "Past" },
     chat: { title: "AI Biznes Maslahatchisi", placeholder: "Biznes xatolari haqida so'rang...", send: "Yuborish", thinking: "O'ylamoqda...", open: "AI", close: "Yopish", welcome: "Salom! Men AI biznes maslahatchingizman." },
     failAnim: { title: "Har kuni bizneslar yopiladi", sub: "Statistika bo'lmang.", stat1: "90% startuplar yopiladi", stat2: "38% pul tugaydi", stat3: "35% bozor yo'q", stat4: "$1.4M o'rtacha zarar", stat5: "20% 1-yilda yopiladi", cta: "Haqiqiy $100k+ holatlar →" },
+    graveyard: {
+      title: "🪦 Startup Qabristoni",
+      sub: "78+ haqiqiy startup muvaffaqiyatsizliklari · $80B+ darslar",
+      filterAll: "Barchasi",
+      filterMega: "Mega ($1B+)",
+      filterMajor: "Katta ($100M-$1B)",
+      filterRecent: "Yangi (2023+)",
+      sortBy: "Saralash",
+      sortLost: "💰 Yo'qotilgan",
+      sortYear: "📅 O'lgan yil",
+      sortName: "🔤 Ism",
+      raised: "Yig'ilgan",
+      lost: "Yo'qotilgan",
+      reason: "Nega o'ldi",
+      lesson: "Dars",
+      yearsAlive: "yil yashagan",
+      showing: "Ko'rsatilmoqda",
+      of: "/",
+      stats: { buried: "ko'milgan", lost: "umumiy zarar", avg: "o'rtacha umr" },
+      searchPh: "Startuplarni qidirish...",
+    },
     validator: {
       title: "🧪 Biznes Fikr Tekshirgich", sub: "O'zbekiston bozorida fikringizni test qiling",
       step1Title: "Fikringizni aytib bering",
@@ -319,7 +447,7 @@ function MoneyParticle({ style }) {
 function StartupFailSection({ t, onCtaClick }) {
   const particles = Array.from({ length: 18 }, (_, i) => i);
   const stats = [
-    { emoji: "💀", text: t.failAnim.stat1 },
+    { emoji: "🪦", text: t.failAnim.stat1 },
     { emoji: "💸", text: t.failAnim.stat2 },
     { emoji: "🔍", text: t.failAnim.stat3 },
     { emoji: "📉", text: t.failAnim.stat4 },
@@ -772,6 +900,190 @@ function FounderSection() {
   );
 }
 
+
+// ── GRAVEYARD SECTION (Timeline) ──
+function GraveyardSection({ t }) {
+  const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState("lost");
+  const [search, setSearch] = useState("");
+  const [openId, setOpenId] = useState(null);
+
+  const fmtMoney = n => {
+    if (!n) return "$0";
+    if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
+    if (n >= 1e6) return `$${(n / 1e6).toFixed(0)}M`;
+    return `$${(n / 1e3).toFixed(0)}k`;
+  };
+
+  const filtered = GRAVEYARD.filter(g => {
+    if (filter === "mega" && g.lost < 1e9) return false;
+    if (filter === "major" && (g.lost < 1e8 || g.lost >= 1e9)) return false;
+    if (filter === "recent" && g.died < 2023) return false;
+    if (search && !`${g.name} ${g.industry} ${g.country}`.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => {
+    if (sort === "lost") return b.lost - a.lost;
+    if (sort === "year") return b.died - a.died;
+    return a.name.localeCompare(b.name);
+  });
+
+  const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
+  const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
+
+  // Group by year for timeline
+  const yearGroups = {};
+  filtered.forEach(g => {
+    if (!yearGroups[g.died]) yearGroups[g.died] = [];
+    yearGroups[g.died].push(g);
+  });
+  const years = Object.keys(yearGroups).sort((a, b) => b - a);
+
+  return (
+    <div style={{ background: "linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%)", padding: "4rem 1.5rem", position: "relative", overflow: "hidden" }}>
+      {/* Background ghosts */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} style={{ position: "absolute", fontSize: "3rem", opacity: 0.04, left: `${(i * 13) % 100}%`, top: `${(i * 17) % 100}%`, pointerEvents: "none" }}>🪦</div>
+      ))}
+
+      <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+          <h2 style={{ fontSize: "clamp(1.7rem, 4vw, 2.5rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{t.graveyard.title}</h2>
+          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem" }}>{t.graveyard.sub}</p>
+        </div>
+
+        {/* Stats bar */}
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "2rem" }}>
+          {[
+            { value: GRAVEYARD.length, label: t.graveyard.stats.buried },
+            { value: fmtMoney(totalLost), label: t.graveyard.stats.lost },
+            { value: `${avgLife}y`, label: t.graveyard.stats.avg },
+          ].map((s, i) => (
+            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.5rem", textAlign: "center", minWidth: 130 }}>
+              <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ff6060" }}>{s.value}</div>
+              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", marginTop: "0.2rem" }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Filters */}
+        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1rem" }}>
+          {[
+            ["all", t.graveyard.filterAll],
+            ["mega", t.graveyard.filterMega],
+            ["major", t.graveyard.filterMajor],
+            ["recent", t.graveyard.filterRecent],
+          ].map(([k, label]) => (
+            <button key={k} onClick={() => setFilter(k)}
+              style={{ background: filter === k ? "linear-gradient(135deg, #ef4444, #dc2626)" : "rgba(255,255,255,0.05)", color: filter === k ? "#fff" : "rgba(255,255,255,0.7)", border: filter === k ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.4rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", transition: "all 0.2s" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search + sort */}
+        <div style={{ display: "flex", gap: "0.6rem", maxWidth: 600, margin: "0 auto 2rem", flexWrap: "wrap" }}>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t.graveyard.searchPh}
+            style={{ flex: 1, minWidth: 200, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
+          <select value={sort} onChange={e => setSort(e.target.value)}
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
+            <option value="lost" style={{ background: "#1a1a1a" }}>{t.graveyard.sortLost}</option>
+            <option value="year" style={{ background: "#1a1a1a" }}>{t.graveyard.sortYear}</option>
+            <option value="name" style={{ background: "#1a1a1a" }}>{t.graveyard.sortName}</option>
+          </select>
+        </div>
+
+        <div style={{ textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>
+          {t.graveyard.showing} {filtered.length} {t.graveyard.of} {GRAVEYARD.length}
+        </div>
+
+        {/* Timeline */}
+        <div style={{ position: "relative" }}>
+          {/* Vertical line */}
+          <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "linear-gradient(180deg, transparent, rgba(239,68,68,0.4), transparent)", transform: "translateX(-50%)" }} />
+
+          {sort === "year" ? years.map((year, yi) => (
+            <div key={year}>
+              <div style={{ textAlign: "center", marginBottom: "1rem", position: "relative", zIndex: 2 }}>
+                <span style={{ display: "inline-block", background: "linear-gradient(135deg, #ef4444, #b91c1c)", color: "#fff", fontWeight: 800, fontSize: "1.1rem", padding: "0.4rem 1.25rem", borderRadius: 100, boxShadow: "0 4px 20px rgba(239,68,68,0.4)" }}>✝ {year}</span>
+              </div>
+              {yearGroups[year].map((g, i) => (
+                <GraveCard key={`${year}-${i}`} g={g} index={i} side={i % 2} fmtMoney={fmtMoney} t={t} open={openId === `${year}-${i}`} onToggle={() => setOpenId(openId === `${year}-${i}` ? null : `${year}-${i}`)} />
+              ))}
+            </div>
+          )) : filtered.map((g, i) => (
+            <GraveCard key={i} g={g} index={i} side={i % 2} fmtMoney={fmtMoney} t={t} open={openId === i} onToggle={() => setOpenId(openId === i ? null : i)} />
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <div style={{ textAlign: "center", padding: "4rem", color: "rgba(255,255,255,0.4)" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div>
+            <p>No startups buried matching your filter</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function GraveCard({ g, side, fmtMoney, t, open, onToggle }) {
+  const yearsAlive = g.died - g.founded;
+  return (
+    <div style={{ display: "flex", justifyContent: side === 0 ? "flex-start" : "flex-end", marginBottom: "1.5rem", position: "relative" }}>
+      {/* Dot on timeline */}
+      <div style={{ position: "absolute", left: "50%", top: 24, transform: "translateX(-50%)", width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a0a0a", zIndex: 2, boxShadow: "0 0 12px rgba(239,68,68,0.6)" }} />
+
+      <div onClick={onToggle} style={{
+        width: "calc(50% - 1.5rem)",
+        background: "linear-gradient(135deg, rgba(40,15,15,0.9), rgba(20,10,10,0.9))",
+        border: "1px solid rgba(239,68,68,0.25)",
+        borderRadius: 12,
+        padding: "1.1rem 1.25rem",
+        cursor: "pointer",
+        backdropFilter: "blur(8px)",
+        transition: "all 0.2s",
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"; e.currentTarget.style.transform = "translateY(0)"; }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem", gap: "0.5rem" }}>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: "1rem", color: "#fff", marginBottom: "0.2rem" }}>🪦 {g.name}</div>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)" }}>{g.industry} · {g.country}</div>
+          </div>
+          <div style={{ textAlign: "right", flexShrink: 0 }}>
+            <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#ff6060", fontFamily: "monospace" }}>{fmtMoney(g.lost)}</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)" }}>{t.graveyard.lost}</div>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.65rem" }}>
+          <span style={{ fontSize: "0.65rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.15rem 0.5rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
+          <span style={{ fontSize: "0.65rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", padding: "0.15rem 0.5rem", borderRadius: 100 }}>⏱ {yearsAlive} {t.graveyard.yearsAlive}</span>
+          {g.raised > 0 && <span style={{ fontSize: "0.65rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", padding: "0.15rem 0.5rem", borderRadius: 100 }}>💵 {fmtMoney(g.raised)} {t.graveyard.raised}</span>}
+        </div>
+
+        {open && (
+          <div style={{ animation: "fadeUp 0.25s ease" }}>
+            <div style={{ marginTop: "0.6rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(239,68,68,0.15)" }}>
+              <div style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "#ff6060", marginBottom: "0.3rem" }}>⚰️ {t.graveyard.reason}</div>
+              <p style={{ fontSize: "0.79rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.55, marginBottom: "0.85rem" }}>{g.reason}</p>
+
+              <div style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, padding: "0.7rem 0.85rem" }}>
+                <div style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "#7ffba0", marginBottom: "0.3rem" }}>💡 {t.graveyard.lesson}</div>
+                <p style={{ fontSize: "0.79rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!open && <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.35)", marginTop: "0.4rem" }}>Click to read story →</div>}
+      </div>
+    </div>
+  );
+}
+
 // ── AUTH MODAL ──
 function AuthModal({ t, onClose, onSuccess }) {
   const [mode, setMode] = useState("login");
@@ -1090,7 +1402,7 @@ export default function App() {
           🗺 MistakeMap <span style={{ color: "#aaa", fontWeight: 400, fontSize: "0.8rem" }}>· UK & Uzbekistan</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-          {[["home", t.nav.browse], ["blog", t.nav.blog], ["validate", t.nav.validate], ["contact", t.nav.contact]].map(([p, label]) => (
+          {[["home", t.nav.browse], ["graveyard", t.nav.graveyard], ["blog", t.nav.blog], ["validate", t.nav.validate], ["contact", t.nav.contact]].map(([p, label]) => (
             <button key={p} onClick={() => setPage(p)} style={{ background: page === p ? "#e8f5eb" : "transparent", color: page === p ? GREEN : "#7a9a7a", border: "none", padding: "0.4rem 0.7rem", borderRadius: 6, fontFamily: "Inter,sans-serif", fontSize: "0.82rem", fontWeight: 500, cursor: "pointer" }}>{label}</button>
           ))}
           <div style={{ display: "flex", background: "#f0f7f0", borderRadius: 6, overflow: "hidden", border: "1px solid #c8dfc8" }}>
@@ -1279,6 +1591,9 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* GRAVEYARD PAGE */}
+      {page === "graveyard" && <GraveyardSection t={t} />}
 
       {/* VALIDATE PAGE */}
       {page === "validate" && <IdeaValidatorPage t={t} />}
