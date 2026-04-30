@@ -707,47 +707,47 @@ function renderMD(text) {
     .replace(/^# (.+)$/gm, "<div style=\"font-weight:800;color:#0d3a1e;margin:0.75rem 0 0.35rem\">$1</div>")
     .replace(/^- (.+)$/gm, "<div style=\"display:flex;gap:0.4rem;margin-bottom:0.25rem\"><span style=\"color:#1a5c30\">•</span><span>$1</span></div>");
 }
-function MDText({{ text }}) {{
-  return <div style={{{{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.7 }}}} dangerouslySetInnerHTML={{{{ __html: renderMD(text || "") }}}} />;
-}}
+function MDText({ text }) {
+  return <div style={{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || "") }} />;
+}
 
-function FounderSection() {{
+function FounderSection() {
   return (
-    <div style={{{{ background: "linear-gradient(135deg, #0d3a1e, #1a5c30)", padding: "4rem 1.5rem" }}}}>
-      <div style={{{{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "auto 1fr", gap: "3rem", alignItems: "center" }}}}>
-        <div style={{{{ position: "relative" }}}}>
-          <div style={{{{ width: 160, height: 160, borderRadius: "50%", overflow: "hidden", border: "4px solid rgba(255,255,255,0.2)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}}}>
-            <img src={{FOUNDER_PHOTO}} alt="Abdulaziz Ruzmatov" style={{{{ width: "100%", height: "100%", objectFit: "cover" }}}} />
+    <div style={{ background: "linear-gradient(135deg, #0d3a1e, #1a5c30)", padding: "4rem 1.5rem" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "auto 1fr", gap: "3rem", alignItems: "center" }}>
+        <div style={{ position: "relative" }}>
+          <div style={{ width: 160, height: 160, borderRadius: "50%", overflow: "hidden", border: "4px solid rgba(255,255,255,0.2)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+            <img src={FOUNDER_PHOTO} alt="Abdulaziz Ruzmatov" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          <div style={{{{ position: "absolute", bottom: 4, right: 4, background: "#22c55e", width: 20, height: 20, borderRadius: "50%", border: "3px solid #0d3a1e" }}}} />
+          <div style={{ position: "absolute", bottom: 4, right: 4, background: "#22c55e", width: 20, height: 20, borderRadius: "50%", border: "3px solid #0d3a1e" }} />
         </div>
         <div>
-          <div style={{{{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(255,255,255,0.45)", marginBottom: "0.6rem" }}}}>Built & Founded By</div>
-          <h2 style={{{{ fontSize: "1.6rem", fontWeight: 800, color: "#fff", marginBottom: "0.35rem", lineHeight: 1.2 }}}}>Abdulaziz Ruzmatov</h2>
-          <div style={{{{ fontSize: "0.85rem", color: "#7ffba0", fontWeight: 600, marginBottom: "1rem" }}}}>Researcher & Ex-Marketing Agency Owner · 🇺🇿 Uzbekistan → 🇬🇧 London</div>
-          <p style={{{{ fontSize: "0.88rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.7, maxWidth: 560, marginBottom: "1.25rem" }}}}>
-            Generated over <strong style={{{{ color: "#7ffba0" }}}}>$5M+ in marketing revenue</strong> for businesses across Uzbekistan and the UK. Now based in London, actively researching startup failures and success patterns in the Uzbekistan market — building tools to help founders avoid costly mistakes.
+          <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(255,255,255,0.45)", marginBottom: "0.6rem" }}>Built & Founded By</div>
+          <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#fff", marginBottom: "0.35rem", lineHeight: 1.2 }}>Abdulaziz Ruzmatov</h2>
+          <div style={{ fontSize: "0.85rem", color: "#7ffba0", fontWeight: 600, marginBottom: "1rem" }}>Researcher & Ex-Marketing Agency Owner · 🇺🇿 Uzbekistan → 🇬🇧 London</div>
+          <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.7, maxWidth: 560, marginBottom: "1.25rem" }}>
+            Generated over <strong style={{ color: "#7ffba0" }}>$5M+ in marketing revenue</strong> for businesses across Uzbekistan and the UK. Now based in London, actively researching startup failures and success patterns in the Uzbekistan market — building tools to help founders avoid costly mistakes.
           </p>
-          <div style={{{{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}}}>
-            {{[
-              {{ label: "$5M+", sub: "Marketing Revenue" }},
-              {{ label: "2 Countries", sub: "UK & Uzbekistan" }},
-              {{ label: "Active", sub: "Startup Research" }},
+          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+            {[
+              { label: "$5M+", sub: "Marketing Revenue" },
+              { label: "2 Countries", sub: "UK & Uzbekistan" },
+              { label: "Active", sub: "Startup Research" },
             ].map((s, i) => (
-              <div key={{i}} style={{{{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "0.65rem 1rem", textAlign: "center", minWidth: 100 }}}}>
-                <div style={{{{ fontWeight: 800, fontSize: "1rem", color: "#fff" }}}}>{{{s.label}}}</div>
-                <div style={{{{ fontSize: "0.67rem", color: "rgba(255,255,255,0.5)", marginTop: "0.15rem" }}}}>{{{s.sub}}}</div>
+              <div key={i} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "0.65rem 1rem", textAlign: "center", minWidth: 100 }}>
+                <div style={{ fontWeight: 800, fontSize: "1rem", color: "#fff" }}>{s.label}</div>
+                <div style={{ fontSize: "0.67rem", color: "rgba(255,255,255,0.5)", marginTop: "0.15rem" }}>{s.sub}</div>
               </div>
-            ))}}
+            ))}
           </div>
-          <div style={{{{ marginTop: "1.25rem", fontSize: "0.75rem", color: "rgba(255,255,255,0.35)" }}}}>
-            Questions or partnership? <a href="mailto:abdulaziz.ruzmatov@northumbria.ac.uk" style={{{{ color: "#7ffba0", textDecoration: "none", fontWeight: 600 }}}}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
+          <div style={{ marginTop: "1.25rem", fontSize: "0.75rem", color: "rgba(255,255,255,0.35)" }}>
+            Questions or partnership? <a href="mailto:abdulaziz.ruzmatov@northumbria.ac.uk" style={{ color: "#7ffba0", textDecoration: "none", fontWeight: 600 }}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
           </div>
         </div>
       </div>
     </div>
   );
-}}
+}
 
 // ── AUTH MODAL ──
 function AuthModal({ t, onClose, onSuccess }) {
