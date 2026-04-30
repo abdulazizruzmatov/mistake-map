@@ -534,14 +534,37 @@ function IdeaValidatorPage({ t }) {
     (f) => `For the business idea "${f.idea}" in Uzbekistan, identify 3 specific target customer segments. For each segment include: age range, income level, location (which cities/regions of Uzbekistan), and why they need this product/service. Be very specific to Uzbekistan demographics.`,
     (f) => `List the main competitors for "${f.idea}" currently operating in Uzbekistan. Include local and international players. For each competitor mention their name, strengths, and one weakness. If no direct competitors exist, mention indirect ones. Keep it brief - 4 points max.`,
     (f) => `Assess affordability for "${f.idea}" priced at $${f.price || "unknown"} in Uzbekistan. Consider: average salary in Uzbekistan (~$300-500/month), purchasing power, price sensitivity, and whether the target market can afford this. Give a clear affordability verdict.`,
-    (f) => `Give a final Go/No-Go verdict for this business idea in Uzbekistan: "${f.idea}" (${f.industry}, price: $${f.price || "unknown"}, budget: $${f.budget || "unknown"}). Output ONLY a JSON object like this: {"score": 72, "verdict": "GO", "reason": "one sentence reason", "risks": ["risk 1", "risk 2", "risk 3"], "nextSteps": ["step 1", "step 2", "step 3"]}. verdict must be GO, CAUTION, or NOGO.`,
+    (f) => `Give a final verdict for this business idea in Uzbekistan: "${f.idea}" (${f.industry}, price: $${f.price || "unknown"}, budget: $${f.budget || "unknown"}). Output ONLY a JSON object exactly like this format:
+{
+  "score": 72,
+  "verdict": "GO",
+  "reason": "one sentence reason",
+  "risks": ["risk 1", "risk 2", "risk 3"],
+  "nextSteps": ["step 1", "step 2", "step 3"],
+  "youtube": [
+    {"title": "Real YouTube channel name relevant to ${f.industry}", "url": "https://youtube.com/@channelhandle", "desc": "Why it helps for this idea"},
+    {"title": "Another channel", "url": "https://youtube.com/@handle", "desc": "Brief reason"},
+    {"title": "Third channel", "url": "https://youtube.com/@handle", "desc": "Brief reason"}
+  ],
+  "books": [
+    {"title": "Real book title for ${f.industry} entrepreneurs", "author": "Real author", "desc": "Why this book helps"},
+    {"title": "Another book", "author": "Author", "desc": "Reason"},
+    {"title": "Third book", "author": "Author", "desc": "Reason"}
+  ],
+  "globalProducts": [
+    {"name": "Real product/company name from any country similar to this idea", "desc": "What they did and what to learn", "url": "https://realwebsite.com"},
+    {"name": "Another similar real company", "desc": "Lesson", "url": "https://example.com"},
+    {"name": "Third real example", "desc": "Lesson", "url": "https://example.com"}
+  ]
+}
+verdict must be GO, CAUTION, or NOGO. youtube/books/globalProducts must be REAL and SPECIFIC to the "${f.idea}" idea and ${f.industry} industry — not generic. For globalProducts, give 3 real companies from anywhere in the world doing similar things. Use real working URLs.`,
   ];
 
   const callAI = async (prompt) => {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": import.meta.env.VITE_ANTHROPIC_KEY || "", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 600, messages: [{ role: "user", content: prompt }] }),
+      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1500, messages: [{ role: "user", content: prompt }] }),
     });
     const data = await res.json();
     return data.content?.[0]?.text || "Analysis unavailable.";
