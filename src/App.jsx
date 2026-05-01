@@ -283,12 +283,12 @@ const T = {
       effortLow: "LOW EFFORT", effortMed: "MEDIUM EFFORT", effortHigh: "HIGH EFFORT",
       rawAnalysis: "Raw Analysis", validating: "Validating your idea...",
       investorReady: "Investor-Ready — Contact These Funds",
-      graveFailureScore: {t.validator.graveFailureScore}, marketFitRisk: {t.validator.marketFitRisk},
-      burnRateRisk: {t.validator.burnRateRisk}, founderRisk: {t.validator.founderRisk},
+      graveFailureScore: "Failure Score", marketFitRisk: "Market Fit Risk",
+      burnRateRisk: "Burn Rate Risk", founderRisk: "Founder Risk",
       failureRiskAnalysis: "Failure Risk Analysis", whatHappened: "What Happened: The Timeline",
       rootCauses: "Root Causes", keyLessons: "Key Lessons Learned",
       competitorsThatWon: "Competitors That Won", couldBePrevented: "Could This Failure Have Been Prevented?",
-      analysingFailure: "{t.validator.analysingFailure}",
+      analysingFailure: "Analysing failure patterns...",
       sub: "Test your idea against the Uzbekistan market before you invest",
       step1Title: "Tell us your idea",
       ideaLabel: "Business Idea *", ideaPh: "e.g. Online grocery delivery for Tashkent neighbourhoods",
@@ -1234,8 +1234,8 @@ All arrays must have 3 items. verdict must be GO, CAUTION, or NOGO.`,
                 )}
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem" }}>
                   {[
-                    { label:{vt.immediate}, items: score.roadmap.immediate||[], color:"#ef4444", bg:"rgba(239,68,68,0.05)", border:"rgba(239,68,68,0.2)" },
-                    { label:{vt.shortTerm}, items: score.roadmap.shortTerm||[], color:"#f59e0b", bg:"rgba(245,158,11,0.05)", border:"rgba(245,158,11,0.2)" },
+                    { label: vt.immediate, items: score.roadmap.immediate||[], color:"#ef4444", bg:"rgba(239,68,68,0.05)", border:"rgba(239,68,68,0.2)" },
+                    { label: vt.shortTerm, items: score.roadmap.shortTerm||[], color:"#f59e0b", bg:"rgba(245,158,11,0.05)", border:"rgba(245,158,11,0.2)" },
                   ].map((section,i) => (
                     <div key={i} style={{ background:section.bg, border:`1px solid ${section.border}`, borderRadius:12, padding:"1.1rem" }}>
                       <div style={{ fontWeight:700, fontSize:"0.75rem", color:section.color, marginBottom:"0.75rem", textTransform:"uppercase", letterSpacing:"0.05em" }}>{section.label}</div>
