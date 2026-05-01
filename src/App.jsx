@@ -264,6 +264,31 @@ const T = {
     },
     validator: {
       title: "🧪 Business Idea Validator",
+      tabSummary: "Summary", tabScores: "Scores", tabMarket: "Market", tabFinancials: "Financials", tabRoadmap: "Roadmap",
+      executiveSummary: "Executive Summary", greenLights: "Green Lights", redFlags: "Red Flags",
+      problemValidation: "Problem Validation", solutionValidation: "Solution Validation", marketValidation: "Market Validation",
+      marketFactors: "Market Factors", executionFactors: "Execution Factors",
+      targetMarketClarity: {vt.targetMarketClarity}, marketTiming: {vt.marketTiming},
+      marketEntryBarriers: {vt.marketEntryBarriers}, competitionLevel: {vt.competitionLevel},
+      problemSolutionFit: {vt.problemSolutionFit}, mvpViability: {vt.mvpViability},
+      valueProposition: {vt.valueProposition}, initialFeasibility: {vt.initialFeasibility},
+      resourceRequirements: {vt.resourceRequirements},
+      marketSize: "Market Size (TAM/SAM/SOM)", targetRegions: "Target Regions",
+      competitiveLandscape: "Competitive Landscape", strengths: {vt.strengths}, weaknesses: {vt.weaknesses},
+      yourOpportunity: "YOUR OPPORTUNITY",
+      unitEconomics: "Unit Economics", startupCosts: {vt.startupCosts}, cac: "CAC", ltv: "LTV", ltvcac: "LTV/CAC",
+      breakEven: {vt.breakEven}, growth: {vt.growth}, revenueModels: "Revenue Models",
+      quickWins: "Quick Wins", underOneWeek: {vt.underOneWeek},
+      immediate: "IMMEDIATE (1 WEEK)", shortTerm: "SHORT-TERM (1-3 MO)",
+      effortLow: {vt.effortLow}, effortMed: {vt.effortMed}, effortHigh: {vt.effortHigh},
+      rawAnalysis: {vt.rawAnalysis}, validating: {vt.validating},
+      investorReady: "Investor-Ready — Contact These Funds",
+      graveFailureScore: {t.validator.graveFailureScore}, marketFitRisk: {t.validator.marketFitRisk},
+      burnRateRisk: {t.validator.burnRateRisk}, founderRisk: {t.validator.founderRisk},
+      failureRiskAnalysis: "Failure Risk Analysis", whatHappened: "What Happened: The Timeline",
+      rootCauses: "Root Causes", keyLessons: "Key Lessons Learned",
+      competitorsThatWon: "Competitors That Won", couldBePrevented: "Could This Failure Have Been Prevented?",
+      analysingFailure: "{t.validator.analysingFailure}",
       sub: "Test your idea against the Uzbekistan market before you invest",
       step1Title: "Tell us your idea",
       ideaLabel: "Business Idea *", ideaPh: "e.g. Online grocery delivery for Tashkent neighbourhoods",
@@ -320,7 +345,32 @@ const T = {
       searchPh: "Startuplarni qidirish...",
     },
     validator: {
-      title: "🧪 Biznes Fikr Tekshirgich", sub: "O'zbekiston bozorida fikringizni test qiling",
+      title: "🧪 Biznes Fikr Tekshirgich",
+      tabSummary: "Xulosa", tabScores: "Ballar", tabMarket: "Bozor", tabFinancials: "Moliya", tabRoadmap: "Yo'l xaritasi",
+      executiveSummary: "Ijroiya xulosa", greenLights: "Yashil chiroqlar", redFlags: "Qizil bayroqlar",
+      problemValidation: "Muammo tasdiqi", solutionValidation: "Yechim tasdiqi", marketValidation: "Bozor tasdiqi",
+      marketFactors: "Bozor omillari", executionFactors: "Ijro omillari",
+      targetMarketClarity: "Maqsadli bozor aniqligi", marketTiming: "Bozor vaqti",
+      marketEntryBarriers: "Bozorga kirish to'siqlari", competitionLevel: "Raqobat darajasi",
+      problemSolutionFit: "Muammo-Yechim mosligi", mvpViability: "MVP hayotiyligi",
+      valueProposition: "Qiymat taklifi", initialFeasibility: "Boshlang'ich amalga oshirilishi",
+      resourceRequirements: "Resurs talablari",
+      marketSize: "Bozor hajmi (TAM/SAM/SOM)", targetRegions: "Maqsadli hududlar",
+      competitiveLandscape: "Raqobat muhiti", strengths: "KUCHLI TOMONLAR", weaknesses: "ZAIF TOMONLAR",
+      yourOpportunity: "SIZNING IMKONIYATINGIZ",
+      unitEconomics: "Birlik iqtisodiyoti", startupCosts: "BOSHLANG'ICH XARAJATLAR", cac: "Mijoz jalb qilish narxi", ltv: "Mijoz umr bo'yi qiymati", ltvcac: "LTV/CAC",
+      breakEven: "ZARAR KO'RMASLIK NUQTASI", growth: "O'SISH (CAGR)", revenueModels: "Daromad modellari",
+      quickWins: "Tezkor g'alabalar", underOneWeek: "HAR BIRI 1 HAFTA ICHIDA",
+      immediate: "DARHOL (1 HAFTA)", shortTerm: "QISQA MUDDAT (1-3 OY)",
+      effortLow: "PAST KUCH", effortMed: "O'RTA KUCH", effortHigh: "YUQORI KUCH",
+      rawAnalysis: "Xom tahlil", validating: "Fikringiz tekshirilmoqda...",
+      investorReady: "Investorga tayyor — Bu fondlarga murojaat qiling",
+      graveFailureScore: "Muvaffaqiyatsizlik bali", marketFitRisk: "Bozor mosligi xavfi",
+      burnRateRisk: "Pul sarflash xavfi", founderRisk: "Asoschiga bog'liq xavf",
+      failureRiskAnalysis: "Muvaffaqiyatsizlik xavfi tahlili", whatHappened: "Nima bo'ldi: Vaqt jadvali",
+      rootCauses: "Asosiy sabablar", keyLessons: "Asosiy o'rganilgan darslar",
+      competitorsThatWon: "G'olib bo'lgan raqobatchilar", couldBePrevented: "Bu muvaffaqiyatsizlik oldini olish mumkin edi?",
+      analysingFailure: "Muvaffaqiyatsizlik namunalari tahlil qilinmoqda...",, sub: "O'zbekiston bozorida fikringizni test qiling",
       step1Title: "Fikringizni aytib bering",
       ideaLabel: "Biznes fikr *", ideaPh: "masalan: Toshkent mahallalari uchun online oziq-ovqat yetkazib berish",
       industryLabel: "Soha *", priceLabel: "Narx ($)", pricePh: "masalan: 15",
@@ -521,7 +571,13 @@ function Leaderboard({ t }) {
     <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem" }}>
       <div style={sideTitle()}>{t.sidebar.leaderboard}</div>
       <div style={{ fontSize: "0.7rem", color: "#bbb", marginBottom: "0.85rem" }}>{t.sidebar.leaderboardSub}</div>
-      {leaders.length === 0 ? <p style={{ fontSize: "0.78rem", color: "#ccc", textAlign: "center", padding: "0.75rem 0" }}>No data yet</p> : leaders.map((l, i) => (
+      {(leaders.length === 0 ? [
+        { name: "Sardor M.", company: "TechHub UZ", country: "Uzbekistan", is_verified: true, upvotes_received: 47 },
+        { name: "Tom H.", company: "London Ventures", country: "United Kingdom", is_verified: true, upvotes_received: 32 },
+        { name: "Kamola R.", company: "Silk Road Capital", country: "Uzbekistan", is_verified: false, upvotes_received: 28 },
+        { name: "Akbar N.", company: "Manchester Startup", country: "United Kingdom", is_verified: true, upvotes_received: 21 },
+        { name: "Dilnoza K.", company: "IT Park UZ", country: "Uzbekistan", is_verified: false, upvotes_received: 15 },
+      ] : leaders).map((l, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.55rem 0.5rem", borderRadius: 8, background: i === 0 ? "linear-gradient(90deg, rgba(255,215,0,0.1), transparent)" : "transparent", marginBottom: "0.25rem" }}>
           <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{medals[i]}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -645,77 +701,177 @@ function AIChatWidget({ t, problems }) {
   );
 }
 
-// ── IDEA VALIDATOR PAGE ──
+// ── SCORE DIAL ──
+function ScoreDial({ value, label, color, size = 80 }) {
+  const r = (size / 2) - 8;
+  const circ = 2 * Math.PI * r;
+  const dash = (value / 100) * circ;
+  return (
+    <div style={{ textAlign: "center" }}>
+      <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={6} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={6}
+          strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" style={{ transition: "stroke-dasharray 1s ease" }} />
+        <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
+          style={{ fill: "#fff", fontSize: size*0.22, fontWeight: 800, transform: "rotate(90deg)", transformOrigin: `${size/2}px ${size/2}px`, fontFamily: "Inter,sans-serif" }}>
+          {value}
+        </text>
+      </svg>
+      <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", marginTop: "0.25rem", fontWeight: 600 }}>{label}</div>
+    </div>
+  );
+}
+
+// ── CIRCLE CHART (TAM/SAM/SOM) ──
+function TamChart({ tam, sam, som }) {
+  return (
+    <div style={{ position: "relative", width: 120, height: 120, flexShrink: 0 }}>
+      {[{size: 120, color: "rgba(139,92,246,0.15)", border: "2px solid rgba(139,92,246,0.3)", label: "TAM"},
+        {size: 85, color: "rgba(139,92,246,0.25)", border: "2px solid rgba(139,92,246,0.5)", label: "SAM"},
+        {size: 50, color: "rgba(139,92,246,0.7)", border: "2px solid #8b5cf6", label: "SOM"}
+      ].map((c, i) => (
+        <div key={i} style={{
+          position: "absolute", borderRadius: "50%",
+          width: c.size, height: c.size,
+          top: (120-c.size)/2, left: (120-c.size)/2,
+          background: c.color, border: c.border,
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          {i === 2 && <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "#fff" }}>{c.label}</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── SCORE BAR ──
+function ScoreBar({ label, value, color = "#f59e0b" }) {
+  return (
+    <div style={{ marginBottom: "0.85rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.3rem" }}>
+        <span style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.75)" }}>{label}</span>
+        <span style={{ fontSize: "0.78rem", fontWeight: 700, color }}>{value}/100</span>
+      </div>
+      <div style={{ height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 10 }}>
+        <div style={{ height: "100%", width: `${value}%`, background: color, borderRadius: 10, transition: "width 0.8s ease" }} />
+      </div>
+    </div>
+  );
+}
+
+// ── IDEA VALIDATOR PAGE (Full IdeaProof-style) ──
 function IdeaValidatorPage({ t }) {
   const vt = t.validator;
-  const industries = t.form.industries;
-  const [step, setStep] = useState(0); // 0=form, 1-5=analysis steps, 6=results
+  const [step, setStep] = useState(0);
   const [form, setForm] = useState({ idea: "", industry: "", price: "", budget: "" });
   const [results, setResults] = useState([]);
-  const [currentText, setCurrentText] = useState("");
   const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(null);
+  const [activeTab, setActiveTab] = useState("summary");
   const setF = (k, v) => setForm(x => ({ ...x, [k]: v }));
+  const industries = t.form.industries;
 
   const STEP_PROMPTS = [
-    (f) => `Analyse market demand for this business idea in Uzbekistan: "${f.idea}" (${f.industry} sector). Cover: current market size, growth trends, consumer behaviour, and whether there is genuine demand. Be specific to Uzbekistan. Keep it to 4-5 concise bullet points.`,
-    (f) => `For the business idea "${f.idea}" in Uzbekistan, identify 3 specific target customer segments. For each segment include: age range, income level, location (which cities/regions of Uzbekistan), and why they need this product/service. Be very specific to Uzbekistan demographics.`,
-    (f) => `List the main competitors for "${f.idea}" currently operating in Uzbekistan. Include local and international players. For each competitor mention their name, strengths, and one weakness. If no direct competitors exist, mention indirect ones. Keep it brief - 4 points max.`,
-    (f) => `Assess affordability for "${f.idea}" priced at $${f.price || "unknown"} in Uzbekistan. Consider: average salary in Uzbekistan (~$300-500/month), purchasing power, price sensitivity, and whether the target market can afford this. Give a clear affordability verdict.`,
-    (f) => `Give a final verdict for this business idea in Uzbekistan: "${f.idea}" (${f.industry}, price: $${f.price || "unknown"}, budget: $${f.budget || "unknown"}). Output ONLY a JSON object exactly like this format:
+    (f) => `Analyse market demand for this business idea in Uzbekistan: "${f.idea}" (${f.industry}). Cover: market size, growth trends, consumer behaviour, genuine demand. Be specific. 4-5 bullet points.`,
+    (f) => `For "${f.idea}" in Uzbekistan, identify 3 specific target customer segments with age, income level, location (specific Uzbekistan cities), and why they need this. Be very specific.`,
+    (f) => `List main competitors for "${f.idea}" in Uzbekistan. Local and international. Name, 2 strengths, 1 weakness each. Max 4 competitors.`,
+    (f) => `Assess affordability for "${f.idea}" at $${f.price||"unknown"} in Uzbekistan (avg salary $300-500/month). Clear affordability verdict with specifics.`,
+    (f) => `Full validation for business idea: "${f.idea}" (${f.industry}, price: $${f.price||"unknown"}, budget: $${f.budget||"unknown"}) in Uzbekistan.
+Output ONLY this JSON (no markdown, no extra text):
 {
   "score": 72,
-  "verdict": "GO",
-  "reason": "one sentence reason",
-  "risks": ["risk 1", "risk 2", "risk 3"],
-  "nextSteps": ["step 1", "step 2", "step 3"],
-  "youtube": [
-    {"title": "Real YouTube channel name relevant to ${f.industry}", "url": "https://youtube.com/@channelhandle", "desc": "Why it helps for this idea"},
-    {"title": "Another channel", "url": "https://youtube.com/@handle", "desc": "Brief reason"},
-    {"title": "Third channel", "url": "https://youtube.com/@handle", "desc": "Brief reason"}
-  ],
-  "books": [
-    {"title": "Real book title for ${f.industry} entrepreneurs", "author": "Real author", "desc": "Why this book helps"},
-    {"title": "Another book", "author": "Author", "desc": "Reason"},
-    {"title": "Third book", "author": "Author", "desc": "Reason"}
-  ],
-  "globalProducts": [
-    {"name": "Real product/company name from any country similar to this idea", "desc": "What they did and what to learn", "url": "https://realwebsite.com"},
-    {"name": "Another similar real company", "desc": "Lesson", "url": "https://example.com"},
-    {"name": "Third real example", "desc": "Lesson", "url": "https://example.com"}
-  ]
+  "verdict": "CAUTION",
+  "reason": "one sentence summary",
+  "risks": ["risk 1","risk 2","risk 3"],
+  "nextSteps": ["step 1","step 2","step 3"],
+  "youtube": [{"title":"Channel Name","url":"https://youtube.com/@handle","desc":"Why relevant"}],
+  "books": [{"title":"Book Title","author":"Author","desc":"Why relevant"}],
+  "globalProducts": [{"name":"Company (Country)","desc":"What to learn","url":"https://example.com"}],
+  "summary": {
+    "executiveSummary": "2-3 sentence executive summary",
+    "greenLights": ["strength 1","strength 2","strength 3"],
+    "redFlags": ["concern 1","concern 2","concern 3"],
+    "problemValidation": 70,
+    "problemValidationText": "explanation",
+    "solutionValidation": 65,
+    "solutionValidationText": "explanation",
+    "marketValidation": 60,
+    "marketValidationText": "explanation"
+  },
+  "scores": {
+    "targetMarketClarity": 68,
+    "marketTiming": 65,
+    "marketEntryBarriers": 60,
+    "competitionLevel": 58,
+    "problemSolutionFit": 75,
+    "mvpViability": 60,
+    "valueProposition": 72,
+    "initialFeasibility": 55,
+    "resourceRequirements": 50
+  },
+  "market": {
+    "tam": "$100-200M",
+    "sam": "$30-60M",
+    "som": "$5-10M",
+    "maturity": "EMERGING",
+    "seasonality": "brief seasonality note",
+    "targetRegions": ["Tashkent","Samarkand"],
+    "competitors": [
+      {"name":"Competitor name","type":"LOCAL","url":"website.com","strengths":["s1","s2"],"weaknesses":["w1"],"opportunity":"your advantage over them"}
+    ]
+  },
+  "financials": {
+    "startupCosts": "$50,000 - $100,000",
+    "cac": "$20 - $50",
+    "ltv": "$200 - $400",
+    "ltvcac": "4:1 - 8:1",
+    "breakEven": "12-18 months",
+    "growth": "15-25% annually",
+    "revenueModels": ["model 1","model 2"],
+    "monetizationStrategy": "brief strategy"
+  },
+  "roadmap": {
+    "quickWins": [
+      {"title":"Action title","desc":"What to do","effort":"LOW","outcome":"Expected result","timeline":"1 week"}
+    ],
+    "immediate": ["action 1","action 2","action 3"],
+    "shortTerm": ["action 1","action 2","action 3"]
+  }
 }
-verdict must be GO, CAUTION, or NOGO. youtube/books/globalProducts must be REAL and SPECIFIC to the "${f.idea}" idea and ${f.industry} industry — not generic. For globalProducts, give 3 real companies from anywhere in the world doing similar things. Use real working URLs.`,
+All arrays must have 3 items. verdict must be GO, CAUTION, or NOGO.`,
   ];
 
-  const callAI = async (prompt) => {
+  const callAI = async (prompt, maxTok = 800) => {
+    const key = typeof window !== "undefined" ? window.__ANTHROPIC_KEY__ || "" : "";
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": import.meta.env.VITE_ANTHROPIC_KEY || "", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1500, messages: [{ role: "user", content: prompt }] }),
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": (typeof import !== "undefined" && typeof import.meta !== "undefined") ? (import.meta.env?.VITE_ANTHROPIC_KEY || "") : "",
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: maxTok, messages: [{ role: "user", content: prompt }] }),
     });
     const data = await res.json();
-    return data.content?.[0]?.text || "Analysis unavailable.";
+    return data.content?.[0]?.text || "";
   };
 
   const runAnalysis = async () => {
     if (!form.idea || !form.industry) return;
-    setStep(1);
-    setResults([]);
-    setLoading(true);
+    setStep(1); setResults([]); setLoading(true); setScore(null); setActiveTab("summary");
     const stepResults = [];
     for (let i = 0; i < 5; i++) {
       setStep(i + 1);
-      setCurrentText("");
       try {
-        const text = await callAI(STEP_PROMPTS[i](form));
+        const maxT = i === 4 ? 3000 : 800;
+        const text = await callAI(STEP_PROMPTS[i](form), maxT);
         if (i === 4) {
-          // Parse final verdict JSON
           try {
             const clean = text.replace(/```json|```/g, "").trim();
             const parsed = JSON.parse(clean);
             setScore(parsed);
-            stepResults.push({ title: vt.steps[i], content: parsed.reason, isVerdict: true });
+            stepResults.push({ title: vt.steps[i], content: parsed.reason });
           } catch {
             stepResults.push({ title: vt.steps[i], content: text });
           }
@@ -724,7 +880,7 @@ verdict must be GO, CAUTION, or NOGO. youtube/books/globalProducts must be REAL 
         }
         setResults([...stepResults]);
       } catch {
-        stepResults.push({ title: vt.steps[i], content: "Analysis failed. Please check your API key." });
+        stepResults.push({ title: vt.steps[i], content: "Analysis failed." });
         setResults([...stepResults]);
       }
     }
@@ -732,294 +888,385 @@ verdict must be GO, CAUTION, or NOGO. youtube/books/globalProducts must be REAL 
     setStep(6);
   };
 
-  const verdictColor = v => v === "GO" ? "#16a34a" : v === "CAUTION" ? "#d97706" : "#dc2626";
-  const verdictLabel = v => v === "GO" ? vt.goVerdict : v === "CAUTION" ? vt.cautionVerdict : vt.nogoVerdict;
+  const vColor = v => v === "GO" ? "#22c55e" : v === "CAUTION" ? "#f59e0b" : "#ef4444";
+  const vLabel = v => v === "GO" ? vt.goVerdict : v === "CAUTION" ? vt.cautionVerdict : vt.nogoVerdict;
+
+  const TABS = ["summary","scores","market","financials","roadmap"];
 
   return (
-    <div style={{ maxWidth: 860, margin: "0 auto", padding: "2rem 1.5rem" }}>
+    <div style={{ minHeight: "100vh", background: "#0f0f1a" }}>
       {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: DARK, marginBottom: "0.5rem" }}>{vt.title}</h1>
-        <p style={{ color: "#7a9a7a", fontSize: "0.9rem" }}>{vt.sub}</p>
+      <div style={{ background: "linear-gradient(135deg, #1a0a2e, #0f0f1a)", padding: "3rem 1.5rem 2rem", textAlign: "center", borderBottom: "1px solid rgba(139,92,246,0.2)" }}>
+        <h1 style={{ fontSize: "clamp(1.6rem,4vw,2.2rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{vt.title}</h1>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{vt.sub}</p>
       </div>
 
-      {/* Progress Steps */}
-      {step > 0 && step <= 5 && (
-        <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem", marginBottom: "2rem", flexWrap: "wrap" }}>
-          {vt.steps.map((s, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-              <div style={{ width: 28, height: 28, borderRadius: "50%", background: i < step ? GREEN : i === step - 1 ? "#22743c" : "#e8f5eb", color: i < step ? "#fff" : i === step - 1 ? "#fff" : "#aaa", fontSize: "0.72rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.3s" }}>
-                {i < step - 1 ? "✓" : i + 1}
-              </div>
-              <span style={{ fontSize: "0.72rem", color: i === step - 1 ? DARK : "#aaa", fontWeight: i === step - 1 ? 600 : 400 }}>{s}</span>
-              {i < vt.steps.length - 1 && <span style={{ color: "#ddd", fontSize: "0.8rem" }}>›</span>}
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "2rem 1.5rem" }}>
+
+        {/* STEP 0: INPUT FORM */}
+        {step === 0 && (
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 16, padding: "2rem", maxWidth: 580, margin: "0 auto", animation: "fadeUp 0.4s ease" }}>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff", marginBottom: "1.5rem" }}>{vt.step1Title}</h2>
+            <FG label={<span style={{color:"rgba(255,255,255,0.7)"}}>{vt.ideaLabel}</span>}>
+              <textarea value={form.idea} onChange={e => setF("idea", e.target.value)} placeholder={vt.ideaPh}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box", minHeight: 90, resize: "vertical" }} />
+            </FG>
+            <FG label={<span style={{color:"rgba(255,255,255,0.7)"}}>{vt.industryLabel}</span>}>
+              <select value={form.industry} onChange={e => setF("industry", e.target.value)}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", cursor: "pointer", boxSizing: "border-box" }}>
+                <option value="" style={{background:"#1a1a2e"}}>{t.form.selectInd}</option>
+                {industries.map(i => <option key={i} style={{background:"#1a1a2e"}}>{i}</option>)}
+              </select>
+            </FG>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+              <FG label={<span style={{color:"rgba(255,255,255,0.7)"}}>{vt.priceLabel}</span>}>
+                <input value={form.price} onChange={e => setF("price", e.target.value)} type="number" placeholder={vt.pricePh}
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box" }} />
+              </FG>
+              <FG label={<span style={{color:"rgba(255,255,255,0.7)"}}>{vt.budgetLabel}</span>}>
+                <input value={form.budget} onChange={e => setF("budget", e.target.value)} type="number" placeholder={vt.budgetPh}
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box" }} />
+              </FG>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Step 0: Input Form */}
-      {step === 0 && (
-        <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 16, padding: "2rem", maxWidth: 560, margin: "0 auto", animation: "fadeUp 0.4s ease" }}>
-          <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: DARK, marginBottom: "1.25rem" }}>{vt.step1Title}</h2>
-          <FG label={vt.ideaLabel}><textarea value={form.idea} onChange={e => setF("idea", e.target.value)} placeholder={vt.ideaPh} style={{ ...inpSt(), minHeight: 80, resize: "vertical" }} /></FG>
-          <FG label={vt.industryLabel}>
-            <select value={form.industry} onChange={e => setF("industry", e.target.value)} style={selSt()}>
-              <option value="">{t.form.selectInd}</option>
-              {industries.map(i => <option key={i}>{i}</option>)}
-            </select>
-          </FG>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-            <FG label={vt.priceLabel}><input value={form.price} onChange={e => setF("price", e.target.value)} type="number" style={inpSt()} placeholder={vt.pricePh} /></FG>
-            <FG label={vt.budgetLabel}><input value={form.budget} onChange={e => setF("budget", e.target.value)} type="number" style={inpSt()} placeholder={vt.budgetPh} /></FG>
-          </div>
-          <button onClick={runAnalysis} disabled={!form.idea || !form.industry}
-            style={{ width: "100%", background: form.idea && form.industry ? `linear-gradient(135deg, ${GREEN}, #22743c)` : "#e8f5eb", color: form.idea && form.industry ? "#fff" : "#aaa", border: "none", borderRadius: 9, padding: "0.85rem", fontWeight: 700, fontSize: "0.95rem", cursor: form.idea && form.industry ? "pointer" : "not-allowed", fontFamily: "Inter,sans-serif", marginTop: "0.5rem", transition: "all 0.2s" }}>
-            {vt.analyseBtn}
-          </button>
-        </div>
-      )}
-
-      {/* Steps 1-5: Loading / Results */}
-      {step >= 1 && step <= 5 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {results.map((r, i) => (
-            <div key={i} style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1.25rem", animation: "stepIn 0.4s ease" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: GREEN, color: "#fff", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>✓</div>
-                <span style={{ fontWeight: 700, fontSize: "0.88rem", color: DARK }}>{r.title}</span>
-              </div>
-              <p style={{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.65, whiteSpace: "pre-wrap", margin: 0 }}>{r.content}</p>
-            </div>
-          ))}
-          {loading && (
-            <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1.25rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: "linear-gradient(135deg, #e8f5eb, #b8d8bc)", backgroundSize: "200% 200%", animation: "shimmer 1.5s infinite" }} />
-                <span style={{ fontSize: "0.88rem", color: "#aaa", animation: "pulse 1.2s infinite" }}>{vt.steps[step - 1]} — {vt.analysing}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Step 6: Final Results */}
-      {step === 6 && score && (
-        <div style={{ animation: "fadeUp 0.5s ease" }}>
-          {/* Score Card */}
-          <div style={{ background: `linear-gradient(135deg, ${verdictColor(score.verdict)}15, ${verdictColor(score.verdict)}05)`, border: `2px solid ${verdictColor(score.verdict)}40`, borderRadius: 16, padding: "2rem", textAlign: "center", marginBottom: "1.5rem" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: verdictColor(score.verdict), marginBottom: "0.75rem" }}>{vt.scoreLabel}</div>
-            <div style={{ fontSize: "4rem", fontWeight: 900, color: verdictColor(score.verdict), lineHeight: 1, marginBottom: "0.5rem" }}>{score.score}</div>
-            <div style={{ fontSize: "1rem", fontWeight: 700, color: verdictColor(score.verdict), marginBottom: "0.75rem" }}>{verdictLabel(score.verdict)}</div>
-            <p style={{ fontSize: "0.88rem", color: "#5a7a5a", maxWidth: 400, margin: "0 auto" }}>{score.reason}</p>
-          </div>
-
-          {/* Risks + Next Steps */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
-            <div style={{ background: "#fff9f9", border: "1px solid #fca5a5", borderRadius: 12, padding: "1.25rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#7f1d1d", marginBottom: "0.75rem" }}>⚠️ Key Risks</div>
-              {score.risks?.map((r, i) => <div key={i} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", fontSize: "0.81rem", color: "#5a3a3a" }}><span style={{ color: "#ef4444", flexShrink: 0 }}>•</span>{r}</div>)}
-            </div>
-            <div style={{ background: "#f0fdf4", border: "1px solid #a8e6bc", borderRadius: 12, padding: "1.25rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#14532d", marginBottom: "0.75rem" }}>✅ Next Steps</div>
-              {score.nextSteps?.map((s, i) => <div key={i} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", fontSize: "0.81rem", color: "#3a5a3a" }}><span style={{ color: GREEN, flexShrink: 0 }}>{i + 1}.</span>{s}</div>)}
-            </div>
-          </div>
-
-          {/* Analysis steps summary */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
-            {results.slice(0, 4).map((r, i) => (
-              <div key={i} style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.82rem", color: DARK, marginBottom: "0.5rem" }}>
-                  <span style={{ display: "inline-block", background: GREEN, color: "#fff", width: 20, height: 20, borderRadius: "50%", textAlign: "center", lineHeight: "20px", fontSize: "0.65rem", marginRight: "0.5rem" }}>{i + 1}</span>
-                  {r.title}
-                </div>
-                <MDText text={r.content} />
-              </div>
-            ))}
-          </div>
-
-          <button onClick={() => { setStep(0); setResults([]); setScore(null); setForm({ idea: "", industry: "", price: "", budget: "" }); }}
-            style={{ background: "#f0f7f0", color: GREEN, border: "1px solid #c8dfc8", borderRadius: 8, padding: "0.65rem 1.5rem", fontWeight: 600, fontSize: "0.85rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>
-            {vt.restart}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
-function renderMD(text) {
-  if (!text) return "";
-  return text
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/^## (.+)$/gm, "<div style=\"font-weight:700;color:#0d3a1e;margin:0.6rem 0 0.25rem\">$1</div>")
-    .replace(/^# (.+)$/gm, "<div style=\"font-weight:800;color:#0d3a1e;margin:0.75rem 0 0.35rem\">$1</div>")
-    .replace(/^- (.+)$/gm, "<div style=\"display:flex;gap:0.4rem;margin-bottom:0.25rem\"><span style=\"color:#1a5c30\">•</span><span>$1</span></div>");
-}
-function MDText({ text }) {
-  return <div style={{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || "") }} />;
-}
-
-function FounderSection() {
-  return (
-    <div style={{ background: "linear-gradient(135deg, #0d3a1e, #1a5c30)", padding: "4rem 1.5rem" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "auto 1fr", gap: "3rem", alignItems: "center" }}>
-        <div style={{ position: "relative" }}>
-          <div style={{ width: 160, height: 160, borderRadius: "50%", overflow: "hidden", border: "4px solid rgba(255,255,255,0.2)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
-            <img src={FOUNDER_PHOTO} alt="Abdulaziz Ruzmatov" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-          <div style={{ position: "absolute", bottom: 4, right: 4, background: "#22c55e", width: 20, height: 20, borderRadius: "50%", border: "3px solid #0d3a1e" }} />
-        </div>
-        <div>
-          <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(255,255,255,0.45)", marginBottom: "0.6rem" }}>Built & Founded By</div>
-          <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#fff", marginBottom: "0.35rem", lineHeight: 1.2 }}>Abdulaziz Ruzmatov</h2>
-          <div style={{ fontSize: "0.85rem", color: "#7ffba0", fontWeight: 600, marginBottom: "1rem" }}>Researcher & Ex-Marketing Agency Owner · 🇺🇿 Uzbekistan → 🇬🇧 London</div>
-          <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.7, maxWidth: 560, marginBottom: "1.25rem" }}>
-            Generated over <strong style={{ color: "#7ffba0" }}>$5M+ in marketing revenue</strong> for businesses across Uzbekistan and the UK. Now based in London, actively researching startup failures and success patterns in the Uzbekistan market — building tools to help founders avoid costly mistakes.
-          </p>
-          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-            {[
-              { label: "$5M+", sub: "Marketing Revenue" },
-              { label: "2 Countries", sub: "UK & Uzbekistan" },
-              { label: "Active", sub: "Startup Research" },
-            ].map((s, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "0.65rem 1rem", textAlign: "center", minWidth: 100 }}>
-                <div style={{ fontWeight: 800, fontSize: "1rem", color: "#fff" }}>{s.label}</div>
-                <div style={{ fontSize: "0.67rem", color: "rgba(255,255,255,0.5)", marginTop: "0.15rem" }}>{s.sub}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: "1.25rem", fontSize: "0.75rem", color: "rgba(255,255,255,0.35)" }}>
-            Questions or partnership? <a href="mailto:abdulaziz.ruzmatov@northumbria.ac.uk" style={{ color: "#7ffba0", textDecoration: "none", fontWeight: 600 }}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-// ── GRAVEYARD SECTION (Timeline) ──
-function GraveyardSection({ t }) {
-  const [filter, setFilter] = useState("all");
-  const [sort, setSort] = useState("lost");
-  const [search, setSearch] = useState("");
-  const [openId, setOpenId] = useState(null);
-
-  const fmtMoney = n => {
-    if (!n) return "$0";
-    if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
-    if (n >= 1e6) return `$${(n / 1e6).toFixed(0)}M`;
-    return `$${(n / 1e3).toFixed(0)}k`;
-  };
-
-  const filtered = GRAVEYARD.filter(g => {
-    if (filter === "mega" && g.lost < 1e9) return false;
-    if (filter === "major" && (g.lost < 1e8 || g.lost >= 1e9)) return false;
-    if (filter === "recent" && g.died < 2023) return false;
-    if (search && !`${g.name} ${g.industry} ${g.country}`.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  }).sort((a, b) => {
-    if (sort === "lost") return b.lost - a.lost;
-    if (sort === "year") return b.died - a.died;
-    return a.name.localeCompare(b.name);
-  });
-
-  const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
-  const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
-
-  // Group by year for timeline
-  const yearGroups = {};
-  filtered.forEach(g => {
-    if (!yearGroups[g.died]) yearGroups[g.died] = [];
-    yearGroups[g.died].push(g);
-  });
-  const years = Object.keys(yearGroups).sort((a, b) => b - a);
-
-  return (
-    <div style={{ background: "linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%)", padding: "4rem 1.5rem", position: "relative", overflow: "hidden" }}>
-      {/* Background ghosts */}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} style={{ position: "absolute", fontSize: "3rem", opacity: 0.04, left: `${(i * 13) % 100}%`, top: `${(i * 17) % 100}%`, pointerEvents: "none" }}>🪦</div>
-      ))}
-
-      <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}>
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <h2 style={{ fontSize: "clamp(1.7rem, 4vw, 2.5rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{t.graveyard.title}</h2>
-          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem" }}>{t.graveyard.sub}</p>
-        </div>
-
-        {/* Stats bar */}
-        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "2rem" }}>
-          {[
-            { value: GRAVEYARD.length, label: t.graveyard.stats.buried },
-            { value: fmtMoney(totalLost), label: t.graveyard.stats.lost },
-            { value: `${avgLife}y`, label: t.graveyard.stats.avg },
-          ].map((s, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.5rem", textAlign: "center", minWidth: 130 }}>
-              <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ff6060" }}>{s.value}</div>
-              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", marginTop: "0.2rem" }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Filters */}
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1rem" }}>
-          {[
-            ["all", t.graveyard.filterAll],
-            ["mega", t.graveyard.filterMega],
-            ["major", t.graveyard.filterMajor],
-            ["recent", t.graveyard.filterRecent],
-          ].map(([k, label]) => (
-            <button key={k} onClick={() => setFilter(k)}
-              style={{ background: filter === k ? "linear-gradient(135deg, #ef4444, #dc2626)" : "rgba(255,255,255,0.05)", color: filter === k ? "#fff" : "rgba(255,255,255,0.7)", border: filter === k ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.4rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", transition: "all 0.2s" }}>
-              {label}
+            <button onClick={runAnalysis} disabled={!form.idea || !form.industry}
+              style={{ width: "100%", background: form.idea && form.industry ? "linear-gradient(135deg, #7c3aed, #6d28d9)" : "rgba(255,255,255,0.05)", color: form.idea && form.industry ? "#fff" : "rgba(255,255,255,0.3)", border: "none", borderRadius: 10, padding: "0.9rem", fontWeight: 700, fontSize: "0.95rem", cursor: form.idea && form.industry ? "pointer" : "not-allowed", fontFamily: "Inter,sans-serif", marginTop: "0.5rem", transition: "all 0.2s" }}>
+              {vt.analyseBtn}
             </button>
-          ))}
-        </div>
+          </div>
+        )}
 
-        {/* Search + sort */}
-        <div style={{ display: "flex", gap: "0.6rem", maxWidth: 600, margin: "0 auto 2rem", flexWrap: "wrap" }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t.graveyard.searchPh}
-            style={{ flex: 1, minWidth: 200, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
-          <select value={sort} onChange={e => setSort(e.target.value)}
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
-            <option value="lost" style={{ background: "#1a1a1a" }}>{t.graveyard.sortLost}</option>
-            <option value="year" style={{ background: "#1a1a1a" }}>{t.graveyard.sortYear}</option>
-            <option value="name" style={{ background: "#1a1a1a" }}>{t.graveyard.sortName}</option>
-          </select>
-        </div>
-
-        <div style={{ textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>
-          {t.graveyard.showing} {filtered.length} {t.graveyard.of} {GRAVEYARD.length}
-        </div>
-
-        {/* Timeline */}
-        <div style={{ position: "relative" }}>
-          {/* Vertical line */}
-          <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "linear-gradient(180deg, transparent, rgba(239,68,68,0.4), transparent)", transform: "translateX(-50%)" }} />
-
-          {sort === "year" ? years.map((year, yi) => (
-            <div key={year}>
-              <div style={{ textAlign: "center", marginBottom: "1rem", position: "relative", zIndex: 2 }}>
-                <span style={{ display: "inline-block", background: "linear-gradient(135deg, #ef4444, #b91c1c)", color: "#fff", fontWeight: 800, fontSize: "1.1rem", padding: "0.4rem 1.25rem", borderRadius: 100, boxShadow: "0 4px 20px rgba(239,68,68,0.4)" }}>✝ {year}</span>
+        {/* STEPS 1-5: PROGRESS */}
+        {step >= 1 && step <= 5 && (
+          <div>
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem" }}>Validating your idea...</span>
+                <span style={{ color: "#8b5cf6", fontWeight: 700, fontSize: "0.85rem" }}>{Math.round((step/5)*100)}%</span>
               </div>
-              {yearGroups[year].map((g, i) => (
-                <GraveCard key={`${year}-${i}`} g={g} index={i} side={i % 2} fmtMoney={fmtMoney} t={t} open={openId === `${year}-${i}`} onToggle={() => setOpenId(openId === `${year}-${i}` ? null : `${year}-${i}`)} />
+              <div style={{ height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 10 }}>
+                <div style={{ height: "100%", width: `${(step/5)*100}%`, background: "linear-gradient(90deg, #7c3aed, #8b5cf6)", borderRadius: 10, transition: "width 0.5s ease" }} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1rem" }}>
+                {vt.steps.map((s, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+                    <div style={{ width: 20, height: 20, borderRadius: "50%", background: i < step ? "#22c55e" : i === step-1 ? "#8b5cf6" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", flexShrink: 0, animation: i === step-1 ? "pulse 1.2s infinite" : "none" }}>
+                      {i < step ? "✓" : i === step-1 ? "⋯" : ""}
+                    </div>
+                    <span style={{ fontSize: "0.8rem", color: i < step ? "#22c55e" : i === step-1 ? "#a78bfa" : "rgba(255,255,255,0.3)" }}>{s}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 6: RESULTS DASHBOARD */}
+        {step === 6 && score && (
+          <div style={{ animation: "fadeUp 0.5s ease" }}>
+            {/* Top bar */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{form.idea}</h2>
+                <div style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.5)" }}>{form.industry} · Uzbekistan Validation</div>
+              </div>
+              <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                {[
+                  { label: "RISK", val: score.scores?.marketEntryBarriers || 50, color: "#ef4444" },
+                  { label: "DIFF", val: score.scores?.competitionLevel || 50, color: "#f59e0b" },
+                  { label: "CONF", val: score.scores?.problemSolutionFit || 50, color: "#22c55e" },
+                  { label: "SCORE", val: score.score, color: vColor(score.verdict) },
+                ].map((d, i) => <ScoreDial key={i} value={d.val} label={d.label} color={d.color} size={i===3?90:70} />)}
+              </div>
+            </div>
+
+            {/* Verdict Banner */}
+            <div style={{ background: `linear-gradient(135deg, ${vColor(score.verdict)}15, ${vColor(score.verdict)}05)`, border: `1px solid ${vColor(score.verdict)}40`, borderRadius: 12, padding: "1rem 1.25rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: vColor(score.verdict) }} />
+                <span style={{ fontWeight: 700, fontSize: "0.9rem", color: vColor(score.verdict) }}>{vLabel(score.verdict)}</span>
+              </div>
+              <p style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.75)", margin: 0 }}>{score.reason}</p>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "0.25rem", flexWrap: "wrap" }}>
+              {TABS.map(tab => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  style={{ flex: 1, minWidth: 80, background: activeTab === tab ? "rgba(139,92,246,0.3)" : "transparent", color: activeTab === tab ? "#a78bfa" : "rgba(255,255,255,0.5)", border: activeTab === tab ? "1px solid rgba(139,92,246,0.4)" : "1px solid transparent", borderRadius: 7, padding: "0.45rem 0.5rem", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", textTransform: "capitalize", transition: "all 0.2s" }}>
+                  {tab === "summary" ? vt.tabSummary : tab === "scores" ? vt.tabScores : tab === "market" ? vt.tabMarket : tab === "financials" ? vt.tabFinancials : vt.tabRoadmap}
+                </button>
               ))}
             </div>
-          )) : filtered.map((g, i) => (
-            <GraveCard key={i} g={g} index={i} side={i % 2} fmtMoney={fmtMoney} t={t} open={openId === i} onToggle={() => setOpenId(openId === i ? null : i)} />
-          ))}
-        </div>
 
-        {filtered.length === 0 && (
-          <div style={{ textAlign: "center", padding: "4rem", color: "rgba(255,255,255,0.4)" }}>
-            <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div>
-            <p>No startups buried matching your filter</p>
+            {/* ── SUMMARY TAB ── */}
+            {activeTab === "summary" && score.summary && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "1.25rem", marginBottom: "1rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#a78bfa", marginBottom: "0.75rem" }}>📊 Executive Summary</div>
+                  <p style={{ fontSize: "0.87rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.7 }}>{score.summary.executiveSummary}</p>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+                  <div style={{ background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1.1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#22c55e", marginBottom: "0.75rem" }}>✅ Green Lights</div>
+                    {(score.summary.greenLights||[]).map((g, i) => (
+                      <div key={i} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", fontSize: "0.8rem", color: "rgba(255,255,255,0.75)" }}>
+                        <span style={{ color: "#22c55e", flexShrink: 0 }}>✓</span>{g}
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "1.1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#ef4444", marginBottom: "0.75rem" }}>⚠️ Red Flags</div>
+                    {(score.summary.redFlags||[]).map((r, i) => (
+                      <div key={i} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", fontSize: "0.8rem", color: "rgba(255,255,255,0.75)" }}>
+                        <span style={{ color: "#ef4444", flexShrink: 0 }}>✗</span>{r}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+                  {[
+                    { label: "Problem Validation", val: score.summary.problemValidation, text: score.summary.problemValidationText },
+                    { label: "Solution Validation", val: score.summary.solutionValidation, text: score.summary.solutionValidationText },
+                    { label: "Market Validation", val: score.summary.marketValidation, text: score.summary.marketValidationText },
+                  ].map((item, i) => (
+                    <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "1rem" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>{item.label}</span>
+                        <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#f59e0b" }}>{item.val}/100</span>
+                      </div>
+                      <div style={{ height: 4, background: "rgba(255,255,255,0.08)", borderRadius: 10, marginBottom: "0.6rem" }}>
+                        <div style={{ height: "100%", width: `${item.val}%`, background: "#f59e0b", borderRadius: 10 }} />
+                      </div>
+                      <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: 0 }}>{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* Resources */}
+                {score.score >= 80 && (
+                  <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1.25rem", marginTop: "1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#22c55e", marginBottom: "1rem" }}>🚀 Investor-Ready — Contact These Funds</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px,1fr))", gap: "0.6rem" }}>
+                      {VENTURE_FUNDS.map((f, i) => (
+                        <a key={i} href={f.url} target="_blank" rel="noreferrer" style={{ textDecoration:"none", background:"rgba(255,255,255,0.04)", border:"1px solid rgba(34,197,94,0.2)", borderRadius:8, padding:"0.65rem" }}>
+                          <div style={{ fontSize:"0.75rem", fontWeight:700, color:"#fff", marginBottom:"0.2rem" }}>{f.flag} {f.name}</div>
+                          <div style={{ fontSize:"0.65rem", color:"rgba(255,255,255,0.5)" }}>{f.focus}</div>
+                          <div style={{ fontSize:"0.65rem", color:"#22c55e", marginTop:"0.2rem", fontWeight:600 }}>{f.stage}</div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {score.score >= 50 && score.score < 80 && (
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"1rem", marginTop:"1rem" }}>
+                    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1rem" }}>
+                      <div style={{ fontWeight:700, fontSize:"0.78rem", color:"#f59e0b", marginBottom:"0.6rem" }}>📺 YouTube</div>
+                      {(score.youtube||RESOURCES.youtube).map((r,i) => (
+                        <a key={i} href={r.url} target="_blank" rel="noreferrer" style={{ display:"block", textDecoration:"none", marginBottom:"0.4rem", padding:"0.4rem 0.5rem", background:"rgba(255,255,255,0.04)", borderRadius:6 }}>
+                          <div style={{ fontSize:"0.74rem", fontWeight:600, color:"#fff" }}>{r.title}</div>
+                          <div style={{ fontSize:"0.67rem", color:"rgba(255,255,255,0.4)" }}>{r.desc}</div>
+                        </a>
+                      ))}
+                    </div>
+                    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1rem" }}>
+                      <div style={{ fontWeight:700, fontSize:"0.78rem", color:"#f59e0b", marginBottom:"0.6rem" }}>📖 Books</div>
+                      {(score.books||RESOURCES.books).map((r,i) => (
+                        <div key={i} style={{ marginBottom:"0.4rem", padding:"0.4rem 0.5rem", background:"rgba(255,255,255,0.04)", borderRadius:6 }}>
+                          <div style={{ fontSize:"0.74rem", fontWeight:600, color:"#fff" }}>{r.title}</div>
+                          <div style={{ fontSize:"0.67rem", color:"rgba(255,255,255,0.4)" }}>by {r.author}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1rem" }}>
+                      <div style={{ fontWeight:700, fontSize:"0.78rem", color:"#f59e0b", marginBottom:"0.6rem" }}>🌍 Study These</div>
+                      {(score.globalProducts||RESOURCES.globalProducts).map((r,i) => (
+                        <a key={i} href={r.url} target="_blank" rel="noreferrer" style={{ display:"block", textDecoration:"none", marginBottom:"0.4rem", padding:"0.4rem 0.5rem", background:"rgba(255,255,255,0.04)", borderRadius:6 }}>
+                          <div style={{ fontSize:"0.74rem", fontWeight:600, color:"#fff" }}>{r.name}</div>
+                          <div style={{ fontSize:"0.67rem", color:"rgba(255,255,255,0.4)" }}>{r.desc}</div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── SCORES TAB ── */}
+            {activeTab === "scores" && score.scores && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.25rem" }}>
+                    <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"1rem" }}>📈 Market Factors</div>
+                    <ScoreBar label="Target Market Clarity" value={score.scores.targetMarketClarity||65} />
+                    <ScoreBar label="Market Timing" value={score.scores.marketTiming||65} />
+                    <ScoreBar label="Market Entry Barriers" value={score.scores.marketEntryBarriers||55} />
+                    <ScoreBar label="Competition Level" value={score.scores.competitionLevel||55} />
+                    <ScoreBar label="Problem-Solution Fit" value={score.scores.problemSolutionFit||70} color="#22c55e" />
+                  </div>
+                  <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.25rem" }}>
+                    <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"1rem" }}>⚙️ Execution Factors</div>
+                    <ScoreBar label="MVP Viability" value={score.scores.mvpViability||60} />
+                    <ScoreBar label="Value Proposition" value={score.scores.valueProposition||68} color="#22c55e" />
+                    <ScoreBar label="Initial Feasibility" value={score.scores.initialFeasibility||55} />
+                    <ScoreBar label="Resource Requirements" value={score.scores.resourceRequirements||50} color="#ef4444" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── MARKET TAB ── */}
+            {activeTab === "market" && score.market && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+                  <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"1rem" }}>🌐 Market Size (TAM/SAM/SOM)</div>
+                  <div style={{ display:"flex", alignItems:"center", gap:"2rem", flexWrap:"wrap" }}>
+                    <TamChart tam={score.market.tam} sam={score.market.sam} som={score.market.som} />
+                    <div style={{ flex:1 }}>
+                      {[["TAM", score.market.tam, "#7c3aed"],["SAM", score.market.sam, "#8b5cf6"],["SOM", score.market.som, "#a78bfa"]].map(([label, val, color]) => (
+                        <div key={label} style={{ display:"flex", alignItems:"center", gap:"0.75rem", marginBottom:"0.6rem" }}>
+                          <span style={{ fontSize:"0.7rem", fontWeight:700, color, width:35 }}>{label}</span>
+                          <span style={{ fontSize:"0.88rem", fontWeight:800, color:"#fff" }}>{val}</span>
+                        </div>
+                      ))}
+                      <div style={{ marginTop:"0.75rem", display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+                        <span style={{ fontSize:"0.7rem", background:"rgba(139,92,246,0.15)", color:"#a78bfa", padding:"0.2rem 0.6rem", borderRadius:100, border:"1px solid rgba(139,92,246,0.3)", fontWeight:600 }}>{score.market.maturity}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {score.market.targetRegions && (
+                  <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+                    <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.75rem" }}>📍 Target Regions</div>
+                    <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+                      {score.market.targetRegions.map((r,i) => <span key={i} style={{ fontSize:"0.78rem", background:"rgba(139,92,246,0.1)", color:"#a78bfa", padding:"0.3rem 0.75rem", borderRadius:100, border:"1px solid rgba(139,92,246,0.25)" }}>{r}</span>)}
+                    </div>
+                  </div>
+                )}
+                {score.market.competitors && (
+                  <div>
+                    <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.75rem" }}>🎯 Competitive Landscape</div>
+                    {score.market.competitors.map((c,i) => (
+                      <div key={i} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.1rem", marginBottom:"0.75rem" }}>
+                        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"0.75rem" }}>
+                          <span style={{ fontWeight:700, fontSize:"0.88rem", color:"#fff" }}>{c.name}</span>
+                          <span style={{ fontSize:"0.65rem", background:"rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.6)", padding:"0.15rem 0.55rem", borderRadius:100, fontWeight:600 }}>{c.type}</span>
+                        </div>
+                        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.75rem", marginBottom:"0.75rem" }}>
+                          <div>
+                            <div style={{ fontSize:"0.68rem", color:"#22c55e", fontWeight:600, marginBottom:"0.3rem" }}>STRENGTHS</div>
+                            {(c.strengths||[]).map((s,j) => <div key={j} style={{ fontSize:"0.76rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.2rem" }}>+ {s}</div>)}
+                          </div>
+                          <div>
+                            <div style={{ fontSize:"0.68rem", color:"#ef4444", fontWeight:600, marginBottom:"0.3rem" }}>WEAKNESSES</div>
+                            {(c.weaknesses||[]).map((w,j) => <div key={j} style={{ fontSize:"0.76rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.2rem" }}>- {w}</div>)}
+                          </div>
+                        </div>
+                        {c.opportunity && <div style={{ background:"rgba(34,197,94,0.06)", border:"1px solid rgba(34,197,94,0.15)", borderRadius:8, padding:"0.6rem 0.75rem" }}>
+                          <span style={{ fontSize:"0.67rem", color:"#22c55e", fontWeight:700 }}>YOUR OPPORTUNITY </span>
+                          <span style={{ fontSize:"0.76rem", color:"rgba(255,255,255,0.7)" }}>{c.opportunity}</span>
+                        </div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── FINANCIALS TAB ── */}
+            {activeTab === "financials" && score.financials && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"0.75rem", marginBottom:"1rem" }}>
+                  {[
+                    { label:"STARTUP COSTS", val: score.financials.startupCosts, color:"rgba(255,255,255,0.85)" },
+                    { label:vt.cac, val: score.financials.cac, color:"#ef4444" },
+                    { label:vt.ltv, val: score.financials.ltv, color:"#22c55e" },
+                    { label:vt.ltvcac, val: score.financials.ltvcac, color:"#a78bfa" },
+                  ].map((item,i) => (
+                    <div key={i} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1rem", textAlign:"center" }}>
+                      <div style={{ fontSize:"0.62rem", color:"rgba(255,255,255,0.4)", fontWeight:700, textTransform:"uppercase", letterSpacing:"0.07em", marginBottom:"0.5rem" }}>{item.label}</div>
+                      <div style={{ fontSize:"0.85rem", fontWeight:800, color:item.color, lineHeight:1.3 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.75rem", marginBottom:"1rem" }}>
+                  {[
+                    { label:"BREAK-EVEN", val: score.financials.breakEven },
+                    { label:"GROWTH (CAGR)", val: score.financials.growth },
+                  ].map((item,i) => (
+                    <div key={i} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1rem", textAlign:"center" }}>
+                      <div style={{ fontSize:"0.62rem", color:"rgba(255,255,255,0.4)", fontWeight:700, textTransform:"uppercase", letterSpacing:"0.07em", marginBottom:"0.5rem" }}>{item.label}</div>
+                      <div style={{ fontSize:"1rem", fontWeight:800, color:"#fff" }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.1rem" }}>
+                  <div style={{ fontWeight:700, fontSize:"0.8rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.65rem" }}>💰 Revenue Models</div>
+                  <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap", marginBottom:"0.75rem" }}>
+                    {(score.financials.revenueModels||[]).map((m,i) => <span key={i} style={{ fontSize:"0.76rem", background:"rgba(139,92,246,0.1)", color:"#a78bfa", padding:"0.3rem 0.75rem", borderRadius:100, border:"1px solid rgba(139,92,246,0.25)" }}>{m}</span>)}
+                  </div>
+                  {score.financials.monetizationStrategy && <p style={{ fontSize:"0.8rem", color:"rgba(255,255,255,0.6)", lineHeight:1.6, margin:0 }}>{score.financials.monetizationStrategy}</p>}
+                </div>
+              </div>
+            )}
+
+            {/* ── ROADMAP TAB ── */}
+            {activeTab === "roadmap" && score.roadmap && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                {score.roadmap.quickWins && (
+                  <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1rem" }}>
+                      <div style={{ fontWeight:700, fontSize:"0.85rem", color:"#fff" }}>⚡ Quick Wins</div>
+                      <span style={{ fontSize:"0.67rem", background:"rgba(34,197,94,0.1)", color:"#22c55e", padding:"0.2rem 0.7rem", borderRadius:100, border:"1px solid rgba(34,197,94,0.25)", fontWeight:600 }}>UNDER 1 WEEK EACH</span>
+                    </div>
+                    {score.roadmap.quickWins.map((qw,i) => (
+                      <div key={i} style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:10, padding:"1rem", marginBottom:"0.75rem" }}>
+                        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"0.5rem" }}>
+                          <div style={{ display:"flex", gap:"0.65rem", alignItems:"center" }}>
+                            <div style={{ width:24, height:24, borderRadius:"50%", background:"linear-gradient(135deg,#7c3aed,#6d28d9)", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"0.7rem", fontWeight:700, flexShrink:0 }}>{i+1}</div>
+                            <span style={{ fontWeight:600, fontSize:"0.84rem", color:"#fff" }}>{qw.title}</span>
+                          </div>
+                          <span style={{ fontSize:"0.67rem", background: qw.effort==="LOW"?"rgba(34,197,94,0.1)":qw.effort==="MEDIUM"?"rgba(245,158,11,0.1)":"rgba(239,68,68,0.1)", color: qw.effort==="LOW"?"#22c55e":qw.effort==="MEDIUM"?"#f59e0b":"#ef4444", padding:"0.15rem 0.55rem", borderRadius:100, fontWeight:600, border: qw.effort==="LOW"?"1px solid rgba(34,197,94,0.25)":qw.effort==="MEDIUM"?"1px solid rgba(245,158,11,0.25)":"1px solid rgba(239,68,68,0.25)" }}>{qw.effort} EFFORT</span>
+                        </div>
+                        <p style={{ fontSize:"0.79rem", color:"rgba(255,255,255,0.6)", lineHeight:1.55, margin:"0 0 0.5rem 2rem" }}>{qw.desc}</p>
+                        {qw.outcome && <div style={{ marginLeft:"2rem", fontSize:"0.75rem", color:"#a78bfa" }}>→ {qw.outcome}</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem" }}>
+                  {[
+                    { label:{vt.immediate}, items: score.roadmap.immediate||[], color:"#ef4444", bg:"rgba(239,68,68,0.05)", border:"rgba(239,68,68,0.2)" },
+                    { label:{vt.shortTerm}, items: score.roadmap.shortTerm||[], color:"#f59e0b", bg:"rgba(245,158,11,0.05)", border:"rgba(245,158,11,0.2)" },
+                  ].map((section,i) => (
+                    <div key={i} style={{ background:section.bg, border:`1px solid ${section.border}`, borderRadius:12, padding:"1.1rem" }}>
+                      <div style={{ fontWeight:700, fontSize:"0.75rem", color:section.color, marginBottom:"0.75rem", textTransform:"uppercase", letterSpacing:"0.05em" }}>{section.label}</div>
+                      {section.items.map((item,j) => (
+                        <div key={j} style={{ display:"flex", gap:"0.5rem", marginBottom:"0.5rem", fontSize:"0.8rem", color:"rgba(255,255,255,0.75)" }}>
+                          <span style={{ color:section.color, flexShrink:0 }}>•</span>{item}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Analysis Details */}
+            <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.07em" }}>Raw Analysis</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                {results.slice(0, 4).map((r, i) => (
+                  <div key={i} style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:10, padding:"0.85rem 1rem" }}>
+                    <div style={{ fontWeight:700, fontSize:"0.78rem", color:"rgba(255,255,255,0.5)", marginBottom:"0.4rem" }}>{i+1}. {r.title}</div>
+                    <MDText text={r.content} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button onClick={() => { setStep(0); setResults([]); setScore(null); setForm({ idea:"", industry:"", price:"", budget:"" }); }}
+              style={{ marginTop: "1.5rem", background:"rgba(255,255,255,0.05)", color:"rgba(255,255,255,0.6)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:8, padding:"0.65rem 1.5rem", fontWeight:600, fontSize:"0.85rem", cursor:"pointer", fontFamily:"Inter,sans-serif" }}>
+              {vt.restart}
+            </button>
           </div>
         )}
       </div>
@@ -1027,58 +1274,206 @@ function GraveyardSection({ t }) {
   );
 }
 
-function GraveCard({ g, side, fmtMoney, t, open, onToggle }) {
-  const yearsAlive = g.died - g.founded;
+
+// ── GRAVEYARD DETAIL MODAL ──
+function GraveDetailModal({ startup, t, onClose }) {
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const generateDetail = async () => {
+      try {
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": import.meta.env.VITE_ANTHROPIC_KEY || "",
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true"
+          },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-5",
+            max_tokens: 1500,
+            messages: [{
+              role: "user",
+              content: `Generate a detailed failure analysis for the startup "${startup.name}" (${startup.industry}, ${startup.country}, founded ${startup.founded}, closed ${startup.died}, raised $${startup.raised?.toLocaleString()}).
+Known reason: ${startup.reason}
+Known lesson: ${startup.lesson}
+
+Output ONLY this JSON:
+{
+  "failureScore": 78,
+  "marketFitRisk": 70,
+  "burnRateRisk": 85,
+  "founderRisk": 40,
+  "timeline": [
+    {"year": ${startup.founded}, "event": "Company founded"},
+    {"year": ${startup.founded+2}, "event": "Key milestone"},
+    {"year": ${startup.died-1}, "event": "Warning signs"},
+    {"year": ${startup.died}, "event": "Company closes"}
+  ],
+  "rootCauses": ["cause 1","cause 2","cause 3","cause 4"],
+  "keyLessons": [
+    {"title": "Lesson title","desc": "2-3 sentence explanation"},
+    {"title": "Lesson title 2","desc": "2-3 sentence explanation"},
+    {"title": "Lesson title 3","desc": "2-3 sentence explanation"}
+  ],
+  "competitorsThatWon": [
+    {"name": "Company name","why": "Why they succeeded where ${startup.name} failed","outcome": "e.g. Profitable IPO"},
+    {"name": "Company 2","why": "Reason","outcome": "outcome"}
+  ],
+  "couldHaveBeenPrevented": "2-3 sentence honest assessment of whether this failure was preventable"
+}`
+            }]
+          })
+        });
+        const data = await res.json();
+        const text = data.content?.[0]?.text || "";
+        const clean = text.replace(/```json|```/g, "").trim();
+        setDetail(JSON.parse(clean));
+      } catch {
+        setDetail({ failureScore: 75, marketFitRisk: 70, burnRateRisk: 80, founderRisk: 60,
+          timeline: [{year:startup.founded,event:"Founded"},{year:startup.died,event:"Closed"}],
+          rootCauses: startup.reason.split(". ").slice(0,3),
+          keyLessons: [{ title: "Key Lesson", desc: startup.lesson }],
+          competitorsThatWon: [],
+          couldHaveBeenPrevented: "Insufficient data for full analysis." });
+      }
+      setLoading(false);
+    };
+    generateDetail();
+  }, [startup]);
+
+  const fmtMoney = n => { if (!n) return "$0"; if (n>=1e9) return `$${(n/1e9).toFixed(1)}B`; if (n>=1e6) return `$${(n/1e6).toFixed(0)}M`; return `$${(n/1e3).toFixed(0)}k`; };
+
   return (
-    <div style={{ display: "flex", justifyContent: side === 0 ? "flex-start" : "flex-end", marginBottom: "1.5rem", position: "relative" }}>
-      {/* Dot on timeline */}
-      <div style={{ position: "absolute", left: "50%", top: 24, transform: "translateX(-50%)", width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a0a0a", zIndex: 2, boxShadow: "0 0 12px rgba(239,68,68,0.6)" }} />
-
-      <div onClick={onToggle} style={{
-        width: "calc(50% - 1.5rem)",
-        background: "linear-gradient(135deg, rgba(40,15,15,0.9), rgba(20,10,10,0.9))",
-        border: "1px solid rgba(239,68,68,0.25)",
-        borderRadius: 12,
-        padding: "1.1rem 1.25rem",
-        cursor: "pointer",
-        backdropFilter: "blur(8px)",
-        transition: "all 0.2s",
-      }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"; e.currentTarget.style.transform = "translateY(0)"; }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem", gap: "0.5rem" }}>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.85)", backdropFilter:"blur(8px)", zIndex:400, display:"flex", alignItems:"flex-start", justifyContent:"center", padding:"2rem 1rem", overflowY:"auto" }}
+      onClick={onClose}>
+      <div style={{ background:"#0f0f1a", border:"1px solid rgba(239,68,68,0.25)", borderRadius:16, width:"100%", maxWidth:720, padding:"2rem", animation:"fadeUp 0.3s ease" }}
+        onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"1.5rem" }}>
           <div>
-            <div style={{ fontWeight: 800, fontSize: "1rem", color: "#fff", marginBottom: "0.2rem" }}>🪦 {g.name}</div>
-            <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)" }}>{g.industry} · {g.country}</div>
+            <div style={{ fontSize:"0.72rem", background:"rgba(239,68,68,0.15)", color:"#ff8080", border:"1px solid rgba(239,68,68,0.3)", padding:"0.2rem 0.65rem", borderRadius:100, display:"inline-block", marginBottom:"0.5rem", fontWeight:600 }}>Failed {startup.died}</div>
+            <h2 style={{ fontSize:"1.75rem", fontWeight:800, color:"#fff", marginBottom:"0.3rem" }}>{startup.name}</h2>
+            <p style={{ fontSize:"0.84rem", color:"rgba(255,255,255,0.5)" }}>{startup.industry} · {startup.country} · {startup.founded}–{startup.died}</p>
           </div>
-          <div style={{ textAlign: "right", flexShrink: 0 }}>
-            <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#ff6060", fontFamily: "monospace" }}>{fmtMoney(g.lost)}</div>
-            <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)" }}>{t.graveyard.lost}</div>
-          </div>
+          <button onClick={onClose} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:8, width:34, height:34, color:"rgba(255,255,255,0.6)", cursor:"pointer", fontFamily:"Inter,sans-serif", fontSize:"0.9rem" }}>✕</button>
         </div>
 
-        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.65rem" }}>
-          <span style={{ fontSize: "0.65rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.15rem 0.5rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
-          <span style={{ fontSize: "0.65rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", padding: "0.15rem 0.5rem", borderRadius: 100 }}>⏱ {yearsAlive} {t.graveyard.yearsAlive}</span>
-          {g.raised > 0 && <span style={{ fontSize: "0.65rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", padding: "0.15rem 0.5rem", borderRadius: 100 }}>💵 {fmtMoney(g.raised)} {t.graveyard.raised}</span>}
-        </div>
+        {loading ? (
+          <div style={{ textAlign:"center", padding:"3rem", color:"rgba(255,255,255,0.4)" }}>
+            <div style={{ fontSize:"2rem", marginBottom:"0.75rem", animation:"pulse 1.2s infinite" }}>🪦</div>
+            <p>Analysing failure patterns...</p>
+          </div>
+        ) : detail && (
+          <div>
+            {/* Key stats */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:"0.75rem", marginBottom:"1.5rem" }}>
+              {[
+                { label:"Founded → Closed", val:`${startup.founded} → ${startup.died}` },
+                { label:"Funding Raised", val: fmtMoney(startup.raised) },
+                { label:"Total Lost", val: fmtMoney(startup.lost), color:"#ff8080" },
+                { label:"Industry", val: startup.industry.split("/")[0] },
+              ].map((item,i) => (
+                <div key={i} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:10, padding:"0.85rem", textAlign:"center" }}>
+                  <div style={{ fontSize:"0.62rem", color:"rgba(255,255,255,0.4)", fontWeight:600, textTransform:"uppercase", marginBottom:"0.4rem" }}>{item.label}</div>
+                  <div style={{ fontSize:"0.84rem", fontWeight:700, color: item.color||"#fff" }}>{item.val}</div>
+                </div>
+              ))}
+            </div>
 
-        {open && (
-          <div style={{ animation: "fadeUp 0.25s ease" }}>
-            <div style={{ marginTop: "0.6rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(239,68,68,0.15)" }}>
-              <div style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "#ff6060", marginBottom: "0.3rem" }}>⚰️ {t.graveyard.reason}</div>
-              <p style={{ fontSize: "0.79rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.55, marginBottom: "0.85rem" }}>{g.reason}</p>
-
-              <div style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, padding: "0.7rem 0.85rem" }}>
-                <div style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "#7ffba0", marginBottom: "0.3rem" }}>💡 {t.graveyard.lesson}</div>
-                <p style={{ fontSize: "0.79rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
+            {/* AI Failure Score */}
+            <div style={{ background:"rgba(239,68,68,0.05)", border:"1px solid rgba(239,68,68,0.15)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+              <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"1rem" }}>📊 Failure Risk Analysis</div>
+              <div style={{ display:"flex", gap:"1.5rem", flexWrap:"wrap" }}>
+                <div style={{ textAlign:"center" }}>
+                  <div style={{ fontSize:"2.5rem", fontWeight:900, color:"#ff6060" }}>{detail.failureScore}</div>
+                  <div style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.4)" }}>Failure Score</div>
+                </div>
+                <div style={{ flex:1, minWidth:200 }}>
+                  {[
+                    { label:"Market Fit Risk", val:detail.marketFitRisk },
+                    { label:"Burn Rate Risk", val:detail.burnRateRisk },
+                    { label:"Founder Risk", val:detail.founderRisk },
+                  ].map((item,i) => (
+                    <div key={i} style={{ marginBottom:"0.7rem" }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"0.25rem" }}>
+                        <span style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.6)" }}>{item.label}</span>
+                        <span style={{ fontSize:"0.75rem", fontWeight:700, color:"#ff8080" }}>{item.val}</span>
+                      </div>
+                      <div style={{ height:5, background:"rgba(255,255,255,0.06)", borderRadius:10 }}>
+                        <div style={{ height:"100%", width:`${item.val}%`, background:"linear-gradient(90deg,#ef4444,#ff6060)", borderRadius:10 }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+            </div>
+
+            {/* Timeline */}
+            <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+              <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"1rem" }}>📅 What Happened: The Timeline</div>
+              <div style={{ position:"relative" }}>
+                <div style={{ position:"absolute", left:16, top:0, bottom:0, width:2, background:"linear-gradient(180deg,#7c3aed,#ef4444)" }} />
+                {detail.timeline.map((ev,i) => (
+                  <div key={i} style={{ display:"flex", gap:"1rem", marginBottom:"0.85rem", position:"relative", zIndex:1 }}>
+                    <div style={{ width:32, height:32, borderRadius:"50%", background:i===detail.timeline.length-1?"#ef4444":"#7c3aed", border:"3px solid #0f0f1a", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                      <span style={{ fontSize:"0.55rem", color:"#fff", fontWeight:700 }}>{ev.year}</span>
+                    </div>
+                    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:8, padding:"0.5rem 0.85rem", flex:1 }}>
+                      <span style={{ fontSize:"0.72rem", color:"rgba(255,255,255,0.4)", fontWeight:600 }}>{ev.year}</span>
+                      <p style={{ fontSize:"0.82rem", color:"rgba(255,255,255,0.8)", margin:"0.15rem 0 0" }}>{ev.event}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Root Causes */}
+            <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+              <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.85rem" }}>⚠️ Root Causes</div>
+              <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem" }}>
+                {detail.rootCauses.map((c,i) => (
+                  <span key={i} style={{ fontSize:"0.78rem", background:"rgba(239,68,68,0.08)", color:"rgba(255,255,255,0.8)", border:"1px solid rgba(239,68,68,0.2)", padding:"0.3rem 0.75rem", borderRadius:100 }}>{c}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Key Lessons */}
+            <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+              <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.85rem" }}>✅ Key Lessons Learned</div>
+              {detail.keyLessons.map((l,i) => (
+                <div key={i} style={{ borderLeft:"3px solid #22c55e", paddingLeft:"0.85rem", marginBottom:"0.85rem" }}>
+                  <div style={{ fontWeight:700, fontSize:"0.84rem", color:"#fff", marginBottom:"0.3rem" }}>{i+1}. {l.title}</div>
+                  <p style={{ fontSize:"0.8rem", color:"rgba(255,255,255,0.65)", lineHeight:1.6, margin:0 }}>{l.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Competitors That Won */}
+            {detail.competitorsThatWon?.length > 0 && (
+              <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, padding:"1.25rem", marginBottom:"1rem" }}>
+                <div style={{ fontWeight:700, fontSize:"0.82rem", color:"rgba(255,255,255,0.7)", marginBottom:"0.85rem" }}>🏆 Competitors That Won</div>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.75rem" }}>
+                  {detail.competitorsThatWon.map((c,i) => (
+                    <div key={i} style={{ background:"rgba(34,197,94,0.05)", border:"1px solid rgba(34,197,94,0.2)", borderRadius:10, padding:"0.85rem" }}>
+                      <div style={{ fontWeight:700, fontSize:"0.84rem", color:"#22c55e", marginBottom:"0.3rem" }}>{c.name}</div>
+                      <div style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.4)", marginBottom:"0.4rem", fontStyle:"italic" }}>{c.outcome}</div>
+                      <p style={{ fontSize:"0.77rem", color:"rgba(255,255,255,0.65)", lineHeight:1.5, margin:0 }}>{c.why}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Could have been prevented */}
+            <div style={{ background:"rgba(139,92,246,0.06)", border:"1px solid rgba(139,92,246,0.2)", borderRadius:12, padding:"1.25rem" }}>
+              <div style={{ fontWeight:700, fontSize:"0.82rem", color:"#a78bfa", marginBottom:"0.5rem" }}>🤔 Could This Failure Have Been Prevented?</div>
+              <p style={{ fontSize:"0.83rem", color:"rgba(255,255,255,0.7)", lineHeight:1.65, margin:0 }}>{detail.couldHaveBeenPrevented}</p>
             </div>
           </div>
         )}
-
-        {!open && <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.35)", marginTop: "0.4rem" }}>Click to read story →</div>}
       </div>
     </div>
   );
