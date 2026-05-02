@@ -688,13 +688,21 @@ Return ONLY valid JSON no markdown:
         const text = await callAI(prompts[i](form), i === 4 ? 3000 : 800);
         if (i === 4) {
           let parsed = null;
+          // Strip markdown fences first
+          let clean = text.replace(/```json/gi, "").replace(/```/g, "").trim();
+          // Extract JSON object
+          const jsonStart = clean.indexOf("{");
+          const jsonEnd = clean.lastIndexOf("}");
+          if (jsonStart !== -1 && jsonEnd !== -1) {
+            clean = clean.slice(jsonStart, jsonEnd + 1);
+          }
           const tries = [
-            () => JSON.parse(text),
-            () => JSON.parse(text.replace(/```json|```/g, "").trim()),
+            () => JSON.parse(clean),
+            () => JSON.parse(text.replace(/```json|```/gi, "").trim()),
             () => { const m = text.match(/\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; },
           ];
           for (const fn of tries) {
-            try { parsed = fn(); if (parsed) break; } catch {}
+            try { parsed = fn(); if (parsed && parsed.score) break; } catch {}
           }
           if (!parsed) {
             parsed = { score: 50, verdict: "CAUTION", reason: "See analysis below.", risks: [], nextSteps: [], summary: { executiveSummary: text.slice(0,300), greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: "", solutionValidationText: "", marketValidationText: "" }, scores: {}, market: {}, financials: {}, roadmap: {} };
@@ -811,16 +819,20 @@ Return ONLY valid JSON no markdown:
               <div style={{ animation: "fadeUp 0.3s ease" }}>
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
-                  <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>{score.summary.executiveSummary}</p>
+                  <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
+                    {score.summary.executiveSummary && !score.summary.executiveSummary.includes('"score"') ? score.summary.executiveSummary : score.reason}
+                  </p>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "0.85rem" }}>
                   <div style={{ background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1rem" }}>
-                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#22c55e", marginBottom: "0.6rem" }}>✅ {vt.greenLights}</div>
-                    {(score.summary.greenLights || []).map((g, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.4rem", fontSize: "0.79rem", color: "rgba(255,255,255,0.7)" }}><span style={{ color: "#22c55e", flexShrink: 0 }}>✓</span>{g}</div>)}
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#22c55e", marginBottom: "0.5rem" }}>✅ {vt.greenLights}</div>
+                    {(score.summary.greenLights || []).length === 0 && <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Run analysis to see strengths</p>}
+                    {(score.summary.greenLights || []).map((g, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }}>✓</span><span>{g}</span></div>)}
                   </div>
                   <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "1rem" }}>
-                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#ef4444", marginBottom: "0.6rem" }}>⚠️ {vt.redFlags}</div>
-                    {(score.summary.redFlags || []).map((r, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.4rem", fontSize: "0.79rem", color: "rgba(255,255,255,0.7)" }}><span style={{ color: "#ef4444", flexShrink: 0 }}>✗</span>{r}</div>)}
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#ef4444", marginBottom: "0.5rem" }}>⚠️ {vt.redFlags}</div>
+                    {(score.summary.redFlags || []).length === 0 && <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Run analysis to see risks</p>}
+                    {(score.summary.redFlags || []).map((r, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#ef4444", flexShrink: 0, marginTop: 2 }}>✗</span><span>{r}</span></div>)}
                   </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
@@ -857,10 +869,19 @@ Return ONLY valid JSON no markdown:
                       <div key={gi} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "0.9rem" }}>
                         <div style={{ fontWeight: 700, fontSize: "0.76rem", color: "#f59e0b", marginBottom: "0.6rem" }}>{heading}</div>
                         {items.map((r, i) => (
-                          <div key={i} style={{ marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
-                            <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#fff" }}>{r[nameKey]}</div>
-                            <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>{r[descKey]}</div>
-                          </div>
+                          gi === 0 || gi === 2 ? (
+                            <a key={i} href={r[linkKey] || r.url || "#"} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6, transition: "background 0.15s" }}
+                              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                              onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}>
+                              <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#a78bfa" }}>↗ {r[nameKey]}</div>
+                              <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>{r[descKey]}</div>
+                            </a>
+                          ) : (
+                            <div key={i} style={{ marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
+                              <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#fff" }}>{r[nameKey]}</div>
+                              <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>by {r.author || r[descKey]}</div>
+                            </div>
+                          )
                         ))}
                       </div>
                     ))}
@@ -945,15 +966,15 @@ Return ONLY valid JSON no markdown:
             {tab === "financials" && score.financials && (
               <div style={{ animation: "fadeUp 0.3s ease" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.6rem", marginBottom: "0.85rem" }}>
-                  {[[vt.startupCosts, score.financials.startupCosts], ["CAC", score.financials.cac, "#ef4444"], ["LTV", score.financials.ltv, "#22c55e"], ["LTV/CAC", score.financials.ltvcac, "#a78bfa"]].map(([label, val, clr], i) => (
+                  {[[vt.startupCosts, score.financials.startupCosts, null], ["CAC", score.financials.cac, "#ef4444"], ["LTV", score.financials.ltv, "#22c55e"], ["LTV/CAC", score.financials.ltvcac, "#a78bfa"]].map(([label, val, clr], i) => (
                     <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
                       <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 800, color: clr || "rgba(255,255,255,0.85)", lineHeight: 1.3 }}>{val}</div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 800, color: clr || "rgba(255,255,255,0.85)", lineHeight: 1.3 }}>{val || "—"}</div>
                     </div>
                   ))}
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.85rem" }}>
-                  {[[vt.breakEven, score.financials.breakEven], [vt.growth, score.financials.growth]].map(([label, val], i) => (
+                  {[[vt.breakEven, score.financials.breakEven || "—"], [vt.growth, score.financials.growth || "—"]].map(([label, val], i) => (
                     <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
                       <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
                       <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff" }}>{val}</div>
