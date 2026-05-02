@@ -687,14 +687,31 @@ Return ONLY valid JSON no markdown:
       try {
         const text = await callAI(prompts[i](form), i === 4 ? 3000 : 800);
         if (i === 4) {
-          try {
-            const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
-            setScore(parsed);
-            out.push({ title: vt.steps[i], content: parsed.reason });
-          } catch { out.push({ title: vt.steps[i], content: text }); }
+          let parsed = null;
+          const tries = [
+            () => JSON.parse(text),
+            () => JSON.parse(text.replace(/```json|```/g, "").trim()),
+            () => { const m = text.match(/\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; },
+          ];
+          for (const fn of tries) {
+            try { parsed = fn(); if (parsed) break; } catch {}
+          }
+          if (!parsed) {
+            parsed = { score: 50, verdict: "CAUTION", reason: "See analysis below.", risks: [], nextSteps: [], summary: { executiveSummary: text.slice(0,300), greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: "", solutionValidationText: "", marketValidationText: "" }, scores: {}, market: {}, financials: {}, roadmap: {} };
+          }
+          parsed.score = parsed.score || 50;
+          parsed.verdict = parsed.verdict || "CAUTION";
+          parsed.reason = parsed.reason || "Analysis complete.";
+          parsed.summary = parsed.summary || { executiveSummary: parsed.reason, greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: "", solutionValidationText: "", marketValidationText: "" };
+          parsed.scores = parsed.scores || {};
+          parsed.market = parsed.market || {};
+          parsed.financials = parsed.financials || {};
+          parsed.roadmap = parsed.roadmap || {};
+          setScore(parsed);
+          out.push({ title: vt.steps[i], content: parsed.reason });
         } else { out.push({ title: vt.steps[i], content: text }); }
         setResults([...out]);
-      } catch { out.push({ title: vt.steps[i], content: "Analysis failed." }); setResults([...out]); }
+      } catch (err) { out.push({ title: vt.steps[i], content: "Step failed." }); setResults([...out]); }
     }
     setLoading(false); setStep(6);
   };
@@ -711,7 +728,7 @@ Return ONLY valid JSON no markdown:
       </div>
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "2rem 1.5rem" }}>
         {step === 0 && (
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 16, padding: "2rem", maxWidth: 560, margin: "0 auto" }}>
+          <div style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(139,92,246,0.5)", borderRadius: 16, padding: "2rem", maxWidth: 560, margin: "0 auto", boxShadow: "0 0 40px rgba(139,92,246,0.1)" }}>
             <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: "1.25rem" }}>{vt.step1Title}</h2>
             <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.ideaLabel}</span>}>
               <textarea value={form.idea} onChange={e => sf("idea", e.target.value)} placeholder={vt.ideaPh} style={{ ...darkInp(), minHeight: 80, resize: "vertical" }} />
@@ -765,8 +782,9 @@ Return ONLY valid JSON no markdown:
           </div>
         )}
 
-        {step === 6 && score && (
+        {step === 6 && (
           <div style={{ animation: "fadeUp 0.4s ease" }}>
+            {!score && <div style={{ textAlign: "center", padding: "2rem", color: "rgba(255,255,255,0.5)" }}>Analysis complete — processing results...</div>}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", flexWrap: "wrap", gap: "1rem" }}>
               <div>
                 <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{form.idea}</h2>
