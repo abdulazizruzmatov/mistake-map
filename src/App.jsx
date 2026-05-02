@@ -673,9 +673,10 @@ function IdeaValidator({ t }) {
     f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
     f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
     f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
-    f => `Full validation for "${f.idea}" (${f.industry}, $${f.price || "?"}/unit, $${f.budget || "?"} budget) in Uzbekistan.
-Return ONLY valid JSON no markdown:
-{"score":65,"verdict":"CAUTION","reason":"one sentence","risks":["r1","r2","r3"],"nextSteps":["s1","s2","s3"],"youtube":[{"title":"t","url":"https://youtube.com/@x","desc":"d"}],"books":[{"title":"t","author":"a","desc":"d"}],"globalProducts":[{"name":"n","desc":"d","url":"https://x.com"}],"summary":{"executiveSummary":"text","greenLights":["g1","g2","g3"],"redFlags":["r1","r2","r3"],"problemValidation":65,"problemValidationText":"text","solutionValidation":60,"solutionValidationText":"text","marketValidation":58,"marketValidationText":"text"},"scores":{"targetMarketClarity":65,"marketTiming":60,"marketEntryBarriers":55,"competitionLevel":50,"problemSolutionFit":70,"mvpViability":58,"valueProposition":65,"initialFeasibility":50,"resourceRequirements":48},"market":{"tam":"$50-100M","sam":"$10-20M","som":"$2-5M","maturity":"EMERGING","seasonality":"brief note","targetRegions":["Tashkent","Samarkand"],"competitors":[{"name":"name","type":"LOCAL","url":"site.com","strengths":["s1","s2"],"weaknesses":["w1"],"opportunity":"your edge"}]},"financials":{"startupCosts":"$50k-$100k","cac":"$20-50","ltv":"$200-400","ltvcac":"4:1-8:1","breakEven":"12-18 months","growth":"15-25% annually","revenueModels":["m1","m2"],"monetizationStrategy":"text"},"roadmap":{"quickWins":[{"title":"t","desc":"d","effort":"LOW","outcome":"o"}],"immediate":["a1","a2","a3"],"shortTerm":["a1","a2","a3"]}}`,
+    f => `Score this business idea for Uzbekistan market. Idea: "${f.idea}" Industry: ${f.industry} Price: $${f.price||"unknown"} Budget: $${f.budget||"unknown"}.
+Reply with ONLY a JSON object. No markdown. No text before or after. Just the JSON:
+{"score":65,"verdict":"CAUTION","reason":"one sentence max 20 words","risks":["risk 1","risk 2","risk 3"],"nextSteps":["step 1","step 2","step 3"],"greenLights":["strength 1","strength 2","strength 3"],"redFlags":["concern 1","concern 2","concern 3"],"problemValidation":65,"solutionValidation":60,"marketValidation":58,"executiveSummary":"2 sentence summary","youtube":[{"title":"Real Channel","url":"https://youtube.com/@handle","desc":"why relevant"}],"books":[{"title":"Real Book","author":"Author","desc":"why relevant"}],"globalProducts":[{"name":"Company (Country)","desc":"lesson","url":"https://site.com"}]}
+verdict must be GO CAUTION or NOGO. All arrays need 3 items.`,
   ];
 
   const run = async () => {
@@ -717,6 +718,22 @@ Return ONLY valid JSON no markdown:
           parsed.roadmap = parsed.roadmap || {};
           setScore(parsed);
           out.push({ title: vt.steps[i], content: parsed.reason });
+          // Second call: get detailed market/financials/roadmap
+          try {
+            const detailPrompt = `For business idea "${f.idea}" (${f.industry}) in Uzbekistan, return ONLY JSON no markdown:
+{"scores":{"targetMarketClarity":65,"marketTiming":60,"marketEntryBarriers":55,"competitionLevel":50,"problemSolutionFit":70,"mvpViability":58,"valueProposition":65,"initialFeasibility":50,"resourceRequirements":48},"market":{"tam":"$50-100M","sam":"$10-20M","som":"$2-5M","maturity":"EMERGING","targetRegions":["Tashkent","Samarkand"],"competitors":[{"name":"name","type":"LOCAL","strengths":["s1"],"weaknesses":["w1"],"opportunity":"your edge"}]},"financials":{"startupCosts":"$50k","cac":"$20-50","ltv":"$200","ltvcac":"4:1","breakEven":"12 months","growth":"20% annually","revenueModels":["model 1","model 2"],"monetizationStrategy":"brief strategy"},"roadmap":{"quickWins":[{"title":"action","desc":"detail","effort":"LOW","outcome":"result"}],"immediate":["action 1","action 2","action 3"],"shortTerm":["action 1","action 2","action 3"]}}`;
+            const detail = await callAI(detailPrompt, 1500);
+            let dp = null;
+            try {
+              let dc = detail.replace(/\`\`\`json/gi,"").replace(/\`\`\`/g,"").trim();
+              const ds = dc.indexOf("{"); const de = dc.lastIndexOf("}");
+              if (ds !== -1 && de !== -1) dc = dc.slice(ds, de+1);
+              dp = JSON.parse(dc);
+            } catch {}
+            if (dp) {
+              setScore(prev => prev ? { ...prev, scores: dp.scores||{}, market: dp.market||{}, financials: dp.financials||{}, roadmap: dp.roadmap||{} } : prev);
+            }
+          } catch {}
         } else { out.push({ title: vt.steps[i], content: text }); }
         setResults([...out]);
       } catch (err) { out.push({ title: vt.steps[i], content: "Step failed." }); setResults([...out]); }
@@ -820,23 +837,21 @@ Return ONLY valid JSON no markdown:
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
                   <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
-                    {score.summary.executiveSummary && !score.summary.executiveSummary.includes('"score"') ? score.summary.executiveSummary : score.reason}
+                    {score.executiveSummary || (score.summary?.executiveSummary && !score.summary.executiveSummary.includes('"score"') ? score.summary.executiveSummary : null) || score.reason || "Analysis complete."}
                   </p>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "0.85rem" }}>
                   <div style={{ background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1rem" }}>
                     <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#22c55e", marginBottom: "0.5rem" }}>✅ {vt.greenLights}</div>
-                    {(score.summary.greenLights || []).length === 0 && <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Run analysis to see strengths</p>}
-                    {(score.summary.greenLights || []).map((g, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }}>✓</span><span>{g}</span></div>)}
+                    {(() => { const items = score.summary?.greenLights?.length ? score.summary.greenLights : (score.greenLights || []); return items.length === 0 ? <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Analysing strengths...</p> : items.map((g, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }}>✓</span><span>{g}</span></div>); })()}
                   </div>
                   <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "1rem" }}>
                     <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#ef4444", marginBottom: "0.5rem" }}>⚠️ {vt.redFlags}</div>
-                    {(score.summary.redFlags || []).length === 0 && <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Run analysis to see risks</p>}
-                    {(score.summary.redFlags || []).map((r, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#ef4444", flexShrink: 0, marginTop: 2 }}>✗</span><span>{r}</span></div>)}
+                    {(() => { const items = score.summary?.redFlags?.length ? score.summary.redFlags : (score.redFlags || []); return items.length === 0 ? <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Analysing risks...</p> : items.map((r, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#ef4444", flexShrink: 0, marginTop: 2 }}>✗</span><span>{r}</span></div>); })()}
                   </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
-                  {[[vt.problemVal, score.summary.problemValidation, score.summary.problemValidationText], [vt.solutionVal, score.summary.solutionValidation, score.summary.solutionValidationText], [vt.marketVal, score.summary.marketValidation, score.summary.marketValidationText]].map(([label, val, text], i) => (
+                  {[[vt.problemVal, score.problemValidation || score.summary?.problemValidation || 60, score.summary?.problemValidationText || ""], [vt.solutionVal, score.solutionValidation || score.summary?.solutionValidation || 55, score.summary?.solutionValidationText || ""], [vt.marketVal, score.marketValidation || score.summary?.marketValidation || 50, score.summary?.marketValidationText || ""]].map(([label, val, text], i) => (
                     <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
                         <span style={{ fontSize: "0.73rem", fontWeight: 700, color: "rgba(255,255,255,0.6)" }}>{label}</span>
