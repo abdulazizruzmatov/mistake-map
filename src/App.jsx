@@ -1609,6 +1609,7 @@ export default function App() {
                       <span style={tagSt("ind")}>{p.industry}</span>
                       <span style={tagSt(ctryTag(p.country))}>{ctryLabel(p.country)}</span>
                       <span style={tagSt(impType(p.severity))}>{impLabel(p.severity)}</span>
+                      {p.is_verified && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#e8f0fe", color: "#1a56db", border: "1px solid #c3d9fe" }}>✓ Verified</span>}
                       {p.loss_amount && p.loss_amount >= 100000 && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#fde8e8", color: "#b91c1c", border: "1px solid #f8c8c8" }}>💸 ${(p.loss_amount / 1000).toFixed(0)}k</span>}
                     </div>
                     <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0d3a1e", marginBottom: "0.3rem", lineHeight: 1.35 }}>{p.title}</div>
@@ -1701,6 +1702,7 @@ export default function App() {
                 <span style={tagSt("ind")}>{det.industry}</span>
                 <span style={tagSt(ctryTag(det.country))}>{ctryLabel(det.country)}</span>
                 <span style={tagSt(impType(det.severity))}>{impLabel(det.severity)}</span>
+                {det.is_verified && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#e8f0fe", color: "#1a56db", border: "1px solid #c3d9fe" }}>✓ Verified Story</span>}
               </div>
               <button onClick={() => setDetId(null)} style={xBtn()}>✕</button>
             </div>
