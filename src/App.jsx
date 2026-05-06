@@ -483,16 +483,18 @@ function GraveyardSection({ t }) {
           </select>
         </div>
         <p style={{ textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>{gt.showing} {filtered.length} {gt.of} {GRAVEYARD.length}</p>
-        <div style={{ position: "relative" }}>
-          <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "linear-gradient(180deg,transparent,rgba(239,68,68,0.4),transparent)", transform: "translateX(-50%)" }} />
+        {/* Timeline */}
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
           {sort === "year" ? years.map(year => (
             <div key={year}>
-              <div style={{ textAlign: "center", marginBottom: "1rem", position: "relative", zIndex: 2 }}>
-                <span style={{ display: "inline-block", background: "linear-gradient(135deg,#ef4444,#b91c1c)", color: "#fff", fontWeight: 800, fontSize: "1rem", padding: "0.35rem 1.1rem", borderRadius: 100 }}>✝ {year}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0 0.5rem" }}>
+                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+                <span style={{ background: "linear-gradient(135deg,#ef4444,#b91c1c)", color: "#fff", fontWeight: 800, fontSize: "0.82rem", padding: "0.3rem 1rem", borderRadius: 100, flexShrink: 0 }}>✝ {year}</span>
+                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
               </div>
-              {yearGroups[year].map((g, i) => <GraveCard key={i} g={g} side={i % 2} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} />)}
+              {yearGroups[year].map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === yearGroups[year].length - 1} />)}
             </div>
-          )) : filtered.map((g, i) => <GraveCard key={i} g={g} side={i % 2} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} />)}
+          )) : filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === filtered.length - 1} />)}
         </div>
         {filtered.length === 0 && <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}><div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div><p>No startups found</p></div>}
       </div>
@@ -501,30 +503,41 @@ function GraveyardSection({ t }) {
   );
 }
 
-function GraveCard({ g, side, fmt, gt, onOpen }) {
+function GraveCard({ g, fmt, gt, onOpen, isLast }) {
   const years = g.died - g.founded;
   return (
-    <div style={{ display: "flex", justifyContent: side === 0 ? "flex-start" : "flex-end", marginBottom: "1.25rem", position: "relative" }}>
-      <div style={{ position: "absolute", left: "50%", top: 20, transform: "translateX(-50%)", width: 12, height: 12, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a0a0a", zIndex: 2, boxShadow: "0 0 10px rgba(239,68,68,0.6)" }} />
-      <div onClick={onOpen} style={{ width: "calc(50% - 1.5rem)", background: "linear-gradient(135deg,rgba(40,15,15,0.9),rgba(20,10,10,0.9))", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "1rem 1.1rem", cursor: "pointer", transition: "all 0.2s" }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.5)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.2)"; e.currentTarget.style.transform = "none"; }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#fff", marginBottom: "0.2rem" }}>🪦 {g.name}</div>
-            <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)" }}>{g.industry} · {g.country}</div>
+    <div onClick={onOpen} style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, cursor: "pointer" }}>
+      {/* Left side */}
+      <div style={{ padding: "0 1rem 0 0", display: "flex", justifyContent: "flex-end", paddingBottom: "0.5rem" }}>
+        <div style={{ background: "rgba(30,10,10,0.9)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300, width: "100%", transition: "border-color 0.2s" }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"}
+          onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.4rem" }}>
+            <div style={{ fontWeight: 800, fontSize: "0.92rem", color: "#fff" }}>🪦 {g.name}</div>
+            <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#ff6060", fontFamily: "monospace", flexShrink: 0, marginLeft: "0.5rem" }}>{fmt(g.lost)}</div>
           </div>
-          <div style={{ textAlign: "right", flexShrink: 0 }}>
-            <div style={{ fontSize: "0.92rem", fontWeight: 800, color: "#ff6060", fontFamily: "monospace" }}>{fmt(g.lost)}</div>
-            <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.35)" }}>{gt.lost}</div>
+          <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.4rem" }}>{g.industry} · {g.country}</div>
+          <p style={{ fontSize: "0.73rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: "0 0 0.35rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
+          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "0.62rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.1rem 0.4rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
+            <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "0.1rem 0.4rem", borderRadius: 100 }}>⏱ {years}y</span>
           </div>
         </div>
-        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
-          <span style={{ fontSize: "0.63rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.12rem 0.45rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
-          <span style={{ fontSize: "0.63rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)", padding: "0.12rem 0.45rem", borderRadius: 100 }}>⏱ {years} {gt.yearsAlive}</span>
-          {g.raised > 0 && <span style={{ fontSize: "0.63rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)", padding: "0.12rem 0.45rem", borderRadius: 100 }}>💵 {fmt(g.raised)} {gt.raised}</span>}
+      </div>
+
+      {/* Center line + dot */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 32 }}>
+        <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a1f10", boxShadow: "0 0 12px rgba(239,68,68,0.8)", marginTop: "1rem", flexShrink: 0, zIndex: 2 }} />
+        {!isLast && <div style={{ flex: 1, width: 2, background: "rgba(239,68,68,0.3)", minHeight: 30 }} />}
+      </div>
+
+      {/* Right side — lesson */}
+      <div style={{ padding: "0 0 0.5rem 1rem", paddingTop: "0.85rem" }}>
+        <div style={{ background: "rgba(10,30,15,0.7)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300 }}>
+          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>💡 {gt.lesson}</div>
+          <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
+          <div style={{ marginTop: "0.5rem", fontSize: "0.65rem", color: "#22c55e", fontWeight: 600 }}>Click to read full story →</div>
         </div>
-        <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.3)" }}>{gt.clickToRead}</div>
       </div>
     </div>
   );
