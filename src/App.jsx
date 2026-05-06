@@ -333,17 +333,17 @@ function MoneyParticle({ style }) {
 // ── STARTUP FAIL SECTION ──
 function StartupFailSection({ t, onCta }) {
   const stats = [
-    { emoji: "💀", text: t.failAnim.stat1 },
+    { emoji: "🔥", text: t.failAnim.stat1 },
     { emoji: "💸", text: t.failAnim.stat2 },
     { emoji: "🔍", text: t.failAnim.stat3 },
     { emoji: "📉", text: t.failAnim.stat4 },
     { emoji: "📅", text: t.failAnim.stat5 },
   ];
   return (
-    <div style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg,#0a0a0a,#1a0a0a)", padding: "4rem 1.5rem", textAlign: "center" }}>
+    <div style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem", textAlign: "center" }}>
       {Array.from({ length: 14 }, (_, i) => <MoneyParticle key={i} style={{ left: `${(i / 14) * 100}%` }} />)}
       <div style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ display: "inline-block", background: "rgba(255,60,60,0.15)", border: "1px solid rgba(255,60,60,0.3)", color: "#ff6060", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "0.28rem 0.9rem", borderRadius: 100, marginBottom: "1.25rem" }}>⚠ Business Failure Reality Check</div>
+        <div style={{ display: "inline-block", background: "rgba(127,251,160,0.1)", border: "1px solid rgba(127,251,160,0.3)", color: "#7ffba0", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "0.28rem 0.9rem", borderRadius: 100, marginBottom: "1.25rem" }}>⚠ Business Failure Reality Check</div>
         <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.8rem)", fontWeight: 800, color: "#fff", lineHeight: 1.15, marginBottom: "0.75rem" }}>{t.failAnim.title}</h2>
         <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem", marginBottom: "2.5rem" }}>{t.failAnim.sub}</p>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "2.5rem" }}>
@@ -455,7 +455,7 @@ function GraveyardSection({ t }) {
   const years = Object.keys(yearGroups).sort((a, b) => b - a);
 
   return (
-    <div style={{ background: "linear-gradient(135deg,#0a0a0a,#1a0a0a)", padding: "4rem 1.5rem" }}>
+    <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "2rem" }}>
           <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{gt.title}</h2>
