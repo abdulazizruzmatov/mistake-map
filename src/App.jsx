@@ -673,10 +673,7 @@ function IdeaValidator({ t }) {
     f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
     f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
     f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
-    f => `Score this business idea for Uzbekistan market. Idea: "${f.idea}" Industry: ${f.industry} Price: $${f.price||"unknown"} Budget: $${f.budget||"unknown"}.
-Reply with ONLY a JSON object. No markdown. No text before or after. Just the JSON:
-{"score":65,"verdict":"CAUTION","reason":"one sentence max 20 words","risks":["risk 1","risk 2","risk 3"],"nextSteps":["step 1","step 2","step 3"],"greenLights":["strength 1","strength 2","strength 3"],"redFlags":["concern 1","concern 2","concern 3"],"problemValidation":65,"solutionValidation":60,"marketValidation":58,"executiveSummary":"2 sentence summary","youtube":[{"title":"Real Channel","url":"https://youtube.com/@handle","desc":"why relevant"}],"books":[{"title":"Real Book","author":"Author","desc":"why relevant"}],"globalProducts":[{"name":"Company (Country)","desc":"lesson","url":"https://site.com"}]}
-verdict must be GO CAUTION or NOGO. All arrays need 3 items.`,
+    f => "Score this business idea for Uzbekistan: " + f.idea + " (" + f.industry + ", price $" + (f.price||"?") + ", budget $" + (f.budget||"?") + "). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.",
   ];
 
   const run = async () => {
@@ -720,12 +717,11 @@ verdict must be GO CAUTION or NOGO. All arrays need 3 items.`,
           out.push({ title: vt.steps[i], content: parsed.reason });
           // Second call: get detailed market/financials/roadmap
           try {
-            const detailPrompt = `For business idea "${f.idea}" (${f.industry}) in Uzbekistan, return ONLY JSON no markdown:
-{"scores":{"targetMarketClarity":65,"marketTiming":60,"marketEntryBarriers":55,"competitionLevel":50,"problemSolutionFit":70,"mvpViability":58,"valueProposition":65,"initialFeasibility":50,"resourceRequirements":48},"market":{"tam":"$50-100M","sam":"$10-20M","som":"$2-5M","maturity":"EMERGING","targetRegions":["Tashkent","Samarkand"],"competitors":[{"name":"name","type":"LOCAL","strengths":["s1"],"weaknesses":["w1"],"opportunity":"your edge"}]},"financials":{"startupCosts":"$50k","cac":"$20-50","ltv":"$200","ltvcac":"4:1","breakEven":"12 months","growth":"20% annually","revenueModels":["model 1","model 2"],"monetizationStrategy":"brief strategy"},"roadmap":{"quickWins":[{"title":"action","desc":"detail","effort":"LOW","outcome":"result"}],"immediate":["action 1","action 2","action 3"],"shortTerm":["action 1","action 2","action 3"]}}`;
+            const detailPrompt = "For startup idea: " + f.idea + " (" + f.industry + ") in Uzbekistan. Reply ONLY with JSON no markdown: {scores:{targetMarketClarity:N,marketTiming:N,marketEntryBarriers:N,competitionLevel:N,problemSolutionFit:N,mvpViability:N,valueProposition:N,initialFeasibility:N,resourceRequirements:N},market:{tam:string,sam:string,som:string,maturity:string,targetRegions:[array],competitors:[{name,type,strengths:[],weaknesses:[],opportunity}]},financials:{startupCosts:string,cac:string,ltv:string,ltvcac:string,breakEven:string,growth:string,revenueModels:[2 items],monetizationStrategy:string},roadmap:{quickWins:[{title,desc,effort:LOW/MED,outcome}],immediate:[3 actions],shortTerm:[3 actions]}}";
             const detail = await callAI(detailPrompt, 1500);
             let dp = null;
             try {
-              let dc = detail.replace(/\`\`\`json/gi,"").replace(/\`\`\`/g,"").trim();
+              let dc = detail.replace(/```json/gi,"").replace(/```/g,"").trim();
               const ds = dc.indexOf("{"); const de = dc.lastIndexOf("}");
               if (ds !== -1 && de !== -1) dc = dc.slice(ds, de+1);
               dp = JSON.parse(dc);
