@@ -125,7 +125,7 @@ if (!document.getElementById("mm-styles")) {
 // ── TRANSLATIONS ──
 const T = {
   en: {
-    nav: { browse: "Browse", graveyard: "🪦 Graveyard", blog: "Blog", validate: "🧪 Validate", contact: "Contact", share: "+ Share a Mistake", login: "Sign In", logout: "Sign Out" },
+    nav: { browse: "Browse", graveyard: "🪦 Graveyard", learn: "📚 Learn", blog: "Blog", validate: "🧪 Validate", contact: "Contact", share: "+ Share a Mistake", login: "Sign In", logout: "Sign Out" },
     hero: { tag: "🇬🇧 UK & 🇺🇿 Uzbekistan", h1a: "Stop Making", h1b: "Mistakes", h1c: "Others Already Made", sub: "A community where business owners share real failures — so you can learn before it costs you.", cta: "Share Your Story →", browse: "Browse Problems" },
     stats: { problems: "Stories shared", upvotes: "Total upvotes", countries: "Countries", live: "● Live" },
     sidebar: { country: "Country", both: "🌍 Both Countries", uk: "🇬🇧 United Kingdom", uz: "🇺🇿 Uzbekistan", industry: "Industry", all: "All Industries", chart: "By Industry", leaderboard: "🏆 Monthly Top Contributors", leaderboardSub: "Top 5 this month" },
@@ -191,7 +191,7 @@ const T = {
     },
   },
   uz: {
-    nav: { browse: "Ko'rish", graveyard: "🪦 Qabriston", blog: "Blog", validate: "🧪 Tekshirish", contact: "Aloqa", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
+    nav: { browse: "Ko'rish", graveyard: "🪦 Qabriston", learn: "📚 O'rganish", blog: "Blog", validate: "🧪 Tekshirish", contact: "Aloqa", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
     hero: { tag: "🇬🇧 UK va 🇺🇿 O'zbekiston", h1a: "Boshqalar qilgan", h1b: "Xatolarni", h1c: "Takrorlamang", sub: "Biznes egalari haqiqiy muvaffaqiyatsizliklarini baham ko'radigan jamiyat.", cta: "Hikoyangizni ulashing →", browse: "Muammolarni ko'rish" },
     stats: { problems: "Ulashilgan hikoyalar", upvotes: "Jami ovozlar", countries: "Mamlakatlar", live: "● Jonli" },
     sidebar: { country: "Mamlakat", both: "🌍 Ikkala mamlakat", uk: "🇬🇧 Birlashgan Qirollik", uz: "🇺🇿 O'zbekiston", industry: "Soha", all: "Barcha sohalar", chart: "Soha bo'yicha", leaderboard: "🏆 Oylik Top Hissadorlar", leaderboardSub: "Bu oyda top 5" },
@@ -1057,6 +1057,245 @@ verdict must be GO CAUTION or NOGO. All arrays need 3 items.`,
   );
 }
 
+
+// ── LEARN HUB ──
+const QUOTES = [
+  { text: "The biggest risk is not taking any risk. In a world that's changing quickly, the only strategy that is guaranteed to fail is not taking risks.", author: "Mark Zuckerberg", role: "Founder, Meta", emoji: "💙" },
+  { text: "I knew that if I failed I wouldn't regret that, but I knew the one thing I might regret is not trying.", author: "Jeff Bezos", role: "Founder, Amazon", emoji: "📦" },
+  { text: "It's fine to celebrate success but it is more important to heed the lessons of failure.", author: "Bill Gates", role: "Co-Founder, Microsoft", emoji: "💻" },
+  { text: "Failure is simply the opportunity to begin again, this time more intelligently.", author: "Henry Ford", role: "Founder, Ford Motor", emoji: "🚗" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney", role: "Founder, Disney", emoji: "🎬" },
+  { text: "Your most unhappy customers are your greatest source of learning.", author: "Bill Gates", role: "Co-Founder, Microsoft", emoji: "📊" },
+  { text: "Move fast and break things. Unless you are breaking stuff, you are not moving fast enough.", author: "Mark Zuckerberg", role: "Founder, Meta", emoji: "🚀" },
+  { text: "If you are not embarrassed by the first version of your product, you've launched too late.", author: "Reid Hoffman", role: "Co-Founder, LinkedIn", emoji: "🔗" },
+  { text: "Ideas are easy. Implementation is hard.", author: "Guy Kawasaki", role: "Investor & Author", emoji: "💡" },
+  { text: "Chase the vision, not the money. The money will end up following you.", author: "Tony Hsieh", role: "Founder, Zappos", emoji: "👟" },
+];
+
+const GLOSSARY = [
+  { term: "MVP", full: "Minimum Viable Product", emoji: "🛠️", desc: "The simplest version of your product with just enough features to test your idea with real users. Build it fast, learn fast.", example: "Dropbox launched with just a demo video before building anything. It got 75,000 signups overnight." },
+  { term: "PMF", full: "Product-Market Fit", emoji: "🎯", desc: "When your product genuinely solves a real problem for a specific group of people — and they love it enough to pay and tell others.", example: "WhatsApp had PMF when users got upset if it went down for 5 minutes." },
+  { term: "Pitch Deck", full: "Investor Presentation", emoji: "📊", desc: "A 10-15 slide presentation that tells investors your story: the problem, your solution, market size, team, and how much you need.", example: "Airbnb's original 2008 pitch deck is publicly available — it raised $600k at a $2.5M valuation." },
+  { term: "VC / Venture Capital", full: "Venture Capital", emoji: "💰", desc: "Professional investors who give money to startups in exchange for equity (a % of your company). They expect 10x returns.", example: "Sequoia Capital invested $60M in WhatsApp. When Facebook bought it for $19B, they made $3B." },
+  { term: "Angel Investor", full: "Angel Investor", emoji: "😇", desc: "A wealthy individual who invests their own money in early-stage startups, usually before VCs get involved. Less formal, more flexible.", example: "Google's first investor was an angel — Andy Bechtolsheim wrote a $100k cheque before Google was even a company." },
+  { term: "Runway", full: "Financial Runway", emoji: "✈️", desc: "How many months your startup can survive before running out of money. Calculated as: Cash ÷ Monthly Burn Rate.", example: "If you have $120,000 and spend $10,000/month, your runway is 12 months." },
+  { term: "Burn Rate", full: "Monthly Burn Rate", emoji: "🔥", desc: "How much money your startup spends per month. High burn rate with low revenue = danger zone.", example: "Fast.co was burning $10M/month with only $600k revenue. They shut down in 2022." },
+  { term: "Equity", full: "Ownership Stake", emoji: "📈", desc: "The percentage of a company you own. When you take investment, you give away equity in exchange for cash.", example: "If your company is worth $1M and you give 10% equity for $100k, you sold 10% of your business." },
+  { term: "Pivot", full: "Strategic Pivot", emoji: "🔄", desc: "Changing your business model or product direction based on what you've learned. Not a failure — it's smart adaptation.", example: "Instagram started as Burbn (a check-in app). They pivoted to photo sharing and became a $1B company." },
+  { term: "Bootstrap", full: "Bootstrapping", emoji: "👢", desc: "Building a company using only your own money and revenue — no external investment. Slower but you keep full control.", example: "Mailchimp bootstrapped for 12 years before accepting any investment. It sold for $12B." },
+  { term: "TAM / SAM / SOM", full: "Market Size Framework", emoji: "🌍", desc: "TAM = Total Available Market (everyone who could buy). SAM = your target segment. SOM = what you can realistically capture.", example: "If you sell premium coffee in London: TAM=$50B (global coffee), SAM=$2B (UK premium), SOM=$10M (London)." },
+  { term: "CAC", full: "Customer Acquisition Cost", emoji: "🧲", desc: "How much it costs to acquire one new customer through marketing, sales and ads.", example: "If you spend £1,000 on ads and get 10 customers, your CAC is £100." },
+  { term: "LTV", full: "Lifetime Value", emoji: "💎", desc: "Total revenue a customer generates over their entire relationship with your business.", example: "If a customer pays £20/month and stays 2 years, LTV = £480." },
+  { term: "Due Diligence", full: "Due Diligence", emoji: "🔍", desc: "The process investors use to verify everything about your startup before investing — financials, legal, team, claims.", example: "Frank founder fabricated 4M users. JPMorgan's due diligence missed it. They sued for $175M." },
+  { term: "Term Sheet", full: "Investment Term Sheet", emoji: "📄", desc: "A non-binding document outlining the key terms of an investment deal — valuation, equity, rights, board seats.", example: "Never sign a term sheet with anti-dilution clauses without a startup lawyer reviewing it first." },
+  { term: "Vesting", full: "Equity Vesting", emoji: "⏳", desc: "A schedule that determines when founders/employees actually own their equity. Typical: 4 years with 1-year cliff.", example: "If you give 10% equity with 4-year vesting, someone who leaves after 1 year only keeps 2.5%." },
+  { term: "Churn Rate", full: "Customer Churn Rate", emoji: "🚪", desc: "The percentage of customers who stop using your product each month. High churn = leaky bucket.", example: "If you have 100 customers and lose 5 per month, your monthly churn rate is 5%." },
+  { term: "Series A / B / C", full: "Funding Rounds", emoji: "💼", desc: "Different stages of venture capital fundraising. Seed→Series A→B→C as the company grows and needs more capital.", example: "Seed: prove idea. Series A: prove growth. Series B: scale. Series C: dominate market." },
+];
+
+const LESSONS = [
+  { number: "01", title: "Validate Before You Build", icon: "🧪", color: "#8b5cf6", desc: "Talk to 20 potential customers before writing a single line of code. Ask about their problem, not your solution. If you can get 5 people to pre-pay — you have a business idea worth pursuing.", action: "This week: Interview 5 potential customers. Ask: 'How do you currently solve [problem]?' and 'How much would you pay to fix it?'" },
+  { number: "02", title: "Start with the Problem, Not the Solution", icon: "🎯", color: "#ef4444", desc: "Most failed startups build solutions looking for problems. The best startups start with a painful problem they deeply understand — usually one they've personally experienced.", action: "Write down: 'The specific problem I am solving is ___ for ___ people who currently solve it by ___'" },
+  { number: "03", title: "Revenue is More Important Than Investment", icon: "💰", color: "#22c55e", desc: "Getting a paying customer on day 1 is worth more than 6 months of investor meetings. Revenue validates your idea. Investment just delays the validation.", action: "Before pitching investors, ask: Can I charge £/$ 1 for this today? If not — you don't have a business yet." },
+  { number: "04", title: "Understand Your Unit Economics", icon: "📊", color: "#f59e0b", desc: "If it costs you more to acquire a customer than they pay you, you will run out of money no matter how fast you grow. CAC must be lower than LTV.", action: "Calculate: How much does one customer cost you? How much do they pay over their lifetime? Is LTV > 3x CAC?" },
+  { number: "05", title: "Build a Team Slowly", icon: "👥", color: "#06b6d4", desc: "Most early-stage startups hire too fast. One great co-founder beats five average employees. Hire when revenue forces you to, not because you have investment.", action: "For your first hire: Could this person's skills 10x your revenue? If not — can you outsource it instead?" },
+  { number: "06", title: "Keep It Simple Until It Works", icon: "⚡", color: "#ec4899", desc: "A simple product that works beats a complex product that almost works. Every feature you add is a risk. Start with one thing done perfectly.", action: "Remove features. What is the ONE thing your product must do brilliantly? Build that. Add everything else later." },
+];
+
+const RESOURCES = [
+  { category: "📚 Must-Read Books", items: [
+    { title: "The Lean Startup", author: "Eric Ries", desc: "Build-Measure-Learn. The bible of startup thinking.", link: "https://amazon.co.uk/s?k=lean+startup+eric+ries" },
+    { title: "Zero to One", author: "Peter Thiel", desc: "Why the best startups build monopolies, not compete.", link: "https://amazon.co.uk/s?k=zero+to+one+peter+thiel" },
+    { title: "The Mom Test", author: "Rob Fitzpatrick", desc: "How to ask customers the right questions without them lying to you.", link: "https://amazon.co.uk/s?k=mom+test+rob+fitzpatrick" },
+    { title: "Crossing the Chasm", author: "Geoffrey Moore", desc: "Why most products fail to go mainstream and how to fix it.", link: "https://amazon.co.uk/s?k=crossing+chasm+moore" },
+    { title: "Blitzscaling", author: "Reid Hoffman", desc: "How to grow from 0 to 1 billion users at hyperspeed.", link: "https://amazon.co.uk/s?k=blitzscaling+reid+hoffman" },
+  ]},
+  { category: "📺 YouTube Channels", items: [
+    { title: "Y Combinator", desc: "Best free startup education in the world.", link: "https://youtube.com/@ycombinator" },
+    { title: "How to Start a Startup (Stanford)", desc: "Full lecture series from Sam Altman at Stanford.", link: "https://youtube.com/@stanfordgsb" },
+    { title: "Alex Hormozi", desc: "Practical business growth — no fluff.", link: "https://youtube.com/@AlexHormozi" },
+    { title: "Garry Tan (YC CEO)", desc: "Founder insights, hiring, fundraising tips.", link: "https://youtube.com/@GarryTan" },
+    { title: "Startup with Shaan Puri", desc: "Business ideas, trends, and real talk.", link: "https://youtube.com/@shaanvp" },
+  ]},
+  { category: "🌐 Free Online Tools", items: [
+    { title: "Canva", desc: "Make pitch decks, social posts, and presentations for free.", link: "https://canva.com" },
+    { title: "Notion", desc: "Free workspace for business plans, notes, and team collaboration.", link: "https://notion.so" },
+    { title: "Stripe Atlas", desc: "Register a US company from anywhere in the world for $500.", link: "https://stripe.com/atlas" },
+    { title: "Google Trends", desc: "Check if interest in your idea is growing or dying.", link: "https://trends.google.com" },
+    { title: "Product Hunt", desc: "Launch your product and get your first 1000 users.", link: "https://producthunt.com" },
+  ]},
+];
+
+function LearnHub({ t }) {
+  const [activeQuote, setActiveQuote] = useState(0);
+  const [openGloss, setOpenGloss] = useState(null);
+  const [glossSearch, setGlossSearch] = useState("");
+  const [activeLesson, setActiveLesson] = useState(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => setActiveQuote(q => (q + 1) % QUOTES.length), 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const filteredGloss = GLOSSARY.filter(g =>
+    g.term.toLowerCase().includes(glossSearch.toLowerCase()) ||
+    g.full.toLowerCase().includes(glossSearch.toLowerCase()) ||
+    g.desc.toLowerCase().includes(glossSearch.toLowerCase())
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f8faf8" }}>
+
+      {/* Hero */}
+      <div style={{ background: "linear-gradient(135deg, #0d3a1e, #1a5c30)", padding: "3.5rem 1.5rem", textAlign: "center" }}>
+        <div style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#7ffba0", fontSize: "0.75rem", fontWeight: 700, padding: "0.3rem 1rem", borderRadius: 100, marginBottom: "1rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>📚 Startup School</div>
+        <h1 style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 800, color: "#fff", marginBottom: "0.65rem", lineHeight: 1.2 }}>Everything You Need to Know<br /><span style={{ color: "#7ffba0" }}>Before Starting a Business</span></h1>
+        <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.95rem", maxWidth: 480, margin: "0 auto" }}>Glossary · Billionaire Wisdom · Core Lessons · Books · Tools — all in one place</p>
+      </div>
+
+      {/* Billionaire Quote Carousel */}
+      <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "3rem 1.5rem" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", marginBottom: "1.5rem" }}>💬 Wisdom from the World's Greatest Founders</div>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 20, padding: "2.5rem 2rem", position: "relative", minHeight: 180 }}>
+            <div style={{ fontSize: "4rem", position: "absolute", top: -20, left: "50%", transform: "translateX(-50%)" }}>"</div>
+            {QUOTES.map((q, i) => (
+              <div key={i} style={{ display: i === activeQuote ? "block" : "none", animation: "fadeUp 0.5s ease" }}>
+                <p style={{ fontSize: "clamp(0.95rem,2vw,1.15rem)", color: "#fff", lineHeight: 1.7, marginBottom: "1.5rem", fontStyle: "italic" }}>{q.text}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", justifyContent: "center" }}>
+                  <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem" }}>{q.emoji}</div>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ fontWeight: 700, color: "#fff", fontSize: "0.88rem" }}>{q.author}</div>
+                    <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem" }}>{q.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: "0.4rem", justifyContent: "center", marginTop: "1rem" }}>
+            {QUOTES.map((_, i) => <div key={i} onClick={() => setActiveQuote(i)} style={{ width: i === activeQuote ? 20 : 7, height: 7, borderRadius: 100, background: i === activeQuote ? "#a78bfa" : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "all 0.3s" }} />)}
+          </div>
+        </div>
+      </div>
+
+      {/* 6 Core Lessons */}
+      <div style={{ padding: "3.5rem 1.5rem", background: "#fff" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+            <h2 style={{ fontSize: "1.7rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.4rem" }}>📖 6 Lessons Every Founder Must Learn</h2>
+            <p style={{ color: "#7a9a7a", fontSize: "0.88rem" }}>Before spending a single dollar — understand these fundamentals</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))", gap: "1.1rem" }}>
+            {LESSONS.map((l, i) => (
+              <div key={i} onClick={() => setActiveLesson(activeLesson === i ? null : i)} style={{ background: "#f8faf8", border: "1px solid #dceadc", borderLeft: `4px solid ${l.color}`, borderRadius: 12, padding: "1.35rem", cursor: "pointer", transition: "all 0.2s" }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 6px 24px ${l.color}22`; e.currentTarget.style.borderColor = l.color; }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.borderLeftColor = l.color; }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem", marginBottom: "0.6rem" }}>
+                  <div style={{ width: 42, height: 42, borderRadius: 10, background: l.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", flexShrink: 0 }}>{l.icon}</div>
+                  <div>
+                    <div style={{ fontSize: "0.62rem", fontWeight: 700, color: l.color, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.15rem" }}>Lesson {l.number}</div>
+                    <div style={{ fontWeight: 700, fontSize: "0.92rem", color: "#0d3a1e" }}>{l.title}</div>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.65, marginBottom: "0.5rem" }}>{l.desc}</p>
+                {activeLesson === i && (
+                  <div style={{ marginTop: "0.75rem", padding: "0.75rem 1rem", background: l.color + "10", border: `1px solid ${l.color}30`, borderRadius: 8, animation: "fadeUp 0.25s ease" }}>
+                    <div style={{ fontSize: "0.7rem", fontWeight: 700, color: l.color, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>⚡ Action Step</div>
+                    <p style={{ fontSize: "0.81rem", color: "#1a2e1a", lineHeight: 1.55, margin: 0 }}>{l.action}</p>
+                  </div>
+                )}
+                <div style={{ fontSize: "0.72rem", color: l.color, fontWeight: 600, marginTop: "0.5rem" }}>{activeLesson === i ? "▲ Hide action step" : "▼ Show action step"}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Startup Glossary */}
+      <div style={{ padding: "3.5rem 1.5rem", background: "#f0fdf4" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.7rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.4rem" }}>🔤 Startup Glossary</h2>
+            <p style={{ color: "#7a9a7a", fontSize: "0.88rem" }}>Every term you'll hear in the startup world — explained simply</p>
+          </div>
+          <div style={{ maxWidth: 480, margin: "0 auto 1.75rem" }}>
+            <input value={glossSearch} onChange={e => setGlossSearch(e.target.value)} placeholder="Search terms... (MVP, VC, pivot...)" style={{ width: "100%", boxSizing: "border-box", background: "#fff", border: "2px solid #dceadc", borderRadius: 10, padding: "0.75rem 1rem", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", color: "#1a2e1a", outline: "none" }}
+              onFocus={e => e.target.style.borderColor = "#1a5c30"}
+              onBlur={e => e.target.style.borderColor = "#dceadc"} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: "0.85rem" }}>
+            {filteredGloss.map((g, i) => (
+              <div key={i} onClick={() => setOpenGloss(openGloss === i ? null : i)} style={{ background: "#fff", border: "1px solid " + (openGloss === i ? "#1a5c30" : "#dceadc"), borderRadius: 12, padding: "1rem 1.1rem", cursor: "pointer", transition: "all 0.2s" }}
+                onMouseEnter={e => { if (openGloss !== i) e.currentTarget.style.borderColor = "#7a9a7a"; }}
+                onMouseLeave={e => { if (openGloss !== i) e.currentTarget.style.borderColor = "#dceadc"; }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: openGloss === i ? "0.65rem" : 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+                    <span style={{ fontSize: "1.4rem" }}>{g.emoji}</span>
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#0d3a1e" }}>{g.term}</div>
+                      <div style={{ fontSize: "0.7rem", color: "#7a9a7a" }}>{g.full}</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: "0.75rem", color: "#aaa" }}>{openGloss === i ? "▲" : "▼"}</span>
+                </div>
+                {openGloss === i && (
+                  <div style={{ animation: "fadeUp 0.2s ease" }}>
+                    <p style={{ fontSize: "0.82rem", color: "#5a7a5a", lineHeight: 1.6, marginBottom: "0.65rem" }}>{g.desc}</p>
+                    <div style={{ background: "#f0fdf4", border: "1px solid #c8e8cc", borderRadius: 7, padding: "0.55rem 0.75rem" }}>
+                      <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#166534", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.2rem" }}>📌 Real Example</div>
+                      <p style={{ fontSize: "0.79rem", color: "#14532d", lineHeight: 1.55, margin: 0 }}>{g.example}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          {filteredGloss.length === 0 && <p style={{ textAlign: "center", color: "#aaa", padding: "2rem" }}>No terms found for "{glossSearch}"</p>}
+        </div>
+      </div>
+
+      {/* Resources */}
+      <div style={{ padding: "3.5rem 1.5rem", background: "#fff" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+            <h2 style={{ fontSize: "1.7rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.4rem" }}>🛠️ Free Resources to Start Now</h2>
+            <p style={{ color: "#7a9a7a", fontSize: "0.88rem" }}>Books, YouTube channels and tools — all free or very cheap</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.5rem" }}>
+            {RESOURCES.map((cat, ci) => (
+              <div key={ci} style={{ background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 14, padding: "1.5rem" }}>
+                <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0d3a1e", marginBottom: "1.1rem" }}>{cat.category}</div>
+                {cat.items.map((item, ii) => (
+                  <a key={ii} href={item.link} target="_blank" rel="noreferrer" style={{ display: "flex", gap: "0.65rem", alignItems: "flex-start", marginBottom: "0.85rem", textDecoration: "none", padding: "0.6rem 0.75rem", background: "#fff", borderRadius: 9, border: "1px solid #e8f0e8", transition: "all 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#1a5c30"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(26,92,48,0.08)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#e8f0e8"; e.currentTarget.style.boxShadow = "none"; }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#0d3a1e", marginBottom: "0.15rem" }}>{item.title}</div>
+                      {item.author && <div style={{ fontSize: "0.68rem", color: "#7a9a7a", marginBottom: "0.15rem" }}>by {item.author}</div>}
+                      <div style={{ fontSize: "0.76rem", color: "#7a9a7a", lineHeight: 1.45 }}>{item.desc}</div>
+                    </div>
+                    <span style={{ color: "#1a5c30", fontWeight: 700, fontSize: "0.78rem", flexShrink: 0, marginTop: 2 }}>↗</span>
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3rem 1.5rem", textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#fff", marginBottom: "0.6rem" }}>Ready to Test Your Idea?</h2>
+        <p style={{ color: "rgba(255,255,255,0.65)", marginBottom: "1.5rem", fontSize: "0.9rem" }}>Use our AI Validator to check your business idea against the Uzbekistan market before you invest a single dollar.</p>
+        <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => window.scrollTo(0,0)} style={{ background: "#fff", color: "#0d3a1e", border: "none", borderRadius: 8, padding: "0.7rem 1.5rem", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>🧪 Validate My Idea →</button>
+          <button onClick={() => window.scrollTo(0,0)} style={{ background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.35)", borderRadius: 8, padding: "0.7rem 1.5rem", fontWeight: 600, fontSize: "0.9rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>📖 Browse Failure Stories →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── IT PARK AD ──
 function ItParkAd({ t }) {
   return (
@@ -1512,7 +1751,7 @@ export default function App() {
           🗺 MistakeMap <span style={{ color: "#aaa", fontWeight: 400, fontSize: "0.78rem" }}>· UK & Uzbekistan</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
-          {[["home", t.nav.browse], ["graveyard", t.nav.graveyard], ["blog", t.nav.blog], ["validate", t.nav.validate], ["contact", t.nav.contact]].map(([p, label]) => (
+          {[["home", t.nav.browse], ["graveyard", t.nav.graveyard], ["learn", t.nav.learn], ["blog", t.nav.blog], ["validate", t.nav.validate], ["contact", t.nav.contact]].map(([p, label]) => (
             <button key={p} onClick={() => setPage(p)} style={{ background: page === p ? "#e8f5eb" : "transparent", color: page === p ? GREEN : "#7a9a7a", border: "none", padding: "0.35rem 0.6rem", borderRadius: 6, fontFamily: "Inter,sans-serif", fontSize: "0.8rem", fontWeight: 500, cursor: "pointer" }}>{label}</button>
           ))}
           <div style={{ display: "flex", background: "#f0f7f0", borderRadius: 6, overflow: "hidden", border: "1px solid #c8dfc8" }}>
@@ -1630,6 +1869,9 @@ export default function App() {
 
       {/* GRAVEYARD */}
       {page === "graveyard" && <GraveyardSection t={t} />}
+
+      {/* LEARN */}
+      {page === "learn" && <LearnHub t={t} />}
 
       {/* BLOG */}
       {page === "blog" && (
