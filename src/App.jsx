@@ -167,7 +167,7 @@ const T = {
       industryLabel: "Industry *", priceLabel: "Price point ($)", pricePh: "e.g. 15",
       budgetLabel: "Startup budget ($)", budgetPh: "e.g. 5000",
       analyseBtn: "Analyse My Idea →",
-      steps: ["Market Research", "Target Segments", "Competitor Analysis", "Affordability", "Final Verdict"],
+      steps: ["Problem Validation", "Failure Risks & Distribution", "PMF & Investor Readiness", "Action Roadmap", "Final Verdict"],
       analysing: "Analysing...",
       goVerdict: "✅ GO — Strong opportunity",
       cautionVerdict: "⚠️ CAUTION — Proceed carefully",
@@ -233,7 +233,7 @@ const T = {
       industryLabel: "Soha *", priceLabel: "Narx ($)", pricePh: "masalan: 15",
       budgetLabel: "Boshlang'ich byudjet ($)", budgetPh: "masalan: 5000",
       analyseBtn: "Tahlil qilish →",
-      steps: ["Bozor tadqiqoti", "Maqsad segmentlar", "Raqobatchilar", "Sotib olish qobiliyati", "Yakuniy hukm"],
+      steps: ["Muammo tekshiruvi", "Muvaffaqiyatsizlik xavflari", "PMF & Investor tayyorligi", "Harakat rejasi", "Yakuniy hukm"],
       analysing: "Tahlil qilinmoqda...",
       goVerdict: "✅ BORING — Kuchli imkoniyat",
       cautionVerdict: "⚠️ EHTIYOT — Ehtiyotkorlik bilan",
@@ -691,11 +691,63 @@ function IdeaValidator({ t }) {
   const sf = (k, v) => setForm(x => ({ ...x, [k]: v }));
 
   const prompts = [
-    f => `Analyse market demand for "${f.idea}" (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.`,
-    f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
-    f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
-    f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
-    f => "Score this business idea for Uzbekistan: " + f.idea + " (" + f.industry + ", price $" + (f.price||"?") + ", budget $" + (f.budget||"?") + "). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.",
+    f => `Using the "Choosing the Right Problem" framework, evaluate the startup idea: "${f.idea}" (${f.industry}, price $${f.price||"?"}).
+Score each of these 3 criteria clearly (YES / PARTIAL / NO + reason):
+1. Does it HURT EMOTIONALLY OR FINANCIALLY? (Problems worth solving cause real pain — users must feel urgency)
+2. Does it OCCUR FREQUENTLY in the target market? (Recurring pain points create sustainable demand — one-time problems limit growth)
+3. Does it have PAYING CUSTOMERS POTENTIAL? (Validate willingness to pay early — interest without payment signals weak demand)
+Then give an overall Problem Strength verdict: STRONG / MODERATE / WEAK with 2-sentence explanation.`,
+
+    f => `Using the Startup Validation framework, analyse "${f.idea}" (${f.industry}) for early failure risks and distribution.
+Cover these 4 areas with specific bullet points:
+1. TOP EARLY FAILURE RISKS: Check for (a) no market demand — building what nobody wants, (b) weak distribution — great product with no visibility, (c) cash management dangers at $${f.budget||"unknown"} budget
+2. VALIDATION SIGNS TO WATCH: What specific behaviours would prove this idea is validated? (users return voluntarily, recommend organically, pay willingly — give concrete examples for this idea)
+3. DISTRIBUTION CHANNELS: Which 3-4 channels are most realistic for this idea? (social media, SEO, viral loops, communities, partnerships — be specific)
+4. MVP RECOMMENDATION: What is the simplest possible MVP to test ONE core assumption? What should NOT be built yet?`,
+
+    f => `Analyse Product-Market Fit readiness and investor appeal for "${f.idea}" (${f.industry}).
+Cover:
+1. PMF SIGNALS: What specific signs would confirm PMF for this idea? (users return without prompts, referral growth, feature requests increase, retention improves, CAC decreases)
+2. WHAT INVESTORS WANT — score this idea on: Market Size (TAM/SAM/SOM potential), Traction potential (MRR path, growth trajectory), Defensibility (moats, switching costs, network effects, IP)
+3. FINANCIAL DISCIPLINE CHECK: At $${f.budget||"unknown"} budget — estimate runway, key unit economics to track (CAC, LTV, break-even). Flag any vanity spending traps to avoid.
+4. COMPETITIVE LANDSCAPE: Name 2-3 direct competitors. For each: what caused similar ideas to fail? What would need to be done differently?`,
+
+    f => `Apply the Complete Startup Roadmap framework to give a phase-by-phase action plan for "${f.idea}" (${f.industry}, price $${f.price||"?"}, budget $${f.budget||"?"}).
+Structure your response as:
+PHASE 1 — BEFORE STARTING (this week): 3 specific actions (market research, customer interviews, competitor study)
+PHASE 2 — MVP & VALIDATION (first 30 days): What to build, how to test ONE problem, what NOT to spend on yet
+PHASE 3 — PRE-SEED (days 31-90): PMF milestones to hit, distribution system to build, metrics to track
+RESILIENCE WARNING: What is the hardest moment founders of this type of business typically face, and how to prepare for it?`,
+
+    f => `You are a startup advisor using The Complete Startup Roadmap framework. Score this idea comprehensively.
+Idea: "${f.idea}" | Industry: ${f.industry} | Price: $${f.price||"?"} | Budget: $${f.budget||"?"}
+
+Reply ONLY with valid JSON, no markdown fences:
+{
+  "score": 65,
+  "verdict": "CAUTION",
+  "reason": "2-sentence overall assessment",
+  "executiveSummary": "3-sentence summary using startup roadmap lens",
+  "problemStrength": "STRONG|MODERATE|WEAK",
+  "problemHurts": true,
+  "problemRecurring": true,
+  "problemPaysCustomers": true,
+  "greenLights": ["3 genuine strengths based on roadmap criteria"],
+  "redFlags": ["3 real risks: market demand, distribution, cash management"],
+  "risks": ["top 3 failure risks from the early failure framework"],
+  "nextSteps": ["3 immediate actions: validate problem, build MVP, test distribution"],
+  "mvpIdea": "1-sentence simplest MVP to test core assumption",
+  "distributionChannels": ["top 3 channels for this idea"],
+  "pmfMilestones": ["3 specific signs that would confirm PMF for this idea"],
+  "investorReadiness": "NOT READY|EARLY STAGE|INVESTOR READY",
+  "problemValidation": 65,
+  "solutionValidation": 60,
+  "marketValidation": 58,
+  "youtube": [{"title": "title", "url": "https://...", "desc": "why relevant"}],
+  "books": [{"title": "title", "author": "author", "desc": "why relevant"}],
+  "globalProducts": [{"name": "name", "desc": "lesson for this idea", "url": "https://..."}]
+}
+verdict must be exactly GO, CAUTION, or NOGO.`,
   ];
 
   const run = async () => {
@@ -852,6 +904,50 @@ function IdeaValidator({ t }) {
 
             {tab === "summary" && score.summary && (
               <div style={{ animation: "fadeUp 0.3s ease" }}>
+                {/* PDF Framework: Problem Strength */}
+                {score.problemStrength && (
+                  <div style={{ background: score.problemStrength === "STRONG" ? "rgba(34,197,94,0.07)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.07)" : "rgba(239,68,68,0.07)", border: "1px solid " + (score.problemStrength === "STRONG" ? "rgba(34,197,94,0.25)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.25)" : "rgba(239,68,68,0.25)"), borderRadius: 12, padding: "1rem 1.1rem", marginBottom: "0.85rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.7rem", flexWrap: "wrap", gap: "0.5rem" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.7)" }}>🎯 Problem Strength (Startup Roadmap Framework)</div>
+                      <span style={{ fontSize: "0.72rem", fontWeight: 800, padding: "0.2rem 0.75rem", borderRadius: 100, background: score.problemStrength === "STRONG" ? "rgba(34,197,94,0.2)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.2)" : "rgba(239,68,68,0.2)", color: score.problemStrength === "STRONG" ? "#22c55e" : score.problemStrength === "MODERATE" ? "#f59e0b" : "#ef4444", border: "1px solid currentColor" }}>{score.problemStrength}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+                      {[["Hurts emotionally/financially", score.problemHurts], ["Occurs frequently", score.problemRecurring], ["Has paying potential", score.problemPaysCustomers]].map(([label, val], i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.04)", padding: "0.3rem 0.65rem", borderRadius: 100, border: "1px solid rgba(255,255,255,0.08)" }}>
+                          <span style={{ color: val ? "#22c55e" : "#ef4444" }}>{val ? "✓" : "✗"}</span> {label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* MVP + Distribution + PMF row */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
+                  {score.mvpIdea && (
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🛠 Simplest MVP</div>
+                      <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5, margin: 0 }}>{score.mvpIdea}</p>
+                    </div>
+                  )}
+                  {score.distributionChannels?.length > 0 && (
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#f59e0b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>📣 Distribution</div>
+                      {score.distributionChannels.map((c, i) => <div key={i} style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.7)", marginBottom: "0.25rem" }}>→ {c}</div>)}
+                    </div>
+                  )}
+                  {score.pmfMilestones?.length > 0 && (
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🎯 PMF Signs to Watch</div>
+                      {score.pmfMilestones.map((m, i) => <div key={i} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", marginBottom: "0.25rem" }}>◦ {m}</div>)}
+                    </div>
+                  )}
+                </div>
+                {/* Investor readiness badge */}
+                {score.investorReadiness && (
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 100, padding: "0.35rem 1rem", marginBottom: "0.85rem" }}>
+                    <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)" }}>Investor Readiness:</span>
+                    <span style={{ fontSize: "0.73rem", fontWeight: 700, color: score.investorReadiness === "INVESTOR READY" ? "#22c55e" : score.investorReadiness === "EARLY STAGE" ? "#f59e0b" : "#ef4444" }}>{score.investorReadiness}</span>
+                  </div>
+                )}
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
                   <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
