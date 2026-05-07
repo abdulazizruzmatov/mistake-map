@@ -1391,6 +1391,7 @@ function LearnHub() {
 // ── IT PARK AD ──
 function ItParkAd({ t }) {
   return (
+    <>
     <div style={{ background: "linear-gradient(135deg,#0a2e1a,#1a5c30)", borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "relative", zIndex: 1 }}>
         <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>{t.blog.sponsoredBy}</div>
@@ -1427,6 +1428,7 @@ function ItParkAd({ t }) {
         ))}
       </div>
     </div>
+    </>
   );
 }
 
