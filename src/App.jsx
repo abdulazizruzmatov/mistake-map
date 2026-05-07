@@ -1779,7 +1779,7 @@ export default function App() {
   const [toastMsg, setToastMsg] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [page, setPage] = useState(1);
+  const [browsePage, setBrowsePage] = useState(1);
   const PER_PAGE = 10;
   const toastTimer = useRef(null);
   const t = T[lang];
@@ -1870,7 +1870,7 @@ export default function App() {
   }).sort((a, b) => sort === "up" ? b.upvotes - a.upvotes : sort === "com" ? (comments[b.id]?.length || 0) - (comments[a.id]?.length || 0) : new Date(b.created_at) - new Date(a.created_at));
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
-  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const paginated = filtered.slice((browsePage - 1) * PER_PAGE, browsePage * PER_PAGE);
 
   const indCounts = (() => { const src = curCountry ? problems.filter(p => p.country === curCountry) : problems; const c = {}; src.forEach(p => { c[p.industry] = (c[p.industry] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]); })();
   const det = problems.find(p => p.id === detId);
@@ -1940,13 +1940,13 @@ export default function App() {
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.country}</div>
               {[["", t.sidebar.both], ["United Kingdom", t.sidebar.uk], ["Uzbekistan", t.sidebar.uz]].map(([val, label]) => (
-                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); setPage(1); }}>{label}</FilterBtn>
+                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); setBrowsePage(1); }}>{label}</FilterBtn>
               ))}
             </div>
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.industry}</div>
-              <FilterBtn active={curIndustry === ""} onClick={() => { setCurIndustry(""); setPage(1); }}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
-              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => { setCurIndustry(ind); setPage(1); }}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
+              <FilterBtn active={curIndustry === ""} onClick={() => { setCurIndustry(""); setBrowsePage(1); }}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
+              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => { setCurIndustry(ind); setBrowsePage(1); }}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
             </div>
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.chart}</div>
@@ -1965,10 +1965,10 @@ export default function App() {
                 <span style={{ position: "absolute", left: "0.7rem", top: "50%", transform: "translateY(-50%)", color: "#aaa", fontSize: "0.78rem" }}>🔍</span>
                 <input value={q} onChange={e => setQ(e.target.value)} placeholder={t.filters.search} style={inp({ paddingLeft: "2.1rem" })} />
               </div>
-              <select value={sort} onChange={e => { setSort(e.target.value); setPage(1); }} style={sel()}>
+              <select value={sort} onChange={e => { setSort(e.target.value); setBrowsePage(1); }} style={sel()}>
                 <option value="new">{t.filters.newest}</option><option value="up">{t.filters.upvoted}</option><option value="com">{t.filters.discussed}</option>
               </select>
-              <select value={sev} onChange={e => { setSev(e.target.value); setPage(1); }} style={sel()}>
+              <select value={sev} onChange={e => { setSev(e.target.value); setBrowsePage(1); }} style={sel()}>
                 <option value="">{t.filters.allImp}</option><option value="high">{t.filters.high}</option><option value="medium">{t.filters.medium}</option><option value="low">{t.filters.low}</option>
               </select>
             </div>
@@ -2006,21 +2006,21 @@ export default function App() {
             {/* Pagination */}
             {!loading && totalPages > 1 && (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.4rem", marginTop: "1.5rem", flexWrap: "wrap" }}>
-                <button onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={page === 1}
-                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: page === 1 ? "#f5f5f5" : "#fff", color: page === 1 ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: page === 1 ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>← Prev</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 2).reduce((acc, n, idx, arr) => {
+                <button onClick={() => { setBrowsePage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={browsePage === 1}
+                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: browsePage === 1 ? "#f5f5f5" : "#fff", color: browsePage === 1 ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: browsePage === 1 ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>← Prev</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).filter(n => n === 1 || n === totalPages || Math.abs(n - browsePage) <= 2).reduce((acc, n, idx, arr) => {
                   if (idx > 0 && n - arr[idx - 1] > 1) acc.push("...");
                   acc.push(n);
                   return acc;
                 }, []).map((n, i) => n === "..." ? (
                   <span key={"e" + i} style={{ padding: "0 0.3rem", color: "#aaa", fontSize: "0.8rem" }}>…</span>
                 ) : (
-                  <button key={n} onClick={() => { setPage(n); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                    style={{ width: 34, height: 34, borderRadius: 7, border: "1px solid " + (page === n ? GREEN : "#c8dfc8"), background: page === n ? GREEN : "#fff", color: page === n ? "#fff" : GREEN, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{n}</button>
+                  <button key={n} onClick={() => { setBrowsePage(n); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    style={{ width: 34, height: 34, borderRadius: 7, border: "1px solid " + (browsePage === n ? GREEN : "#c8dfc8"), background: browsePage === n ? GREEN : "#fff", color: browsePage === n ? "#fff" : GREEN, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{n}</button>
                 ))}
-                <button onClick={() => { setPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={page === totalPages}
-                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: page === totalPages ? "#f5f5f5" : "#fff", color: page === totalPages ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: page === totalPages ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>Next →</button>
-                <span style={{ fontSize: "0.74rem", color: "#aaa", marginLeft: "0.5rem" }}>{filtered.length} stories · page {page}/{totalPages}</span>
+                <button onClick={() => { setBrowsePage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={browsePage === totalPages}
+                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: browsePage === totalPages ? "#f5f5f5" : "#fff", color: browsePage === totalPages ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: browsePage === totalPages ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>Next →</button>
+                <span style={{ fontSize: "0.74rem", color: "#aaa", marginLeft: "0.5rem" }}>{filtered.length} stories · page {browsePage}/{totalPages}</span>
               </div>
             )}
               </div>
