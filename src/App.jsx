@@ -430,6 +430,19 @@ function Leaderboard({ t }) {
 }
 
 // ── GRAVEYARD SECTION ──
+const GRAVE_COLORS = {
+  "FTX":"#0a1628","Theranos":"#7f1d1d","WeWork":"#18181b","Quibi":"#4c1d95","Byju's":"#1e3a8a",
+  "Wirecard":"#064e3b","Northvolt":"#0c4a6e","Argo AI":"#431407","Vice Media":"#991b1b",
+  "Nikola Motor":"#0f172a","MoviePass":"#881337","Hopin":"#4a1d96","Convoy":"#1e3a8a",
+  "Bird":"#78350f","Juicero":"#14532d","Beepi":"#1e3a8a","Vine":"#064e3b","HQ Trivia":"#713f12",
+  "Pebble":"#1f2937","Fast":"#312e81","IRL":"#831843","Babylon Health":"#0c4a6e",
+  "Hyperloop One":"#3b0764","Magic Leap":"#1a2e1a","Munchery":"#7c2d12","Solyndra":"#14532d",
+  "Jawbone":"#312e81","Brandless":"#374151","Webvan":"#1c1917","Pets.com":"#7c3aed",
+  "Rdio":"#7f1d1d","Homejoy":"#052e16","Anki":"#1e1b4b","Faraday Future":"#312e81",
+  "Essential Products":"#18181b","Zenefits":"#0c4a6e","Compass Real Estate":"#1a2e1a",
+  "Frank":"#1e3a8a","Aereo":"#172554","Quirky":"#92400e","Katerra":"#1c1917",
+};
+
 function GraveyardSection({ t }) {
   const gt = t.graveyard;
   const [filter, setFilter] = useState("all");
@@ -450,93 +463,89 @@ function GraveyardSection({ t }) {
   const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
   const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
 
-  const yearGroups = {};
-  filtered.forEach(g => { if (!yearGroups[g.died]) yearGroups[g.died] = []; yearGroups[g.died].push(g); });
-  const years = Object.keys(yearGroups).sort((a, b) => b - a);
-
   return (
-    <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+    <div style={{ background: "#f8faf8", minHeight: "100vh" }}>
+      {/* Dark header */}
+      <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3rem 1.5rem 2.5rem" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.9)", fontSize: "0.73rem", fontWeight: 600, padding: "0.25rem 0.85rem", borderRadius: 100, marginBottom: "1rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>🪦 Startup Graveyard</div>
           <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{gt.title}</h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{gt.sub}</p>
-        </div>
-        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-          {[{ v: GRAVEYARD.length, l: gt.statBuried }, { v: fmt(totalLost), l: gt.statLost }, { v: avgLife + "y", l: gt.statAvg }].map((s, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.5rem", textAlign: "center", minWidth: 130 }}>
-              <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ff6060" }}>{s.v}</div>
-              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", marginTop: "0.2rem" }}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "0.75rem" }}>
-          {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
-            <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "linear-gradient(135deg,#ef4444,#dc2626)" : "rgba(255,255,255,0.05)", color: filter === k ? "#fff" : "rgba(255,255,255,0.7)", border: "1px solid " + (filter === k ? "#ef4444" : "rgba(255,255,255,0.15)"), borderRadius: 100, padding: "0.4rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "0.6rem", maxWidth: 600, margin: "0 auto 1.5rem", flexWrap: "wrap" }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, minWidth: 180, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
-          <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
-            <option value="lost" style={{ background: "#1a1a1a" }}>{gt.sortLost}</option>
-            <option value="year" style={{ background: "#1a1a1a" }}>{gt.sortYear}</option>
-            <option value="name" style={{ background: "#1a1a1a" }}>{gt.sortName}</option>
-          </select>
-        </div>
-        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>{gt.showing} {filtered.length} {gt.of} {GRAVEYARD.length}</p>
-        {/* Timeline */}
-        <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          {sort === "year" ? years.map(year => (
-            <div key={year}>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0 0.5rem" }}>
-                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
-                <span style={{ background: "linear-gradient(135deg,#ef4444,#b91c1c)", color: "#fff", fontWeight: 800, fontSize: "0.82rem", padding: "0.3rem 1rem", borderRadius: 100, flexShrink: 0 }}>✝ {year}</span>
-                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", marginBottom: "2rem" }}>{gt.sub}</p>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.75rem" }}>
+            {[{ v: GRAVEYARD.length, l: gt.statBuried, c: "#7ffba0" }, { v: fmt(totalLost), l: gt.statLost, c: "#fca5a5" }, { v: avgLife + "y", l: gt.statAvg, c: "#fde68a" }].map((s, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "1rem 1.75rem", textAlign: "center", minWidth: 120 }}>
+                <div style={{ fontSize: "1.6rem", fontWeight: 900, color: s.c, lineHeight: 1 }}>{s.v}</div>
+                <div style={{ fontSize: "0.69rem", color: "rgba(255,255,255,0.5)", marginTop: "0.3rem", fontWeight: 500 }}>{s.l}</div>
               </div>
-              {yearGroups[year].map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === yearGroups[year].length - 1} />)}
-            </div>
-          )) : filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === filtered.length - 1} />)}
+            ))}
+          </div>
+          {/* Filters */}
+          <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
+              <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "#fff" : "rgba(255,255,255,0.08)", color: filter === k ? "#0d3a1e" : "rgba(255,255,255,0.75)", border: "1px solid " + (filter === k ? "#fff" : "rgba(255,255,255,0.2)"), borderRadius: 100, padding: "0.38rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", transition: "all 0.15s" }}>{label}</button>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: "0.6rem", maxWidth: 560, margin: "0 auto" }}>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
+            <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
+              <option value="lost" style={{ background: "#0d3a1e" }}>{gt.sortLost}</option>
+              <option value="year" style={{ background: "#0d3a1e" }}>{gt.sortYear}</option>
+              <option value="name" style={{ background: "#0d3a1e" }}>{gt.sortName}</option>
+            </select>
+          </div>
         </div>
-        {filtered.length === 0 && <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}><div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div><p>No startups found</p></div>}
+      </div>
+
+      {/* Cards grid */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2.5rem 1.5rem" }}>
+        <p style={{ color: "#7a9a7a", fontSize: "0.78rem", marginBottom: "1.5rem", fontWeight: 500 }}>{gt.showing} <strong style={{ color: "#1a2e1a" }}>{filtered.length}</strong> {gt.of} {GRAVEYARD.length}</p>
+        {filtered.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "4rem", color: "#aaa" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div>
+            <p>No startups found</p>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))", gap: "1.5rem" }}>
+            {filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} />)}
+          </div>
+        )}
       </div>
       {selected && <GraveDetail g={selected} gt={gt} fmt={fmt} onClose={() => setSelected(null)} />}
     </div>
   );
 }
 
-function GraveCard({ g, fmt, gt, onOpen, isLast }) {
-  const years = g.died - g.founded;
+function GraveCard({ g, fmt, gt, onOpen }) {
+  const bg = GRAVE_COLORS[g.name] || "#1a2e1a";
+  const [hovered, setHovered] = useState(false);
   return (
-    <div onClick={onOpen} style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, cursor: "pointer" }}>
-      {/* Left side */}
-      <div style={{ padding: "0 1rem 0 0", display: "flex", justifyContent: "flex-end", paddingBottom: "0.5rem" }}>
-        <div style={{ background: "rgba(30,10,10,0.9)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300, width: "100%", transition: "border-color 0.2s" }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"}
-          onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.4rem" }}>
-            <div style={{ fontWeight: 800, fontSize: "0.92rem", color: "#fff" }}>🪦 {g.name}</div>
-            <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#ff6060", fontFamily: "monospace", flexShrink: 0, marginLeft: "0.5rem" }}>{fmt(g.lost)}</div>
-          </div>
-          <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.4rem" }}>{g.industry} · {g.country}</div>
-          <p style={{ fontSize: "0.73rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: "0 0 0.35rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
-          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "0.62rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.1rem 0.4rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
-            <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "0.1rem 0.4rem", borderRadius: 100 }}>⏱ {years}y</span>
-          </div>
+    <div onClick={onOpen} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: "#fff", borderRadius: 14, overflow: "hidden", cursor: "pointer", border: "1px solid #e8efe8", boxShadow: hovered ? "0 8px 32px rgba(26,92,48,0.12)" : "0 1px 4px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-3px)" : "none", transition: "all 0.2s ease" }}>
+      {/* Coloured thumbnail */}
+      <div style={{ background: bg, height: 140, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+        {/* Subtle grid pattern */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 0)", backgroundSize: "24px 24px" }} />
+        {/* Tombstone badge */}
+        <div style={{ position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.45)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.2rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem", whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: "0.62rem" }}>🪦</span>
+          <span style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.8)", fontWeight: 600, letterSpacing: "0.03em" }}>Why They Died</span>
         </div>
+        {/* Company name */}
+        <span style={{ fontSize: "clamp(1.2rem,3vw,1.6rem)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", textAlign: "center", padding: "0 1rem", position: "relative", zIndex: 1, textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>{g.name}</span>
       </div>
-
-      {/* Center line + dot */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 32 }}>
-        <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a1f10", boxShadow: "0 0 12px rgba(239,68,68,0.8)", marginTop: "1rem", flexShrink: 0, zIndex: 2 }} />
-        {!isLast && <div style={{ flex: 1, width: 2, background: "rgba(239,68,68,0.3)", minHeight: 30 }} />}
-      </div>
-
-      {/* Right side — lesson */}
-      <div style={{ padding: "0 0 0.5rem 1rem", paddingTop: "0.85rem" }}>
-        <div style={{ background: "rgba(10,30,15,0.7)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300 }}>
-          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>💡 {gt.lesson}</div>
-          <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
-          <div style={{ marginTop: "0.5rem", fontSize: "0.65rem", color: "#22c55e", fontWeight: 600 }}>Click to read full story →</div>
+      {/* Card body */}
+      <div style={{ padding: "1.1rem 1.1rem 1rem" }}>
+        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0d3a1e", lineHeight: 1.35, marginBottom: "0.5rem" }}>
+          Why {g.name} Died: <span style={{ textDecoration: "line-through", color: "#aaa", fontWeight: 500 }}>{g.industry.split("/")[0]}</span> lessons
+        </h3>
+        <p style={{ fontSize: "0.78rem", color: "#7a9a7a", lineHeight: 1.55, marginBottom: "0.85rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
+        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.85rem" }}>
+          <span style={{ fontSize: "0.65rem", background: "#f0f7f0", color: GREEN, padding: "0.15rem 0.55rem", borderRadius: 100, fontWeight: 600, border: "1px solid #c8dfc8" }}>{g.industry.split("/")[0]}</span>
+          <span style={{ fontSize: "0.65rem", background: "#fde8e8", color: "#b91c1c", padding: "0.15rem 0.55rem", borderRadius: 100, fontWeight: 700, border: "1px solid #fca5a5" }}>💸 {fmt(g.lost)}</span>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f0f7f0", paddingTop: "0.7rem" }}>
+          <span style={{ fontSize: "0.69rem", color: "#aaa" }}>{g.founded} → {g.died}</span>
+          <span style={{ fontSize: "0.72rem", color: GREEN, fontWeight: 600 }}>Read story →</span>
         </div>
       </div>
     </div>
