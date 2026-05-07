@@ -1399,6 +1399,34 @@ function ItParkAd({ t }) {
         <a href="https://it-park.uz" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "#fff", color: GREEN, fontSize: "0.75rem", fontWeight: 700, padding: "0.4rem 0.9rem", borderRadius: 6, textDecoration: "none" }}>{t.blog.itparkCta}</a>
       </div>
     </div>
+    {/* Research Papers */}
+    <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem", marginTop: "1rem" }}>
+      <div style={{ fontSize: "0.62rem", fontWeight: 700, color: GREEN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.85rem" }}>📚 Latest Research</div>
+      {[
+        { title: "Is Marketing the Problem? Evidence from Startup Failures", journal: "JEEE · Under Review", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6600918", tag: "Marketing" },
+        { title: "Why Startups Fail: A Comparative Study of Uzbekistan and the United Kingdom", journal: "JEIEE · Under Review", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6494638", tag: "Comparative" },
+        { title: "Fashion Consumer Behaviour in an Emerging Market", journal: "SSRN Working Paper", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6341986", tag: "Consumer" },
+      ].map((p, i) => (
+        <a key={i} href={p.url} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", padding: "0.65rem 0", borderBottom: i < 2 ? "1px solid #f0f7f0" : "none" }}>
+          <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#0d3a1e", lineHeight: 1.4, marginBottom: "0.25rem" }}>{p.title}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "0.62rem", color: "#7a9a7a" }}>{p.journal}</span>
+            <span style={{ fontSize: "0.6rem", background: "#f0f7f0", color: GREEN, padding: "0.1rem 0.45rem", borderRadius: 100, fontWeight: 600, border: "1px solid #c8dfc8" }}>{p.tag}</span>
+          </div>
+        </a>
+      ))}
+      <div style={{ marginTop: "0.75rem", paddingTop: "0.65rem", borderTop: "1px solid #f0f7f0", display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+        {[
+          { label: "SSRN", url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=8574040" },
+          { label: "Scholar", url: "https://scholar.google.co.uk/citations?user=0jK5GpEAAAAJ&hl=en&authuser=1" },
+          { label: "ResearchGate", url: "https://www.researchgate.net/profile/Abdulaziz-Ruzmatov" },
+          { label: "LinkedIn", url: "https://www.linkedin.com/in/abdulaziz-ruzmatov/" },
+          { label: "ORCID", url: "https://orcid.org/0009-0008-5771-0181" },
+        ].map((l, i) => (
+          <a key={i} href={l.url} target="_blank" rel="noreferrer" style={{ fontSize: "0.63rem", color: GREEN, fontWeight: 600, textDecoration: "none", background: "#f0f7f0", padding: "0.15rem 0.5rem", borderRadius: 100, border: "1px solid #c8dfc8" }}>{l.label}</a>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -1614,6 +1642,20 @@ function FounderSection() {
                 <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#fff" }}>{val}</div>
                 <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.45)", marginTop: "0.1rem" }}>{sub}</div>
               </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {[
+              { label: "LinkedIn", icon: "💼", url: "https://www.linkedin.com/in/abdulaziz-ruzmatov/" },
+              { label: "SSRN", icon: "📄", url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=8574040" },
+              { label: "Google Scholar", icon: "🎓", url: "https://scholar.google.co.uk/citations?user=0jK5GpEAAAAJ&hl=en&authuser=1" },
+              { label: "ResearchGate", icon: "🔬", url: "https://www.researchgate.net/profile/Abdulaziz-Ruzmatov" },
+              { label: "ORCID", icon: "🆔", url: "https://orcid.org/0009-0008-5771-0181" },
+            ].map((l, i) => (
+              <a key={i} href={l.url} target="_blank" rel="noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.28rem 0.75rem", fontSize: "0.71rem", color: "rgba(255,255,255,0.75)", textDecoration: "none", fontWeight: 600 }}>
+                {l.icon} {l.label}
+              </a>
             ))}
           </div>
           <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.35)" }}>
