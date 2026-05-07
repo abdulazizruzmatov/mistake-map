@@ -2023,8 +2023,6 @@ export default function App() {
                 <span style={{ fontSize: "0.74rem", color: "#aaa", marginLeft: "0.5rem" }}>{filtered.length} stories · page {browsePage}/{totalPages}</span>
               </div>
             )}
-              </div>
-            )}
           </div>
           <aside><Leaderboard t={t} /></aside>
         </div>
