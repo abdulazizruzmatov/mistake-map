@@ -167,7 +167,7 @@ const T = {
       industryLabel: "Industry *", priceLabel: "Price point ($)", pricePh: "e.g. 15",
       budgetLabel: "Startup budget ($)", budgetPh: "e.g. 5000",
       analyseBtn: "Analyse My Idea →",
-      steps: ["Problem Validation", "Failure Risks & Distribution", "PMF & Investor Readiness", "Action Roadmap", "Final Verdict"],
+      steps: ["Market Research", "Target Segments", "Competitor Analysis", "Affordability", "Final Verdict"],
       analysing: "Analysing...",
       goVerdict: "✅ GO — Strong opportunity",
       cautionVerdict: "⚠️ CAUTION — Proceed carefully",
@@ -233,7 +233,7 @@ const T = {
       industryLabel: "Soha *", priceLabel: "Narx ($)", pricePh: "masalan: 15",
       budgetLabel: "Boshlang'ich byudjet ($)", budgetPh: "masalan: 5000",
       analyseBtn: "Tahlil qilish →",
-      steps: ["Muammo tekshiruvi", "Muvaffaqiyatsizlik xavflari", "PMF & Investor tayyorligi", "Harakat rejasi", "Yakuniy hukm"],
+      steps: ["Bozor tadqiqoti", "Maqsad segmentlar", "Raqobatchilar", "Sotib olish qobiliyati", "Yakuniy hukm"],
       analysing: "Tahlil qilinmoqda...",
       goVerdict: "✅ BORING — Kuchli imkoniyat",
       cautionVerdict: "⚠️ EHTIYOT — Ehtiyotkorlik bilan",
@@ -430,19 +430,6 @@ function Leaderboard({ t }) {
 }
 
 // ── GRAVEYARD SECTION ──
-const GRAVE_COLORS = {
-  "FTX":"#0a1628","Theranos":"#7f1d1d","WeWork":"#18181b","Quibi":"#4c1d95","Byju's":"#1e3a8a",
-  "Wirecard":"#064e3b","Northvolt":"#0c4a6e","Argo AI":"#431407","Vice Media":"#991b1b",
-  "Nikola Motor":"#0f172a","MoviePass":"#881337","Hopin":"#4a1d96","Convoy":"#1e3a8a",
-  "Bird":"#78350f","Juicero":"#14532d","Beepi":"#1e3a8a","Vine":"#064e3b","HQ Trivia":"#713f12",
-  "Pebble":"#1f2937","Fast":"#312e81","IRL":"#831843","Babylon Health":"#0c4a6e",
-  "Hyperloop One":"#3b0764","Magic Leap":"#1a2e1a","Munchery":"#7c2d12","Solyndra":"#14532d",
-  "Jawbone":"#312e81","Brandless":"#374151","Webvan":"#1c1917","Pets.com":"#7c3aed",
-  "Rdio":"#7f1d1d","Homejoy":"#052e16","Anki":"#1e1b4b","Faraday Future":"#312e81",
-  "Essential Products":"#18181b","Zenefits":"#0c4a6e","Compass Real Estate":"#1a2e1a",
-  "Frank":"#1e3a8a","Aereo":"#172554","Quirky":"#92400e","Katerra":"#1c1917",
-};
-
 function GraveyardSection({ t }) {
   const gt = t.graveyard;
   const [filter, setFilter] = useState("all");
@@ -463,89 +450,93 @@ function GraveyardSection({ t }) {
   const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
   const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
 
-  return (
-    <div style={{ background: "#f8faf8", minHeight: "100vh" }}>
-      {/* Dark header */}
-      <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3rem 1.5rem 2.5rem" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.9)", fontSize: "0.73rem", fontWeight: 600, padding: "0.25rem 0.85rem", borderRadius: 100, marginBottom: "1rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>🪦 Startup Graveyard</div>
-          <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{gt.title}</h2>
-          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", marginBottom: "2rem" }}>{gt.sub}</p>
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.75rem" }}>
-            {[{ v: GRAVEYARD.length, l: gt.statBuried, c: "#7ffba0" }, { v: fmt(totalLost), l: gt.statLost, c: "#fca5a5" }, { v: avgLife + "y", l: gt.statAvg, c: "#fde68a" }].map((s, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "1rem 1.75rem", textAlign: "center", minWidth: 120 }}>
-                <div style={{ fontSize: "1.6rem", fontWeight: 900, color: s.c, lineHeight: 1 }}>{s.v}</div>
-                <div style={{ fontSize: "0.69rem", color: "rgba(255,255,255,0.5)", marginTop: "0.3rem", fontWeight: 500 }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
-          {/* Filters */}
-          <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1rem" }}>
-            {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
-              <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "#fff" : "rgba(255,255,255,0.08)", color: filter === k ? "#0d3a1e" : "rgba(255,255,255,0.75)", border: "1px solid " + (filter === k ? "#fff" : "rgba(255,255,255,0.2)"), borderRadius: 100, padding: "0.38rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", transition: "all 0.15s" }}>{label}</button>
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: "0.6rem", maxWidth: 560, margin: "0 auto" }}>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
-            <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
-              <option value="lost" style={{ background: "#0d3a1e" }}>{gt.sortLost}</option>
-              <option value="year" style={{ background: "#0d3a1e" }}>{gt.sortYear}</option>
-              <option value="name" style={{ background: "#0d3a1e" }}>{gt.sortName}</option>
-            </select>
-          </div>
-        </div>
-      </div>
+  const yearGroups = {};
+  filtered.forEach(g => { if (!yearGroups[g.died]) yearGroups[g.died] = []; yearGroups[g.died].push(g); });
+  const years = Object.keys(yearGroups).sort((a, b) => b - a);
 
-      {/* Cards grid */}
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2.5rem 1.5rem" }}>
-        <p style={{ color: "#7a9a7a", fontSize: "0.78rem", marginBottom: "1.5rem", fontWeight: 500 }}>{gt.showing} <strong style={{ color: "#1a2e1a" }}>{filtered.length}</strong> {gt.of} {GRAVEYARD.length}</p>
-        {filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "4rem", color: "#aaa" }}>
-            <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div>
-            <p>No startups found</p>
-          </div>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))", gap: "1.5rem" }}>
-            {filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} />)}
-          </div>
-        )}
+  return (
+    <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{gt.title}</h2>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{gt.sub}</p>
+        </div>
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+          {[{ v: GRAVEYARD.length, l: gt.statBuried }, { v: fmt(totalLost), l: gt.statLost }, { v: avgLife + "y", l: gt.statAvg }].map((s, i) => (
+            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.5rem", textAlign: "center", minWidth: 130 }}>
+              <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ff6060" }}>{s.v}</div>
+              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", marginTop: "0.2rem" }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "0.75rem" }}>
+          {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
+            <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "linear-gradient(135deg,#ef4444,#dc2626)" : "rgba(255,255,255,0.05)", color: filter === k ? "#fff" : "rgba(255,255,255,0.7)", border: "1px solid " + (filter === k ? "#ef4444" : "rgba(255,255,255,0.15)"), borderRadius: 100, padding: "0.4rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: "0.6rem", maxWidth: 600, margin: "0 auto 1.5rem", flexWrap: "wrap" }}>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, minWidth: 180, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
+          <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
+            <option value="lost" style={{ background: "#1a1a1a" }}>{gt.sortLost}</option>
+            <option value="year" style={{ background: "#1a1a1a" }}>{gt.sortYear}</option>
+            <option value="name" style={{ background: "#1a1a1a" }}>{gt.sortName}</option>
+          </select>
+        </div>
+        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>{gt.showing} {filtered.length} {gt.of} {GRAVEYARD.length}</p>
+        {/* Timeline */}
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          {sort === "year" ? years.map(year => (
+            <div key={year}>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0 0.5rem" }}>
+                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+                <span style={{ background: "linear-gradient(135deg,#ef4444,#b91c1c)", color: "#fff", fontWeight: 800, fontSize: "0.82rem", padding: "0.3rem 1rem", borderRadius: 100, flexShrink: 0 }}>✝ {year}</span>
+                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+              </div>
+              {yearGroups[year].map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === yearGroups[year].length - 1} />)}
+            </div>
+          )) : filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === filtered.length - 1} />)}
+        </div>
+        {filtered.length === 0 && <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}><div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div><p>No startups found</p></div>}
       </div>
       {selected && <GraveDetail g={selected} gt={gt} fmt={fmt} onClose={() => setSelected(null)} />}
     </div>
   );
 }
 
-function GraveCard({ g, fmt, gt, onOpen }) {
-  const bg = GRAVE_COLORS[g.name] || "#1a2e1a";
-  const [hovered, setHovered] = useState(false);
+function GraveCard({ g, fmt, gt, onOpen, isLast }) {
+  const years = g.died - g.founded;
   return (
-    <div onClick={onOpen} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: "#fff", borderRadius: 14, overflow: "hidden", cursor: "pointer", border: "1px solid #e8efe8", boxShadow: hovered ? "0 8px 32px rgba(26,92,48,0.12)" : "0 1px 4px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-3px)" : "none", transition: "all 0.2s ease" }}>
-      {/* Coloured thumbnail */}
-      <div style={{ background: bg, height: 140, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-        {/* Subtle grid pattern */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 0)", backgroundSize: "24px 24px" }} />
-        {/* Tombstone badge */}
-        <div style={{ position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.45)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.2rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem", whiteSpace: "nowrap" }}>
-          <span style={{ fontSize: "0.62rem" }}>🪦</span>
-          <span style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.8)", fontWeight: 600, letterSpacing: "0.03em" }}>Why They Died</span>
+    <div onClick={onOpen} style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, cursor: "pointer" }}>
+      {/* Left side */}
+      <div style={{ padding: "0 1rem 0 0", display: "flex", justifyContent: "flex-end", paddingBottom: "0.5rem" }}>
+        <div style={{ background: "rgba(30,10,10,0.9)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300, width: "100%", transition: "border-color 0.2s" }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"}
+          onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.4rem" }}>
+            <div style={{ fontWeight: 800, fontSize: "0.92rem", color: "#fff" }}>🪦 {g.name}</div>
+            <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#ff6060", fontFamily: "monospace", flexShrink: 0, marginLeft: "0.5rem" }}>{fmt(g.lost)}</div>
+          </div>
+          <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.4rem" }}>{g.industry} · {g.country}</div>
+          <p style={{ fontSize: "0.73rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: "0 0 0.35rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
+          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "0.62rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.1rem 0.4rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
+            <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "0.1rem 0.4rem", borderRadius: 100 }}>⏱ {years}y</span>
+          </div>
         </div>
-        {/* Company name */}
-        <span style={{ fontSize: "clamp(1.2rem,3vw,1.6rem)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", textAlign: "center", padding: "0 1rem", position: "relative", zIndex: 1, textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>{g.name}</span>
       </div>
-      {/* Card body */}
-      <div style={{ padding: "1.1rem 1.1rem 1rem" }}>
-        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0d3a1e", lineHeight: 1.35, marginBottom: "0.5rem" }}>
-          Why {g.name} Died: <span style={{ textDecoration: "line-through", color: "#aaa", fontWeight: 500 }}>{g.industry.split("/")[0]}</span> lessons
-        </h3>
-        <p style={{ fontSize: "0.78rem", color: "#7a9a7a", lineHeight: 1.55, marginBottom: "0.85rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
-        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.85rem" }}>
-          <span style={{ fontSize: "0.65rem", background: "#f0f7f0", color: GREEN, padding: "0.15rem 0.55rem", borderRadius: 100, fontWeight: 600, border: "1px solid #c8dfc8" }}>{g.industry.split("/")[0]}</span>
-          <span style={{ fontSize: "0.65rem", background: "#fde8e8", color: "#b91c1c", padding: "0.15rem 0.55rem", borderRadius: 100, fontWeight: 700, border: "1px solid #fca5a5" }}>💸 {fmt(g.lost)}</span>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f0f7f0", paddingTop: "0.7rem" }}>
-          <span style={{ fontSize: "0.69rem", color: "#aaa" }}>{g.founded} → {g.died}</span>
-          <span style={{ fontSize: "0.72rem", color: GREEN, fontWeight: 600 }}>Read story →</span>
+
+      {/* Center line + dot */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 32 }}>
+        <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a1f10", boxShadow: "0 0 12px rgba(239,68,68,0.8)", marginTop: "1rem", flexShrink: 0, zIndex: 2 }} />
+        {!isLast && <div style={{ flex: 1, width: 2, background: "rgba(239,68,68,0.3)", minHeight: 30 }} />}
+      </div>
+
+      {/* Right side — lesson */}
+      <div style={{ padding: "0 0 0.5rem 1rem", paddingTop: "0.85rem" }}>
+        <div style={{ background: "rgba(10,30,15,0.7)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300 }}>
+          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>💡 {gt.lesson}</div>
+          <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
+          <div style={{ marginTop: "0.5rem", fontSize: "0.65rem", color: "#22c55e", fontWeight: 600 }}>Click to read full story →</div>
         </div>
       </div>
     </div>
@@ -691,63 +682,11 @@ function IdeaValidator({ t }) {
   const sf = (k, v) => setForm(x => ({ ...x, [k]: v }));
 
   const prompts = [
-    f => `Using the "Choosing the Right Problem" framework, evaluate the startup idea: "${f.idea}" (${f.industry}, price $${f.price||"?"}).
-Score each of these 3 criteria clearly (YES / PARTIAL / NO + reason):
-1. Does it HURT EMOTIONALLY OR FINANCIALLY? (Problems worth solving cause real pain — users must feel urgency)
-2. Does it OCCUR FREQUENTLY in the target market? (Recurring pain points create sustainable demand — one-time problems limit growth)
-3. Does it have PAYING CUSTOMERS POTENTIAL? (Validate willingness to pay early — interest without payment signals weak demand)
-Then give an overall Problem Strength verdict: STRONG / MODERATE / WEAK with 2-sentence explanation.`,
-
-    f => `Using the Startup Validation framework, analyse "${f.idea}" (${f.industry}) for early failure risks and distribution.
-Cover these 4 areas with specific bullet points:
-1. TOP EARLY FAILURE RISKS: Check for (a) no market demand — building what nobody wants, (b) weak distribution — great product with no visibility, (c) cash management dangers at $${f.budget||"unknown"} budget
-2. VALIDATION SIGNS TO WATCH: What specific behaviours would prove this idea is validated? (users return voluntarily, recommend organically, pay willingly — give concrete examples for this idea)
-3. DISTRIBUTION CHANNELS: Which 3-4 channels are most realistic for this idea? (social media, SEO, viral loops, communities, partnerships — be specific)
-4. MVP RECOMMENDATION: What is the simplest possible MVP to test ONE core assumption? What should NOT be built yet?`,
-
-    f => `Analyse Product-Market Fit readiness and investor appeal for "${f.idea}" (${f.industry}).
-Cover:
-1. PMF SIGNALS: What specific signs would confirm PMF for this idea? (users return without prompts, referral growth, feature requests increase, retention improves, CAC decreases)
-2. WHAT INVESTORS WANT — score this idea on: Market Size (TAM/SAM/SOM potential), Traction potential (MRR path, growth trajectory), Defensibility (moats, switching costs, network effects, IP)
-3. FINANCIAL DISCIPLINE CHECK: At $${f.budget||"unknown"} budget — estimate runway, key unit economics to track (CAC, LTV, break-even). Flag any vanity spending traps to avoid.
-4. COMPETITIVE LANDSCAPE: Name 2-3 direct competitors. For each: what caused similar ideas to fail? What would need to be done differently?`,
-
-    f => `Apply the Complete Startup Roadmap framework to give a phase-by-phase action plan for "${f.idea}" (${f.industry}, price $${f.price||"?"}, budget $${f.budget||"?"}).
-Structure your response as:
-PHASE 1 — BEFORE STARTING (this week): 3 specific actions (market research, customer interviews, competitor study)
-PHASE 2 — MVP & VALIDATION (first 30 days): What to build, how to test ONE problem, what NOT to spend on yet
-PHASE 3 — PRE-SEED (days 31-90): PMF milestones to hit, distribution system to build, metrics to track
-RESILIENCE WARNING: What is the hardest moment founders of this type of business typically face, and how to prepare for it?`,
-
-    f => `You are a startup advisor using The Complete Startup Roadmap framework. Score this idea comprehensively.
-Idea: "${f.idea}" | Industry: ${f.industry} | Price: $${f.price||"?"} | Budget: $${f.budget||"?"}
-
-Reply ONLY with valid JSON, no markdown fences:
-{
-  "score": 65,
-  "verdict": "CAUTION",
-  "reason": "2-sentence overall assessment",
-  "executiveSummary": "3-sentence summary using startup roadmap lens",
-  "problemStrength": "STRONG|MODERATE|WEAK",
-  "problemHurts": true,
-  "problemRecurring": true,
-  "problemPaysCustomers": true,
-  "greenLights": ["3 genuine strengths based on roadmap criteria"],
-  "redFlags": ["3 real risks: market demand, distribution, cash management"],
-  "risks": ["top 3 failure risks from the early failure framework"],
-  "nextSteps": ["3 immediate actions: validate problem, build MVP, test distribution"],
-  "mvpIdea": "1-sentence simplest MVP to test core assumption",
-  "distributionChannels": ["top 3 channels for this idea"],
-  "pmfMilestones": ["3 specific signs that would confirm PMF for this idea"],
-  "investorReadiness": "NOT READY|EARLY STAGE|INVESTOR READY",
-  "problemValidation": 65,
-  "solutionValidation": 60,
-  "marketValidation": 58,
-  "youtube": [{"title": "title", "url": "https://...", "desc": "why relevant"}],
-  "books": [{"title": "title", "author": "author", "desc": "why relevant"}],
-  "globalProducts": [{"name": "name", "desc": "lesson for this idea", "url": "https://..."}]
-}
-verdict must be exactly GO, CAUTION, or NOGO.`,
+    f => `Analyse market demand for "${f.idea}" (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.`,
+    f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
+    f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
+    f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
+    f => "Score this business idea for Uzbekistan: " + f.idea + " (" + f.industry + ", price $" + (f.price||"?") + ", budget $" + (f.budget||"?") + "). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.",
   ];
 
   const run = async () => {
@@ -789,6 +728,19 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
           parsed.roadmap = parsed.roadmap || {};
           setScore(parsed);
           out.push({ title: vt.steps[i], content: parsed.reason });
+          // Save validation to Supabase
+          try {
+            await supabase.from("validations").insert({
+              idea: f.idea,
+              industry: f.industry,
+              price: f.price ? Number(f.price) : null,
+              budget: f.budget ? Number(f.budget) : null,
+              score: parsed.score,
+              verdict: parsed.verdict,
+              reason: parsed.reason,
+              created_at: new Date().toISOString(),
+            });
+          } catch {}
           // Second call: get detailed market/financials/roadmap
           try {
             const detailPrompt = "For startup idea: " + f.idea + " (" + f.industry + ") in Uzbekistan. Reply ONLY with JSON no markdown: {scores:{targetMarketClarity:N,marketTiming:N,marketEntryBarriers:N,competitionLevel:N,problemSolutionFit:N,mvpViability:N,valueProposition:N,initialFeasibility:N,resourceRequirements:N},market:{tam:string,sam:string,som:string,maturity:string,targetRegions:[array],competitors:[{name,type,strengths:[],weaknesses:[],opportunity}]},financials:{startupCosts:string,cac:string,ltv:string,ltvcac:string,breakEven:string,growth:string,revenueModels:[2 items],monetizationStrategy:string},roadmap:{quickWins:[{title,desc,effort:LOW/MED,outcome}],immediate:[3 actions],shortTerm:[3 actions]}}";
@@ -904,50 +856,6 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
 
             {tab === "summary" && score.summary && (
               <div style={{ animation: "fadeUp 0.3s ease" }}>
-                {/* PDF Framework: Problem Strength */}
-                {score.problemStrength && (
-                  <div style={{ background: score.problemStrength === "STRONG" ? "rgba(34,197,94,0.07)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.07)" : "rgba(239,68,68,0.07)", border: "1px solid " + (score.problemStrength === "STRONG" ? "rgba(34,197,94,0.25)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.25)" : "rgba(239,68,68,0.25)"), borderRadius: 12, padding: "1rem 1.1rem", marginBottom: "0.85rem" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.7rem", flexWrap: "wrap", gap: "0.5rem" }}>
-                      <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.7)" }}>🎯 Problem Strength (Startup Roadmap Framework)</div>
-                      <span style={{ fontSize: "0.72rem", fontWeight: 800, padding: "0.2rem 0.75rem", borderRadius: 100, background: score.problemStrength === "STRONG" ? "rgba(34,197,94,0.2)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.2)" : "rgba(239,68,68,0.2)", color: score.problemStrength === "STRONG" ? "#22c55e" : score.problemStrength === "MODERATE" ? "#f59e0b" : "#ef4444", border: "1px solid currentColor" }}>{score.problemStrength}</span>
-                    </div>
-                    <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-                      {[["Hurts emotionally/financially", score.problemHurts], ["Occurs frequently", score.problemRecurring], ["Has paying potential", score.problemPaysCustomers]].map(([label, val], i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.04)", padding: "0.3rem 0.65rem", borderRadius: 100, border: "1px solid rgba(255,255,255,0.08)" }}>
-                          <span style={{ color: val ? "#22c55e" : "#ef4444" }}>{val ? "✓" : "✗"}</span> {label}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {/* MVP + Distribution + PMF row */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
-                  {score.mvpIdea && (
-                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
-                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🛠 Simplest MVP</div>
-                      <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5, margin: 0 }}>{score.mvpIdea}</p>
-                    </div>
-                  )}
-                  {score.distributionChannels?.length > 0 && (
-                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
-                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#f59e0b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>📣 Distribution</div>
-                      {score.distributionChannels.map((c, i) => <div key={i} style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.7)", marginBottom: "0.25rem" }}>→ {c}</div>)}
-                    </div>
-                  )}
-                  {score.pmfMilestones?.length > 0 && (
-                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
-                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🎯 PMF Signs to Watch</div>
-                      {score.pmfMilestones.map((m, i) => <div key={i} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", marginBottom: "0.25rem" }}>◦ {m}</div>)}
-                    </div>
-                  )}
-                </div>
-                {/* Investor readiness badge */}
-                {score.investorReadiness && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 100, padding: "0.35rem 1rem", marginBottom: "0.85rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)" }}>Investor Readiness:</span>
-                    <span style={{ fontSize: "0.73rem", fontWeight: 700, color: score.investorReadiness === "INVESTOR READY" ? "#22c55e" : score.investorReadiness === "EARLY STAGE" ? "#f59e0b" : "#ef4444" }}>{score.investorReadiness}</span>
-                  </div>
-                )}
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
                   <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
@@ -1391,7 +1299,6 @@ function LearnHub() {
 // ── IT PARK AD ──
 function ItParkAd({ t }) {
   return (
-    <>
     <div style={{ background: "linear-gradient(135deg,#0a2e1a,#1a5c30)", borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "relative", zIndex: 1 }}>
         <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>{t.blog.sponsoredBy}</div>
@@ -1400,35 +1307,6 @@ function ItParkAd({ t }) {
         <a href="https://it-park.uz" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "#fff", color: GREEN, fontSize: "0.75rem", fontWeight: 700, padding: "0.4rem 0.9rem", borderRadius: 6, textDecoration: "none" }}>{t.blog.itparkCta}</a>
       </div>
     </div>
-    {/* Research Papers */}
-    <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem", marginTop: "1rem" }}>
-      <div style={{ fontSize: "0.62rem", fontWeight: 700, color: GREEN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.85rem" }}>📚 Latest Research</div>
-      {[
-        { title: "Is Marketing the Problem? Evidence from Startup Failures", journal: "JEEE · Under Review", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6600918", tag: "Marketing" },
-        { title: "Why Startups Fail: A Comparative Study of Uzbekistan and the United Kingdom", journal: "JEIEE · Under Review", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6494638", tag: "Comparative" },
-        { title: "Fashion Consumer Behaviour in an Emerging Market", journal: "SSRN Working Paper", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6341986", tag: "Consumer" },
-      ].map((p, i) => (
-        <a key={i} href={p.url} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", padding: "0.65rem 0", borderBottom: i < 2 ? "1px solid #f0f7f0" : "none" }}>
-          <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#0d3a1e", lineHeight: 1.4, marginBottom: "0.25rem" }}>{p.title}</div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "0.62rem", color: "#7a9a7a" }}>{p.journal}</span>
-            <span style={{ fontSize: "0.6rem", background: "#f0f7f0", color: GREEN, padding: "0.1rem 0.45rem", borderRadius: 100, fontWeight: 600, border: "1px solid #c8dfc8" }}>{p.tag}</span>
-          </div>
-        </a>
-      ))}
-      <div style={{ marginTop: "0.75rem", paddingTop: "0.65rem", borderTop: "1px solid #f0f7f0", display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-        {[
-          { label: "SSRN", url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=8574040" },
-          { label: "Scholar", url: "https://scholar.google.co.uk/citations?user=0jK5GpEAAAAJ&hl=en&authuser=1" },
-          { label: "ResearchGate", url: "https://www.researchgate.net/profile/Abdulaziz-Ruzmatov" },
-          { label: "LinkedIn", url: "https://www.linkedin.com/in/abdulaziz-ruzmatov/" },
-          { label: "ORCID", url: "https://orcid.org/0009-0008-5771-0181" },
-        ].map((l, i) => (
-          <a key={i} href={l.url} target="_blank" rel="noreferrer" style={{ fontSize: "0.63rem", color: GREEN, fontWeight: 600, textDecoration: "none", background: "#f0f7f0", padding: "0.15rem 0.5rem", borderRadius: 100, border: "1px solid #c8dfc8" }}>{l.label}</a>
-        ))}
-      </div>
-    </div>
-    </>
   );
 }
 
@@ -1646,20 +1524,6 @@ function FounderSection() {
               </div>
             ))}
           </div>
-          <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap", marginBottom: "1rem" }}>
-            {[
-              { label: "LinkedIn", icon: "💼", url: "https://www.linkedin.com/in/abdulaziz-ruzmatov/" },
-              { label: "SSRN", icon: "📄", url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=8574040" },
-              { label: "Google Scholar", icon: "🎓", url: "https://scholar.google.co.uk/citations?user=0jK5GpEAAAAJ&hl=en&authuser=1" },
-              { label: "ResearchGate", icon: "🔬", url: "https://www.researchgate.net/profile/Abdulaziz-Ruzmatov" },
-              { label: "ORCID", icon: "🆔", url: "https://orcid.org/0009-0008-5771-0181" },
-            ].map((l, i) => (
-              <a key={i} href={l.url} target="_blank" rel="noreferrer"
-                style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.28rem 0.75rem", fontSize: "0.71rem", color: "rgba(255,255,255,0.75)", textDecoration: "none", fontWeight: 600 }}>
-                {l.icon} {l.label}
-              </a>
-            ))}
-          </div>
           <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.35)" }}>
             Questions? <a href="mailto:abdulaziz.ruzmatov@northumbria.ac.uk" style={{ color: "#7ffba0", textDecoration: "none", fontWeight: 600 }}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
           </div>
@@ -1779,8 +1643,6 @@ export default function App() {
   const [toastMsg, setToastMsg] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [browsePage, setBrowsePage] = useState(1);
-  const PER_PAGE = 10;
   const toastTimer = useRef(null);
   const t = T[lang];
 
@@ -1869,9 +1731,6 @@ export default function App() {
     return true;
   }).sort((a, b) => sort === "up" ? b.upvotes - a.upvotes : sort === "com" ? (comments[b.id]?.length || 0) - (comments[a.id]?.length || 0) : new Date(b.created_at) - new Date(a.created_at));
 
-  const totalPages = Math.ceil(filtered.length / PER_PAGE);
-  const paginated = filtered.slice((browsePage - 1) * PER_PAGE, browsePage * PER_PAGE);
-
   const indCounts = (() => { const src = curCountry ? problems.filter(p => p.country === curCountry) : problems; const c = {}; src.forEach(p => { c[p.industry] = (c[p.industry] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]); })();
   const det = problems.find(p => p.id === detId);
   const detComments = detId ? (comments[detId] || []) : [];
@@ -1940,13 +1799,13 @@ export default function App() {
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.country}</div>
               {[["", t.sidebar.both], ["United Kingdom", t.sidebar.uk], ["Uzbekistan", t.sidebar.uz]].map(([val, label]) => (
-                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); setBrowsePage(1); }}>{label}</FilterBtn>
+                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); }}>{label}</FilterBtn>
               ))}
             </div>
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.industry}</div>
-              <FilterBtn active={curIndustry === ""} onClick={() => { setCurIndustry(""); setBrowsePage(1); }}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
-              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => { setCurIndustry(ind); setBrowsePage(1); }}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
+              <FilterBtn active={curIndustry === ""} onClick={() => setCurIndustry("")}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
+              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => setCurIndustry(ind)}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
             </div>
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.chart}</div>
@@ -1965,10 +1824,10 @@ export default function App() {
                 <span style={{ position: "absolute", left: "0.7rem", top: "50%", transform: "translateY(-50%)", color: "#aaa", fontSize: "0.78rem" }}>🔍</span>
                 <input value={q} onChange={e => setQ(e.target.value)} placeholder={t.filters.search} style={inp({ paddingLeft: "2.1rem" })} />
               </div>
-              <select value={sort} onChange={e => { setSort(e.target.value); setBrowsePage(1); }} style={sel()}>
+              <select value={sort} onChange={e => setSort(e.target.value)} style={sel()}>
                 <option value="new">{t.filters.newest}</option><option value="up">{t.filters.upvoted}</option><option value="com">{t.filters.discussed}</option>
               </select>
-              <select value={sev} onChange={e => { setSev(e.target.value); setBrowsePage(1); }} style={sel()}>
+              <select value={sev} onChange={e => setSev(e.target.value)} style={sel()}>
                 <option value="">{t.filters.allImp}</option><option value="high">{t.filters.high}</option><option value="medium">{t.filters.medium}</option><option value="low">{t.filters.low}</option>
               </select>
             </div>
@@ -1981,7 +1840,7 @@ export default function App() {
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {paginated.map(p => (
+                {filtered.map(p => (
                   <div key={p.id} onClick={() => setDetId(p.id)} style={{ background: "#fff", border: "1px solid #dceadc", borderLeft: "3px solid transparent", borderRadius: 10, padding: "1.1rem 1.25rem", cursor: "pointer", transition: "all 0.15s" }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.borderLeftColor = GREEN; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,48,0.08)"; }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.boxShadow = "none"; }}>
@@ -2001,26 +1860,6 @@ export default function App() {
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-            {/* Pagination */}
-            {!loading && totalPages > 1 && (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.4rem", marginTop: "1.5rem", flexWrap: "wrap" }}>
-                <button onClick={() => { setBrowsePage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={browsePage === 1}
-                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: browsePage === 1 ? "#f5f5f5" : "#fff", color: browsePage === 1 ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: browsePage === 1 ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>← Prev</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).filter(n => n === 1 || n === totalPages || Math.abs(n - browsePage) <= 2).reduce((acc, n, idx, arr) => {
-                  if (idx > 0 && n - arr[idx - 1] > 1) acc.push("...");
-                  acc.push(n);
-                  return acc;
-                }, []).map((n, i) => n === "..." ? (
-                  <span key={"e" + i} style={{ padding: "0 0.3rem", color: "#aaa", fontSize: "0.8rem" }}>…</span>
-                ) : (
-                  <button key={n} onClick={() => { setBrowsePage(n); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                    style={{ width: 34, height: 34, borderRadius: 7, border: "1px solid " + (browsePage === n ? GREEN : "#c8dfc8"), background: browsePage === n ? GREEN : "#fff", color: browsePage === n ? "#fff" : GREEN, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{n}</button>
-                ))}
-                <button onClick={() => { setBrowsePage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={browsePage === totalPages}
-                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: browsePage === totalPages ? "#f5f5f5" : "#fff", color: browsePage === totalPages ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: browsePage === totalPages ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>Next →</button>
-                <span style={{ fontSize: "0.74rem", color: "#aaa", marginLeft: "0.5rem" }}>{filtered.length} stories · page {browsePage}/{totalPages}</span>
               </div>
             )}
           </div>
