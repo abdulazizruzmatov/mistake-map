@@ -107,7 +107,14 @@ const STARTUP_COMPETITIONS = [
 ];
 
 // ── STYLES ──
-const STYLES = `@keyframes moneyFall { 0% { transform:translateY(-60px) rotate(0deg); opacity:1; } 100% { transform:translateY(110vh) rotate(720deg); opacity:0; } } @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } } @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } } @keyframes chatSlide { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } } @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } } @keyframes stepIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }`;
+const STYLES = ’
+@keyframes moneyFall { 0% { transform:translateY(-60px) rotate(0deg); opacity:1; } 100% { transform:translateY(110vh) rotate(720deg); opacity:0; } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes chatSlide { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+@keyframes stepIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+’;
 if (!document.getElementById(“mm-styles”)) {
 const s = document.createElement(“style”);
 s.id = “mm-styles”;
@@ -320,7 +327,7 @@ return data.content?.[0]?.text || “”;
 function MoneyParticle({ style }) {
 const emojis = [“💸”, “💰”, “🤑”, “💵”];
 const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-return <div style={{ position: “absolute”, top: “-60px”, fontSize: `${1 + Math.random()}rem`, animation: `moneyFall ${3 + Math.random() * 4}s linear infinite`, animationDelay: `${Math.random() * 5}s`, pointerEvents: “none”, zIndex: 0, …style }}>{emoji}</div>;
+return <div style={{ position: “absolute”, top: “-60px”, fontSize: ‘${1 + Math.random()}rem’, animation: ‘moneyFall ${3 + Math.random() * 4}s linear infinite’, animationDelay: ‘${Math.random() * 5}s’, pointerEvents: “none”, zIndex: 0, …style }}>{emoji}</div>;
 }
 
 // ── STARTUP FAIL SECTION ──
@@ -334,7 +341,7 @@ const stats = [
 ];
 return (
 <div style={{ position: “relative”, overflow: “hidden”, background: “linear-gradient(135deg,#0a1f10,#0d3a1e)”, padding: “4rem 1.5rem”, textAlign: “center” }}>
-{Array.from({ length: 14 }, (_, i) => <MoneyParticle key={i} style={{ left: `${(i / 14) * 100}%` }} />)}
+{Array.from({ length: 14 }, (_, i) => <MoneyParticle key={i} style={{ left: ‘${(i / 14) * 100}%’ }} />)}
 <div style={{ position: “relative”, zIndex: 1 }}>
 <div style={{ display: “inline-block”, background: “rgba(127,251,160,0.1)”, border: “1px solid rgba(127,251,160,0.3)”, color: “#7ffba0”, fontSize: “0.72rem”, fontWeight: 700, textTransform: “uppercase”, letterSpacing: “0.1em”, padding: “0.28rem 0.9rem”, borderRadius: 100, marginBottom: “1.25rem” }}>⚠ Business Failure Reality Check</div>
 <h2 style={{ fontSize: “clamp(1.6rem,4vw,2.8rem)”, fontWeight: 800, color: “#fff”, lineHeight: 1.15, marginBottom: “0.75rem” }}>{t.failAnim.title}</h2>
@@ -546,9 +553,12 @@ const [loading, setLoading] = useState(true);
 useEffect(() => {
 const run = async () => {
 try {
-const prompt = `Analyse failure of "${g.name}" (${g.industry}, ${g.country}, ${g.founded}-${g.died}, raised ${fmt(g.raised)}). Known reason: ${g.reason}. Known lesson: ${g.lesson}. Output ONLY valid JSON (no markdown): {"failureScore":75,"marketFitRisk":70,"burnRateRisk":80,"founderRisk":50,"timeline":[{"year":${g.founded},"event":"Company founded"},{"year":${g.died-1},"event":"Warning signs appear"},{"year":${g.died},"event":"Company closes"}],"rootCauses":["cause 1","cause 2","cause 3"],"keyLessons":[{"title":"Lesson 1","desc":"explanation"},{"title":"Lesson 2","desc":"explanation"},{"title":"Lesson 3","desc":"explanation"}],"competitorsThatWon":[{"name":"Competitor","why":"reason they won","outcome":"outcome"},{"name":"Competitor 2","why":"reason","outcome":"outcome"}],"couldHaveBeenPrevented":"honest 2-sentence assessment"}`;
+const prompt = ‘Analyse failure of “${g.name}” (${g.industry}, ${g.country}, ${g.founded}-${g.died}, raised ${fmt(g.raised)}).
+Known reason: ${g.reason}. Known lesson: ${g.lesson}.
+Output ONLY valid JSON (no markdown):
+{“failureScore”:75,“marketFitRisk”:70,“burnRateRisk”:80,“founderRisk”:50,“timeline”:[{“year”:${g.founded},“event”:“Company founded”},{“year”:${g.died-1},“event”:“Warning signs appear”},{“year”:${g.died},“event”:“Company closes”}],“rootCauses”:[“cause 1”,“cause 2”,“cause 3”],“keyLessons”:[{“title”:“Lesson 1”,“desc”:“explanation”},{“title”:“Lesson 2”,“desc”:“explanation”},{“title”:“Lesson 3”,“desc”:“explanation”}],“competitorsThatWon”:[{“name”:“Competitor”,“why”:“reason they won”,“outcome”:“outcome”},{“name”:“Competitor 2”,“why”:“reason”,“outcome”:“outcome”}],“couldHaveBeenPrevented”:“honest 2-sentence assessment”}’;
 const text = await callAI(prompt, 1200);
-const clean = text.replace(/`json|`/g, “”).trim();
+const clean = text.replace(/’’‘json|’’’/g, “”).trim();
 setDetail(JSON.parse(clean));
 } catch {
 setDetail({ failureScore: 75, marketFitRisk: 70, burnRateRisk: 80, founderRisk: 50, timeline: [{ year: g.founded, event: “Founded” }, { year: g.died, event: “Closed” }], rootCauses: [g.reason], keyLessons: [{ title: “Key Lesson”, desc: g.lesson }], competitorsThatWon: [], couldHaveBeenPrevented: “Analysis unavailable.” });
@@ -675,10 +685,10 @@ const [tab, setTab] = useState(“summary”);
 const sf = (k, v) => setForm(x => ({ …x, [k]: v }));
 
 const prompts = [
-f => `Analyse market demand for "${f.idea}" (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.`,
-f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
-f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
-f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
+f => ‘Analyse market demand for “${f.idea}” (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.’,
+f => ‘For “${f.idea}” in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.’,
+f => ‘Main competitors for “${f.idea}” in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.’,
+f => ‘Affordability for “${f.idea}” at $${f.price || “unknown”} in Uzbekistan (avg salary $300-500/month). Give clear verdict.’,
 f => “Score this business idea for Uzbekistan: “ + f.idea + “ (” + f.industry + “, price $” + (f.price||”?”) + “, budget $” + (f.budget||”?”) + “). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.”,
 ];
 
@@ -693,7 +703,7 @@ const text = await callAI(prompts[i](form), i === 4 ? 3000 : 800);
 if (i === 4) {
 let parsed = null;
 // Strip markdown fences first
-let clean = text.replace(/`json/gi, "").replace(/`/g, “”).trim();
+let clean = text.replace(/’’‘json/gi, “”).replace(/’’’/g, “”).trim();
 // Extract JSON object
 const jsonStart = clean.indexOf(”{”);
 const jsonEnd = clean.lastIndexOf(”}”);
@@ -702,7 +712,7 @@ clean = clean.slice(jsonStart, jsonEnd + 1);
 }
 const tries = [
 () => JSON.parse(clean),
-() => JSON.parse(text.replace(/`json|`/gi, “”).trim()),
+() => JSON.parse(text.replace(/’’‘json|’’’/gi, “”).trim()),
 () => { const m = text.match(/{[\s\S]*}/); return m ? JSON.parse(m[0]) : null; },
 ];
 for (const fn of tries) {
@@ -740,7 +750,7 @@ const detailPrompt = “For startup idea: “ + f.idea + “ (” + f.industry +
 const detail = await callAI(detailPrompt, 1500);
 let dp = null;
 try {
-let dc = detail.replace(/`json/gi,"").replace(/`/g,””).trim();
+let dc = detail.replace(/’’‘json/gi,””).replace(/’’’/g,””).trim();
 const ds = dc.indexOf(”{”); const de = dc.lastIndexOf(”}”);
 if (ds !== -1 && de !== -1) dc = dc.slice(ds, de+1);
 dp = JSON.parse(dc);
