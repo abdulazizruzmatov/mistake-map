@@ -1622,7 +1622,9 @@ return (
 
 // ── LIKE COUNTER ──
 function LikeCounter() {
-const [count, setCount] = useState(532);
+const BASE = 532;
+const stored = () => { try { return parseInt(localStorage.getItem(“mm_likes”) || BASE); } catch { return BASE; } };
+const [count, setCount] = useState(stored);
 const [animKey, setAnimKey] = useState(0);
 const [ripples, setRipples] = useState([]);
 const [toasts, setToasts] = useState([]);
@@ -1630,12 +1632,7 @@ const [btnPop, setBtnPop] = useState(false);
 const btnRef = useRef(null);
 const EMOJIS = [“👍”,“🙌”,“🔥”,“✅”,“💚”,“⭐”,“🚀”,“💡”];
 
-useEffect(() => {
-supabase.from(“site_likes”).select(“count”).eq(“id”, 1).single()
-.then(({ data }) => { if (data?.count) setCount(data.count); });
-}, []);
-
-const handleLike = async (e) => {
+const handleLike = (e) => {
 const rect = btnRef.current.getBoundingClientRect();
 const rid = Date.now();
 setRipples(r => […r, { id: rid, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
@@ -1649,7 +1646,7 @@ setTimeout(() => setBtnPop(false), 350);
 const next = count + 1;
 setCount(next);
 setAnimKey(k => k + 1);
-await supabase.from(“site_likes”).update({ count: next }).eq(“id”, 1);
+try { localStorage.setItem(“mm_likes”, next); } catch {}
 };
 
 return (
