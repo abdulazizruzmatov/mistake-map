@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
-import UsefulWidget from "./components/UsefulWidget";
+
 const SUPABASE_URL = "https://ofilqtstiztflvarmkxa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_6_OJbucbFlW0tXqzj11Ttw_XI02F9uq";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1998,7 +1998,6 @@ export default function App() {
       <FounderSection />
       <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
 
-     <UsefulWidget />
       {toastMsg && <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", background: GREEN, color: "#fff", padding: "0.7rem 1.1rem", borderRadius: 8, fontSize: "0.84rem", fontWeight: 500, zIndex: 999, maxWidth: 300, boxShadow: "0 4px 20px rgba(26,92,48,0.25)", animation: "slideUp 0.25s ease" }}>{toastMsg}</div>}
     </div>
   );
