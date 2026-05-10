@@ -19,26 +19,26 @@ const DARK = "#0d3a1e";
 const GRAVEYARD = [
   { name: "FTX", industry: "Crypto/Fintech", country: "🇧🇸 Bahamas", founded: 2019, died: 2022, raised: 1800000000, lost: 32000000000, reason: "Fraud and misuse of customer funds. Founder Sam Bankman-Fried convicted of wire fraud.", lesson: "Never commingle customer funds with operations. Transparency and audits matter more than growth." },
   { name: "Theranos", industry: "Healthcare", country: "🇺🇸 USA", founded: 2003, died: 2018, raised: 945000000, lost: 700000000, reason: "Fraudulent technology claims. Blood testing devices never worked as advertised.", lesson: "Validate technical claims before scaling. Hype kills companies when reality catches up." },
-  { name: "WeWork", industry: "Real Estate", country: "🇺🇸 USA", founded: 2010, died: 2023, raised: 22000000000, lost: 11500000000, reason: "Aggressive growth, unsustainable lease commitments, founder governance issues.", lesson: "Real estate is not tech. Don`t dress up traditional businesses as software valuations." },
-  { name: "Quibi", industry: "Media", country: "🇺🇸 USA", founded: 2018, died: 2020, raised: 1750000000, lost: 1750000000, reason: "Built short-form mobile video during pandemic when users wanted long content on TVs.", lesson: "Validate market timing. $1.75B and famous founders can`t save a wrong product." },
-  { name: "Byju`s", industry: "EdTech", country: "🇮🇳 India", founded: 2011, died: 2024, raised: 5500000000, lost: 22000000000, reason: "Aggressive sales tactics, accounting irregularities, post-COVID demand collapse.", lesson: "Growth at all costs creates fragile businesses. Sustainable unit economics beat vanity metrics." },
+  { name: "WeWork", industry: "Real Estate", country: "🇺🇸 USA", founded: 2010, died: 2023, raised: 22000000000, lost: 11500000000, reason: "Aggressive growth, unsustainable lease commitments, founder governance issues.", lesson: "Real estate is not tech. Don't dress up traditional businesses as software valuations." },
+  { name: "Quibi", industry: "Media", country: "🇺🇸 USA", founded: 2018, died: 2020, raised: 1750000000, lost: 1750000000, reason: "Built short-form mobile video during pandemic when users wanted long content on TVs.", lesson: "Validate market timing. $1.75B and famous founders can't save a wrong product." },
+  { name: "Byju's", industry: "EdTech", country: "🇮🇳 India", founded: 2011, died: 2024, raised: 5500000000, lost: 22000000000, reason: "Aggressive sales tactics, accounting irregularities, post-COVID demand collapse.", lesson: "Growth at all costs creates fragile businesses. Sustainable unit economics beat vanity metrics." },
   { name: "Wirecard", industry: "Fintech", country: "🇩🇪 Germany", founded: 1999, died: 2020, raised: 1900000000, lost: 1900000000, reason: "$2B accounting fraud — funds simply did not exist. CEO arrested.", lesson: "Audit everything. Big-name auditors miss massive fraud — boards must dig deeper." },
-  { name: "Northvolt", industry: "CleanTech", country: "🇸🇪 Sweden", founded: 2016, died: 2024, raised: 13800000000, lost: 13800000000, reason: "Could not compete with Chinese battery makers on cost and scale.", lesson: "Capital alone can`t beat 10-year manufacturing experience curves." },
-  { name: "Argo AI", industry: "Autonomous Vehicles", country: "🇺🇸 USA", founded: 2016, died: 2022, raised: 3600000000, lost: 3600000000, reason: "Self-driving timeline pushed back, investors Ford and VW pulled funding.", lesson: "Don`t depend on a few corporate investors. They cut losses faster than VCs do." },
-  { name: "Faraday Future", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 3000000000, lost: 3000000000, reason: "Endless delays, leadership chaos, never delivered cars at scale.", lesson: "Building cars is brutally hard. Don`t underestimate manufacturing complexity." },
+  { name: "Northvolt", industry: "CleanTech", country: "🇸🇪 Sweden", founded: 2016, died: 2024, raised: 13800000000, lost: 13800000000, reason: "Could not compete with Chinese battery makers on cost and scale.", lesson: "Capital alone can't beat 10-year manufacturing experience curves." },
+  { name: "Argo AI", industry: "Autonomous Vehicles", country: "🇺🇸 USA", founded: 2016, died: 2022, raised: 3600000000, lost: 3600000000, reason: "Self-driving timeline pushed back, investors Ford and VW pulled funding.", lesson: "Don't depend on a few corporate investors. They cut losses faster than VCs do." },
+  { name: "Faraday Future", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 3000000000, lost: 3000000000, reason: "Endless delays, leadership chaos, never delivered cars at scale.", lesson: "Building cars is brutally hard. Don't underestimate manufacturing complexity." },
   { name: "Vice Media", industry: "Media", country: "🇺🇸 USA", founded: 1994, died: 2023, raised: 2500000000, lost: 2500000000, reason: "Could not monetize digital media, advertising decline, mismanaged growth.", lesson: "Digital ad-supported media at scale is broken. Subscription revenue is essential." },
-  { name: "Nikola Motor", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 1000000000, lost: 1000000000, reason: "Founder fraud — fake truck demo videos. SEC charges, bankruptcy.", lesson: "Don`t fake it till you make it with hardware. Due diligence will find out." },
+  { name: "Nikola Motor", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 1000000000, lost: 1000000000, reason: "Founder fraud — fake truck demo videos. SEC charges, bankruptcy.", lesson: "Don't fake it till you make it with hardware. Due diligence will find out." },
   { name: "Quirky", industry: "Hardware", country: "🇺🇸 USA", founded: 2009, died: 2015, raised: 200000000, lost: 200000000, reason: "Launched 50 products per year — too many to support. Burned cash on marketing.", lesson: "Focus beats breadth. Better to nail one product than launch 50 mediocre ones." },
-  { name: "Solyndra", industry: "CleanTech", country: "🇺🇸 USA", founded: 2005, died: 2011, raised: 1100000000, lost: 1100000000, reason: "Chinese solar panels became cheaper than Solyndra`s manufacturing cost.", lesson: "Watch global commodity prices. Chinese manufacturing scale crushes Western hardware startups." },
+  { name: "Solyndra", industry: "CleanTech", country: "🇺🇸 USA", founded: 2005, died: 2011, raised: 1100000000, lost: 1100000000, reason: "Chinese solar panels became cheaper than Solyndra's manufacturing cost.", lesson: "Watch global commodity prices. Chinese manufacturing scale crushes Western hardware startups." },
   { name: "Jawbone", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 1999, died: 2017, raised: 930000000, lost: 930000000, reason: "Lost wearables war to Fitbit and Apple. Product issues, customer complaints.", lesson: "Hardware needs continuous quality improvement. One bad product cycle can kill the brand." },
   { name: "MoviePass", industry: "Entertainment", country: "🇺🇸 USA", founded: 2011, died: 2020, raised: 300000000, lost: 300000000, reason: "Unsustainable $9.95/month for unlimited movies. Lost money on every customer.", lesson: "If unit economics are negative, scaling makes losses worse, not better." },
-  { name: "Hopin", industry: "Events/SaaS", country: "🇬🇧 UK", founded: 2019, died: 2024, raised: 1600000000, lost: 1600000000, reason: "Built virtual events platform during COVID, demand collapsed when pandemic ended.", lesson: "Don`t bet the company on temporary tailwinds. Build for normal times." },
+  { name: "Hopin", industry: "Events/SaaS", country: "🇬🇧 UK", founded: 2019, died: 2024, raised: 1600000000, lost: 1600000000, reason: "Built virtual events platform during COVID, demand collapsed when pandemic ended.", lesson: "Don't bet the company on temporary tailwinds. Build for normal times." },
   { name: "Convoy", industry: "Logistics", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 900000000, lost: 900000000, reason: "Freight market collapse, could not sustain unit economics, ran out of cash.", lesson: "Marketplace businesses need positive contribution margins per transaction." },
   { name: "Bird", industry: "Micromobility", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 776000000, lost: 776000000, reason: "Scooter unit economics never worked. Maintenance costs ate revenue.", lesson: "Real-world hardware in public spaces gets destroyed. Account for that in unit economics." },
   { name: "Juicero", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 120000000, lost: 120000000, reason: "$400 juice machine when juice packets could be squeezed by hand.", lesson: "Test if your hardware actually adds value versus a $1 alternative." },
   { name: "Beepi", industry: "Auto Marketplace", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 148000000, lost: 148000000, reason: "Executives spent $7M per month on salaries and perks. Burn rate killed company.", lesson: "Founder extravagance kills startups. Conserve cash like it is your last dollar." },
-  { name: "Pets.com", industry: "E-commerce", country: "🇺🇸 USA", founded: 1998, died: 2000, raised: 300000000, lost: 300000000, reason: "Selling pet food online with shipping costs higher than products. Dot-com poster child.", lesson: "Heavy products with low margins don`t ship economically. Math matters." },
-  { name: "Webvan", industry: "Grocery Delivery", country: "🇺🇸 USA", founded: 1996, died: 2001, raised: 830000000, lost: 830000000, reason: "Built $1B+ warehouse infrastructure before validating demand. Dot-com bust.", lesson: "Don`t build infrastructure for hypothetical demand. Validate first, scale second." },
+  { name: "Pets.com", industry: "E-commerce", country: "🇺🇸 USA", founded: 1998, died: 2000, raised: 300000000, lost: 300000000, reason: "Selling pet food online with shipping costs higher than products. Dot-com poster child.", lesson: "Heavy products with low margins don't ship economically. Math matters." },
+  { name: "Webvan", industry: "Grocery Delivery", country: "🇺🇸 USA", founded: 1996, died: 2001, raised: 830000000, lost: 830000000, reason: "Built $1B+ warehouse infrastructure before validating demand. Dot-com bust.", lesson: "Don't build infrastructure for hypothetical demand. Validate first, scale second." },
   { name: "Vine", industry: "Social Media", country: "🇺🇸 USA", founded: 2012, died: 2017, raised: 30000000, lost: 30000000, reason: "Twitter shut down its 6-second video app. Failed to monetize creators.", lesson: "Creator platforms must share revenue early. Otherwise creators leave for competitors." },
   { name: "Yik Yak", industry: "Social Media", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 73500000, lost: 73500000, reason: "Anonymous app became toxic. Cyberbullying drove users away.", lesson: "Anonymous social products have inherent moderation problems. Plan for abuse early." },
   { name: "HQ Trivia", industry: "Mobile Gaming", country: "🇺🇸 USA", founded: 2017, died: 2020, raised: 15000000, lost: 15000000, reason: "Live trivia game peaked fast then declined. Could not monetize fad.", lesson: "Viral fads are not businesses. Build for sustained engagement." },
@@ -54,7 +54,7 @@ const GRAVEYARD = [
   { name: "Rdio", industry: "Music Streaming", country: "🇺🇸 USA", founded: 2008, died: 2015, raised: 118000000, lost: 118000000, reason: "Lost to Spotify and Apple Music. Could not compete on catalogue or marketing.", lesson: "In platform wars, second place usually means dead. Build moats or exit early." },
   { name: "Aereo", industry: "Streaming", country: "🇺🇸 USA", founded: 2012, died: 2014, raised: 97000000, lost: 97000000, reason: "TV streaming startup ruled illegal by Supreme Court. Business model died overnight.", lesson: "Do not build companies on legal grey areas. One court ruling can kill you." },
   { name: "Anki", industry: "Robotics", country: "🇺🇸 USA", founded: 2010, died: 2019, raised: 182000000, lost: 182000000, reason: "Could not raise next round despite $100M revenue. Hardware margins too thin.", lesson: "Even with revenue, hardware companies need constant capital injection." },
-  { name: "Essential Products", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2015, died: 2020, raised: 330000000, lost: 330000000, reason: "Andy Rubin`s smartphone could not dent Apple/Samsung duopoly.", lesson: "Smartphone hardware market is closed. Do not enter saturated commodity markets." },
+  { name: "Essential Products", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2015, died: 2020, raised: 330000000, lost: 330000000, reason: "Andy Rubin's smartphone could not dent Apple/Samsung duopoly.", lesson: "Smartphone hardware market is closed. Do not enter saturated commodity markets." },
   { name: "Zenefits", industry: "HR Tech", country: "🇺🇸 USA", founded: 2013, died: 2022, raised: 584000000, lost: 584000000, reason: "Cheated insurance compliance training. Founder ousted, valuation crashed.", lesson: "Compliance shortcuts kill regulated businesses. Do it right or do not do it." },
   { name: "Compass Real Estate", industry: "Real Estate", country: "🇺🇸 USA", founded: 2012, died: 2024, raised: 1500000000, lost: 1500000000, reason: "Tech-disguised real estate brokerage. Profit margins same as competitors.", lesson: "Putting tech in your pitch does not change underlying business margins." },
   { name: "Frank", industry: "Fintech", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 20000000, lost: 175000000, reason: "Founder fabricated 4M users for JPMorgan acquisition. Fraud charges.", lesson: "Do not fabricate users. Acquisition due diligence will find out." },
@@ -114,7 +114,6 @@ const STYLES = `
 @keyframes chatSlide { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
 @keyframes stepIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
-@keyframes countPop { 0% { transform:scale(1); } 40% { transform:scale(1.2); } 100% { transform:scale(1); } }
 `;
 if (!document.getElementById("mm-styles")) {
   const s = document.createElement("style");
@@ -133,18 +132,18 @@ const T = {
     filters: { search: "Search stories...", newest: "Newest", upvoted: "Most upvoted", discussed: "Most discussed", allImp: "All impact", high: "🔴 High", medium: "🟡 Medium", low: "🟢 Low" },
     empty: { title: "No stories found", sub: "Try a different filter or be the first to share here." },
     topCases: { title: "💸 Big Loss Cases", sub: "Real business failures that cost $100k+", noData: "No $100k+ cases yet." },
-    form: { title: "Share a Business Mistake", sub: "Your story could save someone else`s business.", industry: "Industry *", country: "Country *", ptitle: "What went wrong? (title) *", problem: "What happened? *", lesson: "Lesson learned *", impact: "Impact", name: "Your name", namePh: "Anonymous", cancel: "Cancel", publish: "Publish →", loss: "Loss Amount ($)", lossph: "e.g. 50000", image: "Upload Image (optional)", industries: ["Fashion & Retail","Technology & SaaS","Food & Restaurant","Marketing & Agency","Finance & Banking","E-commerce","Manufacturing","Education","Healthcare","Travel & Tourism","Real Estate","Other"], high: "🔴 High — nearly fatal", medium: "🟡 Medium — major setback", low: "🟢 Low — minor but useful", selectInd: "Select industry", selectCou: "Select country" },
+    form: { title: "Share a Business Mistake", sub: "Your story could save someone else's business.", industry: "Industry *", country: "Country *", ptitle: "What went wrong? (title) *", problem: "What happened? *", lesson: "Lesson learned *", impact: "Impact", name: "Your name", namePh: "Anonymous", cancel: "Cancel", publish: "Publish →", loss: "Loss Amount ($)", lossph: "e.g. 50000", image: "Upload Image (optional)", industries: ["Fashion & Retail","Technology & SaaS","Food & Restaurant","Marketing & Agency","Finance & Banking","E-commerce","Manufacturing","Education","Healthcare","Travel & Tourism","Real Estate","Other"], high: "🔴 High — nearly fatal", medium: "🟡 Medium — major setback", low: "🟢 Low — minor but useful", selectInd: "Select industry", selectCou: "Select country" },
     detail: { lesson: "✅ Lesson Learned", comments: "Comments", noComments: "No comments yet.", commentPh: "Add a comment...", post: "Post", reviews: "⭐ Reviews", noReviews: "No reviews yet.", reviewPh: "Share your thoughts...", submitReview: "Post Review", loginReview: "Sign in to write a review", lossLabel: "💸 Total Loss", providers: "🤝 Get Help With This Problem" },
     blog: { title: "Blog & Stories", sub: "Insights from the UK and Uzbekistan business community.", write: "Write a Post", readMore: "Read more →", noPost: "No blog posts yet.", noPostSub: "Be the first to share a story.", postTitle: "Post Title *", postBody: "Write your story *", postTag: "Tag", publish: "Publish Post", competitions: "🏆 Startup Competitions", sponsoredBy: "Sponsored", daysLeft: "days left", applyNow: "Apply →", itparkAd: "IT Park Uzbekistan — The home of tech innovation. Apply for residency, funding & mentorship.", itparkCta: "Learn More →" },
     contact: { title: "Contact Us", sub: "Questions or partnership ideas?", email: "Email", emailV: "hello@mistakemap.co.uk", resp: "Response time", respV: "Within 24 hours", serving: "Serving", servingV: "UK & Uzbekistan only", formTitle: "Send a message", formSub: "We read every message.", nameL: "Name *", emailL: "Email *", countryL: "Country", msgL: "Message *", send: "Send Message →" },
-    auth: { loginTitle: "Welcome Back", regTitle: "Create Account", email: "Email *", password: "Password *", name: "Your Name *", company: "Company / Business", country: "Country", loginBtn: "Sign In", regBtn: "Create Account", switchToReg: "Don`t have an account? Register →", switchToLogin: "Already have an account? Sign in →", verifyNote: "Please verify your email after signing up.", verified: "✓ Verified", notVerified: "Email not verified" },
+    auth: { loginTitle: "Welcome Back", regTitle: "Create Account", email: "Email *", password: "Password *", name: "Your Name *", company: "Company / Business", country: "Country", loginBtn: "Sign In", regBtn: "Create Account", switchToReg: "Don't have an account? Register →", switchToLogin: "Already have an account? Sign in →", verifyNote: "Please verify your email after signing up.", verified: "✓ Verified", notVerified: "Email not verified" },
     toast: { published: "✓ Published!", comment: "Comment posted!", contact: "✓ Message sent!", blogPublished: "✓ Blog post published!", fill: "Please fill in all required fields.", loginSuccess: "Welcome back!", regSuccess: "Account created! Check your email.", loggedOut: "Signed out.", reviewPosted: "Review posted!", verifyResent: "Verification email resent." },
     impact: { high: "High", medium: "Medium", low: "Low" },
-    chat: { title: "AI Business Advisor", placeholder: "Ask about business mistakes...", send: "Send", thinking: "Thinking...", welcome: "Hi! I`m your AI business advisor. Ask me anything about business mistakes and how to avoid them." },
-    failAnim: { title: "Every Day Businesses Fail", sub: "Don`t be a statistic. Learn from those who`ve been there.", stat1: "90% of startups fail", stat2: "38% run out of cash", stat3: "35% no market need", stat4: "$1.4M avg loss", stat5: "20% fail year one", cta: "See Real $100k+ Cases →" },
+    chat: { title: "AI Business Advisor", placeholder: "Ask about business mistakes...", send: "Send", thinking: "Thinking...", welcome: "Hi! I'm your AI business advisor. Ask me anything about business mistakes and how to avoid them." },
+    failAnim: { title: "Every Day Businesses Fail", sub: "Don't be a statistic. Learn from those who've been there.", stat1: "90% of startups fail", stat2: "38% run out of cash", stat3: "35% no market need", stat4: "$1.4M avg loss", stat5: "20% fail year one", cta: "See Real $100k+ Cases →" },
     graveyard: {
       title: "🪦 The Startup Graveyard",
-      sub: "50+ real startup failures · $100B+ in lessons · Don`t repeat their mistakes",
+      sub: "50+ real startup failures · $100B+ in lessons · Don't repeat their mistakes",
       filterAll: "All", filterMega: "Mega ($1B+)", filterMajor: "Major ($100M-$1B)", filterRecent: "Recent (2023+)",
       sortLost: "💰 Money Lost", sortYear: "📅 Year Died", sortName: "🔤 Name",
       raised: "Raised", lost: "Lost", reason: "Why it died", lesson: "Lesson",
@@ -168,7 +167,7 @@ const T = {
       industryLabel: "Industry *", priceLabel: "Price point ($)", pricePh: "e.g. 15",
       budgetLabel: "Startup budget ($)", budgetPh: "e.g. 5000",
       analyseBtn: "Analyse My Idea →",
-      steps: ["Market Research", "Target Segments", "Competitor Analysis", "Affordability", "Final Verdict"],
+      steps: ["Problem Validation", "Failure Risks & Distribution", "PMF & Investor Readiness", "Action Roadmap", "Final Verdict"],
       analysing: "Analysing...",
       goVerdict: "✅ GO — Strong opportunity",
       cautionVerdict: "⚠️ CAUTION — Proceed carefully",
@@ -192,49 +191,49 @@ const T = {
     },
   },
   uz: {
-    nav: { browse: "Ko'rish", graveyard: "🪦 Qabriston", learn: "📚 O`rganish", blog: "Blog", validate: "🧪 Tekshirish", contact: "Aloqa", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
-    hero: { tag: "🇬🇧 UK va 🇺🇿 O`zbekiston", h1a: "Boshqalar qilgan", h1b: "Xatolarni", h1c: "Takrorlamang", sub: "Biznes egalari haqiqiy muvaffaqiyatsizliklarini baham ko'radigan jamiyat.", cta: "Hikoyangizni ulashing →", browse: "Muammolarni ko`rish" },
+    nav: { browse: "Ko'rish", graveyard: "🪦 Qabriston", learn: "📚 O'rganish", blog: "Blog", validate: "🧪 Tekshirish", contact: "Aloqa", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
+    hero: { tag: "🇬🇧 UK va 🇺🇿 O'zbekiston", h1a: "Boshqalar qilgan", h1b: "Xatolarni", h1c: "Takrorlamang", sub: "Biznes egalari haqiqiy muvaffaqiyatsizliklarini baham ko'radigan jamiyat.", cta: "Hikoyangizni ulashing →", browse: "Muammolarni ko'rish" },
     stats: { problems: "Ulashilgan hikoyalar", upvotes: "Jami ovozlar", countries: "Mamlakatlar", live: "● Jonli" },
-    sidebar: { country: "Mamlakat", both: "🌍 Ikkala mamlakat", uk: "🇬🇧 Birlashgan Qirollik", uz: "🇺🇿 O`zbekiston", industry: "Soha", all: "Barcha sohalar", chart: "Soha bo`yicha", leaderboard: "🏆 Oylik Top Hissadorlar", leaderboardSub: "Bu oyda top 5" },
-    filters: { search: "Hikoyalarni qidirish...", newest: "Eng yangi", upvoted: "Ko`p ovoz olgan", discussed: "Ko'p muhokama", allImp: "Barcha ta'sir", high: "🔴 Yuqori", medium: "🟡 O`rtacha", low: "🟢 Past" },
-    empty: { title: "Hikoyalar topilmadi", sub: "Boshqa filtrni sinab ko`ring." },
-    topCases: { title: "💸 Katta zarar holatlari", sub: "$100k+ zarar ko'rgan biznes holatlari", noData: "Hali $100k+ holat yo`q." },
-    form: { title: "Biznes xatosini ulashing", sub: "Hikoyangiz boshqalarni saqlab qolishi mumkin.", industry: "Soha *", country: "Mamlakat *", ptitle: "Nima noto`g'ri ketdi? *", problem: "Nima bo'ldi? *", lesson: "O'rganilgan dars *", impact: "Ta'sir", name: "Ismingiz", namePh: "Anonim", cancel: "Bekor qilish", publish: "Nashr etish →", loss: "Zarar miqdori ($)", lossph: "masalan: 50000", image: "Rasm yuklash", industries: ["Moda va chakana savdo","Texnologiya va SaaS","Oziq-ovqat va restoran","Marketing va agentlik","Moliya va bank","Elektron tijorat","Ishlab chiqarish","Ta'lim","Sog'liqni saqlash","Sayohat va turizm","Ko'chmas mulk","Boshqa"], high: "🔴 Yuqori — deyarli halokatli", medium: "🟡 O'rtacha — katta to`siq", low: "🟢 Past — kichik lekin foydali", selectInd: "Sohani tanlang", selectCou: "Mamlakatni tanlang" },
-    detail: { lesson: "✅ O`rganilgan dars", comments: "Izohlar", noComments: "Hali izoh yo'q.", commentPh: "Izoh qo'shing...", post: "Yuborish", reviews: "⭐ Sharhlar", noReviews: "Hali sharh yo'q.", reviewPh: "Fikringizni ulashing...", submitReview: "Sharh jo'natish", loginReview: "Sharh yozish uchun kiring", lossLabel: "💸 Umumiy zarar", providers: "🤝 Bu muammo bo`yicha yordam" },
-    blog: { title: "Blog va Hikoyalar", sub: "UK va O`zbekiston biznes hamjamiyatidan tushunchalar.", write: "Post yozing", readMore: "Ko'proq o'qish →", noPost: "Hali blog postlari yo'q.", noPostSub: "Birinchi bo'lib ulashing.", postTitle: "Post sarlavhasi *", postBody: "Hikoyangizni yozing *", postTag: "Teg", publish: "Postni nashr etish", competitions: "🏆 Startup musobaqalari", sponsoredBy: "Homiy", daysLeft: "kun qoldi", applyNow: "Ariza →", itparkAd: "IT Park O'zbekiston — Texnologik innovatsiyalar markazi.", itparkCta: "Ko`proq →" },
-    contact: { title: "Biz bilan bog`laning", sub: "Savollar yoki hamkorlik g'oyalari?", email: "Elektron pochta", emailV: "hello@mistakemap.co.uk", resp: "Javob vaqti", respV: "24 soat ichida", serving: "Xizmat", servingV: "Faqat UK va O'zbekiston", formTitle: "Xabar yuboring", formSub: "Har bir xabarni o`qiymiz.", nameL: "Ism *", emailL: "Elektron pochta *", countryL: "Mamlakat", msgL: "Xabar *", send: "Xabar yuborish →" },
-    auth: { loginTitle: "Xush kelibsiz", regTitle: "Hisob yaratish", email: "Elektron pochta *", password: "Parol *", name: "Ismingiz *", company: "Kompaniya", country: "Mamlakat", loginBtn: "Kirish", regBtn: "Hisob yaratish", switchToReg: "Hisobingiz yo`qmi? →", switchToLogin: "Hisobingiz bormi? →", verifyNote: "Emailingizni tasdiqlang.", verified: "✓ Tasdiqlangan", notVerified: "Tasdiqlanmagan" },
-    toast: { published: "✓ Nashr etildi!", comment: "Izoh qo'shildi!", contact: "✓ Xabar yuborildi!", blogPublished: "✓ Nashr etildi!", fill: "Barcha maydonlarni to'ldiring.", loginSuccess: "Xush kelibsiz!", regSuccess: "Hisob yaratildi!", loggedOut: "Chiqildi.", reviewPosted: "Sharh qo`shildi!", verifyResent: "Email qayta yuborildi." },
-    impact: { high: "Yuqori", medium: "O`rtacha", low: "Past" },
-    chat: { title: "AI Biznes Maslahatchisi", placeholder: "Biznes xatolari haqida so'rang...", send: "Yuborish", thinking: "O`ylamoqda...", welcome: "Salom! Men AI biznes maslahatchingizman." },
-    failAnim: { title: "Har kuni bizneslar yopiladi", sub: "Statistika bo`lmang.", stat1: "90% startuplar yopiladi", stat2: "38% pul tugaydi", stat3: "35% bozor yo'q", stat4: "$1.4M o`rtacha zarar", stat5: "20% 1-yilda yopiladi", cta: "Haqiqiy $100k+ holatlar →" },
+    sidebar: { country: "Mamlakat", both: "🌍 Ikkala mamlakat", uk: "🇬🇧 Birlashgan Qirollik", uz: "🇺🇿 O'zbekiston", industry: "Soha", all: "Barcha sohalar", chart: "Soha bo'yicha", leaderboard: "🏆 Oylik Top Hissadorlar", leaderboardSub: "Bu oyda top 5" },
+    filters: { search: "Hikoyalarni qidirish...", newest: "Eng yangi", upvoted: "Ko'p ovoz olgan", discussed: "Ko'p muhokama", allImp: "Barcha ta'sir", high: "🔴 Yuqori", medium: "🟡 O'rtacha", low: "🟢 Past" },
+    empty: { title: "Hikoyalar topilmadi", sub: "Boshqa filtrni sinab ko'ring." },
+    topCases: { title: "💸 Katta zarar holatlari", sub: "$100k+ zarar ko'rgan biznes holatlari", noData: "Hali $100k+ holat yo'q." },
+    form: { title: "Biznes xatosini ulashing", sub: "Hikoyangiz boshqalarni saqlab qolishi mumkin.", industry: "Soha *", country: "Mamlakat *", ptitle: "Nima noto'g'ri ketdi? *", problem: "Nima bo'ldi? *", lesson: "O'rganilgan dars *", impact: "Ta'sir", name: "Ismingiz", namePh: "Anonim", cancel: "Bekor qilish", publish: "Nashr etish →", loss: "Zarar miqdori ($)", lossph: "masalan: 50000", image: "Rasm yuklash", industries: ["Moda va chakana savdo","Texnologiya va SaaS","Oziq-ovqat va restoran","Marketing va agentlik","Moliya va bank","Elektron tijorat","Ishlab chiqarish","Ta'lim","Sog'liqni saqlash","Sayohat va turizm","Ko'chmas mulk","Boshqa"], high: "🔴 Yuqori — deyarli halokatli", medium: "🟡 O'rtacha — katta to'siq", low: "🟢 Past — kichik lekin foydali", selectInd: "Sohani tanlang", selectCou: "Mamlakatni tanlang" },
+    detail: { lesson: "✅ O'rganilgan dars", comments: "Izohlar", noComments: "Hali izoh yo'q.", commentPh: "Izoh qo'shing...", post: "Yuborish", reviews: "⭐ Sharhlar", noReviews: "Hali sharh yo'q.", reviewPh: "Fikringizni ulashing...", submitReview: "Sharh jo'natish", loginReview: "Sharh yozish uchun kiring", lossLabel: "💸 Umumiy zarar", providers: "🤝 Bu muammo bo'yicha yordam" },
+    blog: { title: "Blog va Hikoyalar", sub: "UK va O'zbekiston biznes hamjamiyatidan tushunchalar.", write: "Post yozing", readMore: "Ko'proq o'qish →", noPost: "Hali blog postlari yo'q.", noPostSub: "Birinchi bo'lib ulashing.", postTitle: "Post sarlavhasi *", postBody: "Hikoyangizni yozing *", postTag: "Teg", publish: "Postni nashr etish", competitions: "🏆 Startup musobaqalari", sponsoredBy: "Homiy", daysLeft: "kun qoldi", applyNow: "Ariza →", itparkAd: "IT Park O'zbekiston — Texnologik innovatsiyalar markazi.", itparkCta: "Ko'proq →" },
+    contact: { title: "Biz bilan bog'laning", sub: "Savollar yoki hamkorlik g'oyalari?", email: "Elektron pochta", emailV: "hello@mistakemap.co.uk", resp: "Javob vaqti", respV: "24 soat ichida", serving: "Xizmat", servingV: "Faqat UK va O'zbekiston", formTitle: "Xabar yuboring", formSub: "Har bir xabarni o'qiymiz.", nameL: "Ism *", emailL: "Elektron pochta *", countryL: "Mamlakat", msgL: "Xabar *", send: "Xabar yuborish →" },
+    auth: { loginTitle: "Xush kelibsiz", regTitle: "Hisob yaratish", email: "Elektron pochta *", password: "Parol *", name: "Ismingiz *", company: "Kompaniya", country: "Mamlakat", loginBtn: "Kirish", regBtn: "Hisob yaratish", switchToReg: "Hisobingiz yo'qmi? →", switchToLogin: "Hisobingiz bormi? →", verifyNote: "Emailingizni tasdiqlang.", verified: "✓ Tasdiqlangan", notVerified: "Tasdiqlanmagan" },
+    toast: { published: "✓ Nashr etildi!", comment: "Izoh qo'shildi!", contact: "✓ Xabar yuborildi!", blogPublished: "✓ Nashr etildi!", fill: "Barcha maydonlarni to'ldiring.", loginSuccess: "Xush kelibsiz!", regSuccess: "Hisob yaratildi!", loggedOut: "Chiqildi.", reviewPosted: "Sharh qo'shildi!", verifyResent: "Email qayta yuborildi." },
+    impact: { high: "Yuqori", medium: "O'rtacha", low: "Past" },
+    chat: { title: "AI Biznes Maslahatchisi", placeholder: "Biznes xatolari haqida so'rang...", send: "Yuborish", thinking: "O'ylamoqda...", welcome: "Salom! Men AI biznes maslahatchingizman." },
+    failAnim: { title: "Har kuni bizneslar yopiladi", sub: "Statistika bo'lmang.", stat1: "90% startuplar yopiladi", stat2: "38% pul tugaydi", stat3: "35% bozor yo'q", stat4: "$1.4M o'rtacha zarar", stat5: "20% 1-yilda yopiladi", cta: "Haqiqiy $100k+ holatlar →" },
     graveyard: {
       title: "🪦 Startup Qabristoni",
       sub: "50+ haqiqiy startup muvaffaqiyatsizliklari · $100B+ darslar",
       filterAll: "Barchasi", filterMega: "Mega ($1B+)", filterMajor: "Katta ($100M-$1B)", filterRecent: "Yangi (2023+)",
-      sortLost: "💰 Yo`qotilgan", sortYear: "📅 O`lgan yil", sortName: "🔤 Ism",
-      raised: "Yig`ilgan", lost: "Yo'qotilgan", reason: "Nega o`ldi", lesson: "Dars",
-      yearsAlive: "yil yashagan", showing: "Ko`rsatilmoqda", of: "/",
-      statBuried: "ko'milgan", statLost: "umumiy zarar", statAvg: "o`rtacha umr",
-      searchPh: "Startuplarni qidirish...", clickToRead: "Hikoyani o`qish →",
+      sortLost: "💰 Yo'qotilgan", sortYear: "📅 O'lgan yil", sortName: "🔤 Ism",
+      raised: "Yig'ilgan", lost: "Yo'qotilgan", reason: "Nega o'ldi", lesson: "Dars",
+      yearsAlive: "yil yashagan", showing: "Ko'rsatilmoqda", of: "/",
+      statBuried: "ko'milgan", statLost: "umumiy zarar", statAvg: "o'rtacha umr",
+      searchPh: "Startuplarni qidirish...", clickToRead: "Hikoyani o'qish →",
       failedIn: "Yopildi", failureAnalysis: "Muvaffaqiyatsizlik xavfi tahlili",
       failureScore: "Muvaffaqiyatsizlik bali", marketFitRisk: "Bozor mosligi xavfi",
-      burnRateRisk: "Pul sarflash xavfi", founderRisk: "Asoschiga bog`liq xavf",
-      timeline: "Nima bo`ldi: Vaqt jadvali",
-      rootCauses: "Asosiy sabablar", keyLessons: "Asosiy o`rganilgan darslar",
-      competitorsThatWon: "G`olib bo`lgan raqobatchilar",
+      burnRateRisk: "Pul sarflash xavfi", founderRisk: "Asoschiga bog'liq xavf",
+      timeline: "Nima bo'ldi: Vaqt jadvali",
+      rootCauses: "Asosiy sabablar", keyLessons: "Asosiy o'rganilgan darslar",
+      competitorsThatWon: "G'olib bo'lgan raqobatchilar",
       couldBePrevented: "Bu muvaffaqiyatsizlik oldini olish mumkin edi?",
       analysing: "Muvaffaqiyatsizlik namunalari tahlil qilinmoqda...",
     },
     validator: {
       title: "🧪 Biznes Fikr Tekshirgich",
-      sub: "O`zbekiston bozorida fikringizni test qiling",
+      sub: "O'zbekiston bozorida fikringizni test qiling",
       step1Title: "Fikringizni aytib bering",
       ideaLabel: "Biznes fikr *", ideaPh: "masalan: Toshkent uchun online oziq-ovqat",
       industryLabel: "Soha *", priceLabel: "Narx ($)", pricePh: "masalan: 15",
-      budgetLabel: "Boshlang`ich byudjet ($)", budgetPh: "masalan: 5000",
+      budgetLabel: "Boshlang'ich byudjet ($)", budgetPh: "masalan: 5000",
       analyseBtn: "Tahlil qilish →",
-      steps: ["Bozor tadqiqoti", "Maqsad segmentlar", "Raqobatchilar", "Sotib olish qobiliyati", "Yakuniy hukm"],
+      steps: ["Muammo tekshiruvi", "Muvaffaqiyatsizlik xavflari", "PMF & Investor tayyorligi", "Harakat rejasi", "Yakuniy hukm"],
       analysing: "Tahlil qilinmoqda...",
       goVerdict: "✅ BORING — Kuchli imkoniyat",
       cautionVerdict: "⚠️ EHTIYOT — Ehtiyotkorlik bilan",
@@ -242,16 +241,16 @@ const T = {
       scoreLabel: "Imkoniyat bali",
       restart: "← Boshqa fikrni tekshirish",
       tabSummary: "Xulosa", tabScores: "Ballar", tabMarket: "Bozor",
-      tabFinancials: "Moliya", tabRoadmap: "Yo`l xaritasi",
+      tabFinancials: "Moliya", tabRoadmap: "Yo'l xaritasi",
       execSummary: "Ijroiya xulosa", greenLights: "Yashil chiroqlar", redFlags: "Qizil bayroqlar",
       problemVal: "Muammo tasdiqi", solutionVal: "Yechim tasdiqi", marketVal: "Bozor tasdiqi",
       marketFactors: "Bozor omillari", execFactors: "Ijro omillari",
       marketSize: "Bozor hajmi", targetRegions: "Maqsadli hududlar",
       competitive: "Raqobat muhiti", strengths: "KUCHLI TOMONLAR", weaknesses: "ZAIF TOMONLAR",
       yourOpportunity: "SIZNING IMKONIYATINGIZ",
-      unitEconomics: "Birlik iqtisodiyoti", startupCosts: "BOSHLANG`ICH XARAJATLAR",
-      breakEven: "ZARAR KO`RMASLIK", growth: "O`SISH (CAGR)", revenueModels: "Daromad modellari",
-      quickWins: "Tezkor g`alabalar", underOneWeek: "HAR BIRI 1 HAFTA ICHIDA",
+      unitEconomics: "Birlik iqtisodiyoti", startupCosts: "BOSHLANG'ICH XARAJATLAR",
+      breakEven: "ZARAR KO'RMASLIK", growth: "O'SISH (CAGR)", revenueModels: "Daromad modellari",
+      quickWins: "Tezkor g'alabalar", underOneWeek: "HAR BIRI 1 HAFTA ICHIDA",
       immediate: "DARHOL (1 HAFTA)", shortTerm: "QISQA MUDDAT (1-3 OY)",
       rawAnalysis: "Xom tahlil", validatingText: "Fikringiz tekshirilmoqda...",
       investorReady: "Investorga tayyor — Bu fondlarga murojaat qiling",
@@ -289,7 +288,7 @@ const SOLUTION_PROVIDERS = {
 
 // ── HELPERS ──
 function inp(extra = {}) { return { background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 7, padding: "0.6rem 0.8rem", fontFamily: "Inter,sans-serif", fontSize: "0.84rem", color: "#1a2e1a", outline: "none", width: "100%", boxSizing: "border-box", ...extra }; }
-function sel() { return { ...inp(), cursor: "pointer", appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round`/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.7rem center", paddingRight: "2rem" }; }
+function sel() { return { ...inp(), cursor: "pointer", appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.7rem center", paddingRight: "2rem" }; }
 function darkInp() { return { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box" }; }
 function darkSel() { return { ...darkInp(), cursor: "pointer", appearance: "none" }; }
 function xBtn() { return { background: "#f0f7f0", border: "1px solid #dceadc", borderRadius: 6, width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#aaa", fontSize: "0.85rem", flexShrink: 0, fontFamily: "Inter,sans-serif" }; }
@@ -328,7 +327,7 @@ const callAI = async (prompt, maxTok = 1000) => {
 function MoneyParticle({ style }) {
   const emojis = ["💸", "💰", "🤑", "💵"];
   const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-  return <div style={{ position: "absolute", top: "-60px", fontSize: `${1 + Math.random()}rem', animation: 'moneyFall ${3 + Math.random() * 4}s linear infinite', animationDelay: '${Math.random() * 5}s`, pointerEvents: "none", zIndex: 0, ...style }}>{emoji}</div>;
+  return <div style={{ position: "absolute", top: "-60px", fontSize: `${1 + Math.random()}rem`, animation: `moneyFall ${3 + Math.random() * 4}s linear infinite`, animationDelay: `${Math.random() * 5}s`, pointerEvents: "none", zIndex: 0, ...style }}>{emoji}</div>;
 }
 
 // ── STARTUP FAIL SECTION ──
@@ -431,6 +430,19 @@ function Leaderboard({ t }) {
 }
 
 // ── GRAVEYARD SECTION ──
+const GRAVE_COLORS = {
+  "FTX":"#0a1628","Theranos":"#7f1d1d","WeWork":"#18181b","Quibi":"#4c1d95","Byju's":"#1e3a8a",
+  "Wirecard":"#064e3b","Northvolt":"#0c4a6e","Argo AI":"#431407","Vice Media":"#991b1b",
+  "Nikola Motor":"#0f172a","MoviePass":"#881337","Hopin":"#4a1d96","Convoy":"#1e3a8a",
+  "Bird":"#78350f","Juicero":"#14532d","Beepi":"#1e3a8a","Vine":"#064e3b","HQ Trivia":"#713f12",
+  "Pebble":"#1f2937","Fast":"#312e81","IRL":"#831843","Babylon Health":"#0c4a6e",
+  "Hyperloop One":"#3b0764","Magic Leap":"#1a2e1a","Munchery":"#7c2d12","Solyndra":"#14532d",
+  "Jawbone":"#312e81","Brandless":"#374151","Webvan":"#1c1917","Pets.com":"#7c3aed",
+  "Rdio":"#7f1d1d","Homejoy":"#052e16","Anki":"#1e1b4b","Faraday Future":"#312e81",
+  "Essential Products":"#18181b","Zenefits":"#0c4a6e","Compass Real Estate":"#1a2e1a",
+  "Frank":"#1e3a8a","Aereo":"#172554","Quirky":"#92400e","Katerra":"#1c1917",
+};
+
 function GraveyardSection({ t }) {
   const gt = t.graveyard;
   const [filter, setFilter] = useState("all");
@@ -451,93 +463,89 @@ function GraveyardSection({ t }) {
   const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
   const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
 
-  const yearGroups = {};
-  filtered.forEach(g => { if (!yearGroups[g.died]) yearGroups[g.died] = []; yearGroups[g.died].push(g); });
-  const years = Object.keys(yearGroups).sort((a, b) => b - a);
-
   return (
-    <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+    <div style={{ background: "#f8faf8", minHeight: "100vh" }}>
+      {/* Dark header */}
+      <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3rem 1.5rem 2.5rem" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.9)", fontSize: "0.73rem", fontWeight: 600, padding: "0.25rem 0.85rem", borderRadius: 100, marginBottom: "1rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>🪦 Startup Graveyard</div>
           <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{gt.title}</h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{gt.sub}</p>
-        </div>
-        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-          {[{ v: GRAVEYARD.length, l: gt.statBuried }, { v: fmt(totalLost), l: gt.statLost }, { v: avgLife + "y", l: gt.statAvg }].map((s, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.5rem", textAlign: "center", minWidth: 130 }}>
-              <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ff6060" }}>{s.v}</div>
-              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", marginTop: "0.2rem" }}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "0.75rem" }}>
-          {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
-            <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "linear-gradient(135deg,#ef4444,#dc2626)" : "rgba(255,255,255,0.05)", color: filter === k ? "#fff" : "rgba(255,255,255,0.7)", border: "1px solid " + (filter === k ? "#ef4444" : "rgba(255,255,255,0.15)"), borderRadius: 100, padding: "0.4rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "0.6rem", maxWidth: 600, margin: "0 auto 1.5rem", flexWrap: "wrap" }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, minWidth: 180, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
-          <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
-            <option value="lost" style={{ background: "#1a1a1a" }}>{gt.sortLost}</option>
-            <option value="year" style={{ background: "#1a1a1a" }}>{gt.sortYear}</option>
-            <option value="name" style={{ background: "#1a1a1a" }}>{gt.sortName}</option>
-          </select>
-        </div>
-        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>{gt.showing} {filtered.length} {gt.of} {GRAVEYARD.length}</p>
-        {/* Timeline */}
-        <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          {sort === "year" ? years.map(year => (
-            <div key={year}>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0 0.5rem" }}>
-                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
-                <span style={{ background: "linear-gradient(135deg,#ef4444,#b91c1c)", color: "#fff", fontWeight: 800, fontSize: "0.82rem", padding: "0.3rem 1rem", borderRadius: 100, flexShrink: 0 }}>✝ {year}</span>
-                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", marginBottom: "2rem" }}>{gt.sub}</p>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.75rem" }}>
+            {[{ v: GRAVEYARD.length, l: gt.statBuried, c: "#7ffba0" }, { v: fmt(totalLost), l: gt.statLost, c: "#fca5a5" }, { v: avgLife + "y", l: gt.statAvg, c: "#fde68a" }].map((s, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "1rem 1.75rem", textAlign: "center", minWidth: 120 }}>
+                <div style={{ fontSize: "1.6rem", fontWeight: 900, color: s.c, lineHeight: 1 }}>{s.v}</div>
+                <div style={{ fontSize: "0.69rem", color: "rgba(255,255,255,0.5)", marginTop: "0.3rem", fontWeight: 500 }}>{s.l}</div>
               </div>
-              {yearGroups[year].map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === yearGroups[year].length - 1} />)}
-            </div>
-          )) : filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === filtered.length - 1} />)}
+            ))}
+          </div>
+          {/* Filters */}
+          <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
+              <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "#fff" : "rgba(255,255,255,0.08)", color: filter === k ? "#0d3a1e" : "rgba(255,255,255,0.75)", border: "1px solid " + (filter === k ? "#fff" : "rgba(255,255,255,0.2)"), borderRadius: 100, padding: "0.38rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", transition: "all 0.15s" }}>{label}</button>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: "0.6rem", maxWidth: 560, margin: "0 auto" }}>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
+            <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
+              <option value="lost" style={{ background: "#0d3a1e" }}>{gt.sortLost}</option>
+              <option value="year" style={{ background: "#0d3a1e" }}>{gt.sortYear}</option>
+              <option value="name" style={{ background: "#0d3a1e" }}>{gt.sortName}</option>
+            </select>
+          </div>
         </div>
-        {filtered.length === 0 && <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}><div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div><p>No startups found</p></div>}
+      </div>
+
+      {/* Cards grid */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2.5rem 1.5rem" }}>
+        <p style={{ color: "#7a9a7a", fontSize: "0.78rem", marginBottom: "1.5rem", fontWeight: 500 }}>{gt.showing} <strong style={{ color: "#1a2e1a" }}>{filtered.length}</strong> {gt.of} {GRAVEYARD.length}</p>
+        {filtered.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "4rem", color: "#aaa" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div>
+            <p>No startups found</p>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))", gap: "1.5rem" }}>
+            {filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} />)}
+          </div>
+        )}
       </div>
       {selected && <GraveDetail g={selected} gt={gt} fmt={fmt} onClose={() => setSelected(null)} />}
     </div>
   );
 }
 
-function GraveCard({ g, fmt, gt, onOpen, isLast }) {
-  const years = g.died - g.founded;
+function GraveCard({ g, fmt, gt, onOpen }) {
+  const bg = GRAVE_COLORS[g.name] || "#1a2e1a";
+  const [hovered, setHovered] = useState(false);
   return (
-    <div onClick={onOpen} style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, cursor: "pointer" }}>
-      {/* Left side */}
-      <div style={{ padding: "0 1rem 0 0", display: "flex", justifyContent: "flex-end", paddingBottom: "0.5rem" }}>
-        <div style={{ background: "rgba(30,10,10,0.9)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300, width: "100%", transition: "border-color 0.2s" }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"}
-          onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.4rem" }}>
-            <div style={{ fontWeight: 800, fontSize: "0.92rem", color: "#fff" }}>🪦 {g.name}</div>
-            <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#ff6060", fontFamily: "monospace", flexShrink: 0, marginLeft: "0.5rem" }}>{fmt(g.lost)}</div>
-          </div>
-          <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.4rem" }}>{g.industry} · {g.country}</div>
-          <p style={{ fontSize: "0.73rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: "0 0 0.35rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
-          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "0.62rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.1rem 0.4rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
-            <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "0.1rem 0.4rem", borderRadius: 100 }}>⏱ {years}y</span>
-          </div>
+    <div onClick={onOpen} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: "#fff", borderRadius: 14, overflow: "hidden", cursor: "pointer", border: "1px solid #e8efe8", boxShadow: hovered ? "0 8px 32px rgba(26,92,48,0.12)" : "0 1px 4px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-3px)" : "none", transition: "all 0.2s ease" }}>
+      {/* Coloured thumbnail */}
+      <div style={{ background: bg, height: 140, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+        {/* Subtle grid pattern */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 0)", backgroundSize: "24px 24px" }} />
+        {/* Tombstone badge */}
+        <div style={{ position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.45)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.2rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem", whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: "0.62rem" }}>🪦</span>
+          <span style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.8)", fontWeight: 600, letterSpacing: "0.03em" }}>Why They Died</span>
         </div>
+        {/* Company name */}
+        <span style={{ fontSize: "clamp(1.2rem,3vw,1.6rem)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", textAlign: "center", padding: "0 1rem", position: "relative", zIndex: 1, textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>{g.name}</span>
       </div>
-
-      {/* Center line + dot */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 32 }}>
-        <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a1f10", boxShadow: "0 0 12px rgba(239,68,68,0.8)", marginTop: "1rem", flexShrink: 0, zIndex: 2 }} />
-        {!isLast && <div style={{ flex: 1, width: 2, background: "rgba(239,68,68,0.3)", minHeight: 30 }} />}
-      </div>
-
-      {/* Right side — lesson */}
-      <div style={{ padding: "0 0 0.5rem 1rem", paddingTop: "0.85rem" }}>
-        <div style={{ background: "rgba(10,30,15,0.7)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300 }}>
-          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>💡 {gt.lesson}</div>
-          <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
-          <div style={{ marginTop: "0.5rem", fontSize: "0.65rem", color: "#22c55e", fontWeight: 600 }}>Click to read full story →</div>
+      {/* Card body */}
+      <div style={{ padding: "1.1rem 1.1rem 1rem" }}>
+        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0d3a1e", lineHeight: 1.35, marginBottom: "0.5rem" }}>
+          Why {g.name} Died: <span style={{ textDecoration: "line-through", color: "#aaa", fontWeight: 500 }}>{g.industry.split("/")[0]}</span> lessons
+        </h3>
+        <p style={{ fontSize: "0.78rem", color: "#7a9a7a", lineHeight: 1.55, marginBottom: "0.85rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
+        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.85rem" }}>
+          <span style={{ fontSize: "0.65rem", background: "#f0f7f0", color: GREEN, padding: "0.15rem 0.55rem", borderRadius: 100, fontWeight: 600, border: "1px solid #c8dfc8" }}>{g.industry.split("/")[0]}</span>
+          <span style={{ fontSize: "0.65rem", background: "#fde8e8", color: "#b91c1c", padding: "0.15rem 0.55rem", borderRadius: 100, fontWeight: 700, border: "1px solid #fca5a5" }}>💸 {fmt(g.lost)}</span>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f0f7f0", paddingTop: "0.7rem" }}>
+          <span style={{ fontSize: "0.69rem", color: "#aaa" }}>{g.founded} → {g.died}</span>
+          <span style={{ fontSize: "0.72rem", color: GREEN, fontWeight: 600 }}>Read story →</span>
         </div>
       </div>
     </div>
@@ -556,7 +564,7 @@ Known reason: ${g.reason}. Known lesson: ${g.lesson}.
 Output ONLY valid JSON (no markdown):
 {"failureScore":75,"marketFitRisk":70,"burnRateRisk":80,"founderRisk":50,"timeline":[{"year":${g.founded},"event":"Company founded"},{"year":${g.died-1},"event":"Warning signs appear"},{"year":${g.died},"event":"Company closes"}],"rootCauses":["cause 1","cause 2","cause 3"],"keyLessons":[{"title":"Lesson 1","desc":"explanation"},{"title":"Lesson 2","desc":"explanation"},{"title":"Lesson 3","desc":"explanation"}],"competitorsThatWon":[{"name":"Competitor","why":"reason they won","outcome":"outcome"},{"name":"Competitor 2","why":"reason","outcome":"outcome"}],"couldHaveBeenPrevented":"honest 2-sentence assessment"}`;
         const text = await callAI(prompt, 1200);
-        const clean = text.replace(/`''json|''`/g, "").trim();
+        const clean = text.replace(/```json|```/g, "").trim();
         setDetail(JSON.parse(clean));
       } catch {
         setDetail({ failureScore: 75, marketFitRisk: 70, burnRateRisk: 80, founderRisk: 50, timeline: [{ year: g.founded, event: "Founded" }, { year: g.died, event: "Closed" }], rootCauses: [g.reason], keyLessons: [{ title: "Key Lesson", desc: g.lesson }], competitorsThatWon: [], couldHaveBeenPrevented: "Analysis unavailable." });
@@ -683,11 +691,63 @@ function IdeaValidator({ t }) {
   const sf = (k, v) => setForm(x => ({ ...x, [k]: v }));
 
   const prompts = [
-    f => `Analyse market demand for "${f.idea}" (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.`,
-    f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
-    f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
-    f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
-    f => "Score this business idea for Uzbekistan: " + f.idea + " (" + f.industry + ", price $" + (f.price||"?") + ", budget $" + (f.budget||"?") + "). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.",
+    f => `Using the "Choosing the Right Problem" framework, evaluate the startup idea: "${f.idea}" (${f.industry}, price $${f.price||"?"}).
+Score each of these 3 criteria clearly (YES / PARTIAL / NO + reason):
+1. Does it HURT EMOTIONALLY OR FINANCIALLY? (Problems worth solving cause real pain — users must feel urgency)
+2. Does it OCCUR FREQUENTLY in the target market? (Recurring pain points create sustainable demand — one-time problems limit growth)
+3. Does it have PAYING CUSTOMERS POTENTIAL? (Validate willingness to pay early — interest without payment signals weak demand)
+Then give an overall Problem Strength verdict: STRONG / MODERATE / WEAK with 2-sentence explanation.`,
+
+    f => `Using the Startup Validation framework, analyse "${f.idea}" (${f.industry}) for early failure risks and distribution.
+Cover these 4 areas with specific bullet points:
+1. TOP EARLY FAILURE RISKS: Check for (a) no market demand — building what nobody wants, (b) weak distribution — great product with no visibility, (c) cash management dangers at $${f.budget||"unknown"} budget
+2. VALIDATION SIGNS TO WATCH: What specific behaviours would prove this idea is validated? (users return voluntarily, recommend organically, pay willingly — give concrete examples for this idea)
+3. DISTRIBUTION CHANNELS: Which 3-4 channels are most realistic for this idea? (social media, SEO, viral loops, communities, partnerships — be specific)
+4. MVP RECOMMENDATION: What is the simplest possible MVP to test ONE core assumption? What should NOT be built yet?`,
+
+    f => `Analyse Product-Market Fit readiness and investor appeal for "${f.idea}" (${f.industry}).
+Cover:
+1. PMF SIGNALS: What specific signs would confirm PMF for this idea? (users return without prompts, referral growth, feature requests increase, retention improves, CAC decreases)
+2. WHAT INVESTORS WANT — score this idea on: Market Size (TAM/SAM/SOM potential), Traction potential (MRR path, growth trajectory), Defensibility (moats, switching costs, network effects, IP)
+3. FINANCIAL DISCIPLINE CHECK: At $${f.budget||"unknown"} budget — estimate runway, key unit economics to track (CAC, LTV, break-even). Flag any vanity spending traps to avoid.
+4. COMPETITIVE LANDSCAPE: Name 2-3 direct competitors. For each: what caused similar ideas to fail? What would need to be done differently?`,
+
+    f => `Apply the Complete Startup Roadmap framework to give a phase-by-phase action plan for "${f.idea}" (${f.industry}, price $${f.price||"?"}, budget $${f.budget||"?"}).
+Structure your response as:
+PHASE 1 — BEFORE STARTING (this week): 3 specific actions (market research, customer interviews, competitor study)
+PHASE 2 — MVP & VALIDATION (first 30 days): What to build, how to test ONE problem, what NOT to spend on yet
+PHASE 3 — PRE-SEED (days 31-90): PMF milestones to hit, distribution system to build, metrics to track
+RESILIENCE WARNING: What is the hardest moment founders of this type of business typically face, and how to prepare for it?`,
+
+    f => `You are a startup advisor using The Complete Startup Roadmap framework. Score this idea comprehensively.
+Idea: "${f.idea}" | Industry: ${f.industry} | Price: $${f.price||"?"} | Budget: $${f.budget||"?"}
+
+Reply ONLY with valid JSON, no markdown fences:
+{
+  "score": 65,
+  "verdict": "CAUTION",
+  "reason": "2-sentence overall assessment",
+  "executiveSummary": "3-sentence summary using startup roadmap lens",
+  "problemStrength": "STRONG|MODERATE|WEAK",
+  "problemHurts": true,
+  "problemRecurring": true,
+  "problemPaysCustomers": true,
+  "greenLights": ["3 genuine strengths based on roadmap criteria"],
+  "redFlags": ["3 real risks: market demand, distribution, cash management"],
+  "risks": ["top 3 failure risks from the early failure framework"],
+  "nextSteps": ["3 immediate actions: validate problem, build MVP, test distribution"],
+  "mvpIdea": "1-sentence simplest MVP to test core assumption",
+  "distributionChannels": ["top 3 channels for this idea"],
+  "pmfMilestones": ["3 specific signs that would confirm PMF for this idea"],
+  "investorReadiness": "NOT READY|EARLY STAGE|INVESTOR READY",
+  "problemValidation": 65,
+  "solutionValidation": 60,
+  "marketValidation": 58,
+  "youtube": [{"title": "title", "url": "https://...", "desc": "why relevant"}],
+  "books": [{"title": "title", "author": "author", "desc": "why relevant"}],
+  "globalProducts": [{"name": "name", "desc": "lesson for this idea", "url": "https://..."}]
+}
+verdict must be exactly GO, CAUTION, or NOGO.`,
   ];
 
   const run = async () => {
@@ -701,7 +761,7 @@ function IdeaValidator({ t }) {
         if (i === 4) {
           let parsed = null;
           // Strip markdown fences first
-          let clean = text.replace(/`''json/gi, "").replace(/''`/g, "").trim();
+          let clean = text.replace(/```json/gi, "").replace(/```/g, "").trim();
           // Extract JSON object
           const jsonStart = clean.indexOf("{");
           const jsonEnd = clean.lastIndexOf("}");
@@ -710,7 +770,7 @@ function IdeaValidator({ t }) {
           }
           const tries = [
             () => JSON.parse(clean),
-            () => JSON.parse(text.replace(/`''json|''`/gi, "").trim()),
+            () => JSON.parse(text.replace(/```json|```/gi, "").trim()),
             () => { const m = text.match(/\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; },
           ];
           for (const fn of tries) {
@@ -729,26 +789,13 @@ function IdeaValidator({ t }) {
           parsed.roadmap = parsed.roadmap || {};
           setScore(parsed);
           out.push({ title: vt.steps[i], content: parsed.reason });
-          // Save validation to Supabase
-          try {
-            await supabase.from("validations").insert({
-              idea: f.idea,
-              industry: f.industry,
-              price: f.price ? Number(f.price) : null,
-              budget: f.budget ? Number(f.budget) : null,
-              score: parsed.score,
-              verdict: parsed.verdict,
-              reason: parsed.reason,
-              created_at: new Date().toISOString(),
-            });
-          } catch {}
           // Second call: get detailed market/financials/roadmap
           try {
             const detailPrompt = "For startup idea: " + f.idea + " (" + f.industry + ") in Uzbekistan. Reply ONLY with JSON no markdown: {scores:{targetMarketClarity:N,marketTiming:N,marketEntryBarriers:N,competitionLevel:N,problemSolutionFit:N,mvpViability:N,valueProposition:N,initialFeasibility:N,resourceRequirements:N},market:{tam:string,sam:string,som:string,maturity:string,targetRegions:[array],competitors:[{name,type,strengths:[],weaknesses:[],opportunity}]},financials:{startupCosts:string,cac:string,ltv:string,ltvcac:string,breakEven:string,growth:string,revenueModels:[2 items],monetizationStrategy:string},roadmap:{quickWins:[{title,desc,effort:LOW/MED,outcome}],immediate:[3 actions],shortTerm:[3 actions]}}";
             const detail = await callAI(detailPrompt, 1500);
             let dp = null;
             try {
-              let dc = detail.replace(/`''json/gi,"").replace(/''`/g,"").trim();
+              let dc = detail.replace(/```json/gi,"").replace(/```/g,"").trim();
               const ds = dc.indexOf("{"); const de = dc.lastIndexOf("}");
               if (ds !== -1 && de !== -1) dc = dc.slice(ds, de+1);
               dp = JSON.parse(dc);
@@ -838,12 +885,12 @@ function IdeaValidator({ t }) {
                 <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{form.idea}</h2>
                 <div style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.45)" }}>{form.industry} · Uzbekistan</div>
               </div>
-              {score && <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <div style={{ textAlign: "center" }}>
                   <div style={{ fontSize: "2.5rem", fontWeight: 900, color: vc(score.verdict) }}>{score.score}</div>
                   <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)" }}>{vt.scoreLabel}</div>
                 </div>
-              </div>}
+              </div>
             </div>
             <div style={{ background: vc(score.verdict) + "15", border: "1px solid " + vc(score.verdict) + "40", borderRadius: 10, padding: "0.85rem 1.1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
               <span style={{ fontWeight: 700, color: vc(score.verdict) }}>{vl(score.verdict)}</span>
@@ -857,10 +904,54 @@ function IdeaValidator({ t }) {
 
             {tab === "summary" && score.summary && (
               <div style={{ animation: "fadeUp 0.3s ease" }}>
+                {/* PDF Framework: Problem Strength */}
+                {score.problemStrength && (
+                  <div style={{ background: score.problemStrength === "STRONG" ? "rgba(34,197,94,0.07)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.07)" : "rgba(239,68,68,0.07)", border: "1px solid " + (score.problemStrength === "STRONG" ? "rgba(34,197,94,0.25)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.25)" : "rgba(239,68,68,0.25)"), borderRadius: 12, padding: "1rem 1.1rem", marginBottom: "0.85rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.7rem", flexWrap: "wrap", gap: "0.5rem" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.7)" }}>🎯 Problem Strength (Startup Roadmap Framework)</div>
+                      <span style={{ fontSize: "0.72rem", fontWeight: 800, padding: "0.2rem 0.75rem", borderRadius: 100, background: score.problemStrength === "STRONG" ? "rgba(34,197,94,0.2)" : score.problemStrength === "MODERATE" ? "rgba(245,158,11,0.2)" : "rgba(239,68,68,0.2)", color: score.problemStrength === "STRONG" ? "#22c55e" : score.problemStrength === "MODERATE" ? "#f59e0b" : "#ef4444", border: "1px solid currentColor" }}>{score.problemStrength}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+                      {[["Hurts emotionally/financially", score.problemHurts], ["Occurs frequently", score.problemRecurring], ["Has paying potential", score.problemPaysCustomers]].map(([label, val], i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.04)", padding: "0.3rem 0.65rem", borderRadius: 100, border: "1px solid rgba(255,255,255,0.08)" }}>
+                          <span style={{ color: val ? "#22c55e" : "#ef4444" }}>{val ? "✓" : "✗"}</span> {label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* MVP + Distribution + PMF row */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
+                  {score.mvpIdea && (
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🛠 Simplest MVP</div>
+                      <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5, margin: 0 }}>{score.mvpIdea}</p>
+                    </div>
+                  )}
+                  {score.distributionChannels?.length > 0 && (
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#f59e0b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>📣 Distribution</div>
+                      {score.distributionChannels.map((c, i) => <div key={i} style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.7)", marginBottom: "0.25rem" }}>→ {c}</div>)}
+                    </div>
+                  )}
+                  {score.pmfMilestones?.length > 0 && (
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🎯 PMF Signs to Watch</div>
+                      {score.pmfMilestones.map((m, i) => <div key={i} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", marginBottom: "0.25rem" }}>◦ {m}</div>)}
+                    </div>
+                  )}
+                </div>
+                {/* Investor readiness badge */}
+                {score.investorReadiness && (
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 100, padding: "0.35rem 1rem", marginBottom: "0.85rem" }}>
+                    <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)" }}>Investor Readiness:</span>
+                    <span style={{ fontSize: "0.73rem", fontWeight: 700, color: score.investorReadiness === "INVESTOR READY" ? "#22c55e" : score.investorReadiness === "EARLY STAGE" ? "#f59e0b" : "#ef4444" }}>{score.investorReadiness}</span>
+                  </div>
+                )}
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
                   <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
-                    {score.executiveSummary || (score.summary?.executiveSummary && !score.summary.executiveSummary.includes(`"score"`) ? score.summary.executiveSummary : null) || score.reason || "Analysis complete."}
+                    {score.executiveSummary || (score.summary?.executiveSummary && !score.summary.executiveSummary.includes('"score"') ? score.summary.executiveSummary : null) || score.reason || "Analysis complete."}
                   </p>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "0.85rem" }}>
@@ -1086,8 +1177,8 @@ function IdeaValidator({ t }) {
 // ── LEARN HUB DATA ──
 const LEARN_QUOTES = [
   { text: "The biggest risk is not taking any risk.", author: "Mark Zuckerberg", role: "Founder, Meta", emoji: "💙" },
-  { text: "I knew that if I failed I wouldn`t regret that, but I might regret not trying.", author: "Jeff Bezos", role: "Founder, Amazon", emoji: "📦" },
-  { text: "It`s fine to celebrate success but it is more important to learn from failure.", author: "Bill Gates", role: "Co-Founder, Microsoft", emoji: "💻" },
+  { text: "I knew that if I failed I wouldn't regret that, but I might regret not trying.", author: "Jeff Bezos", role: "Founder, Amazon", emoji: "📦" },
+  { text: "It's fine to celebrate success but it is more important to learn from failure.", author: "Bill Gates", role: "Co-Founder, Microsoft", emoji: "💻" },
   { text: "Failure is simply the opportunity to begin again, more intelligently.", author: "Henry Ford", role: "Founder, Ford Motor", emoji: "🚗" },
   { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney", role: "Founder, Disney", emoji: "🎬" },
   { text: "If you are not embarrassed by the first version of your product, you launched too late.", author: "Reid Hoffman", role: "Co-Founder, LinkedIn", emoji: "🔗" },
@@ -1098,15 +1189,15 @@ const LEARN_QUOTES = [
 const LEARN_GLOSSARY = [
   { term: "MVP", full: "Minimum Viable Product", emoji: "🛠️", desc: "The simplest version of your product with just enough features to test with real users.", example: "Dropbox launched with just a demo video. Got 75,000 signups before building anything." },
   { term: "PMF", full: "Product-Market Fit", emoji: "🎯", desc: "When your product genuinely solves a real problem and people love it enough to pay and tell others.", example: "WhatsApp had PMF when users got upset if it went down for 5 minutes." },
-  { term: "Pitch Deck", full: "Investor Presentation", emoji: "📊", desc: "A 10-15 slide presentation showing investors your problem, solution, market size, team, and funding ask.", example: "Airbnb`s 2008 pitch deck raised $600k at a $2.5M valuation. It is publicly available online." },
+  { term: "Pitch Deck", full: "Investor Presentation", emoji: "📊", desc: "A 10-15 slide presentation showing investors your problem, solution, market size, team, and funding ask.", example: "Airbnb's 2008 pitch deck raised $600k at a $2.5M valuation. It is publicly available online." },
   { term: "VC", full: "Venture Capital", emoji: "💰", desc: "Professional investors who give money to startups in exchange for equity. They expect 10x returns.", example: "Sequoia invested $60M in WhatsApp. When Facebook bought it for $19B they made $3B." },
-  { term: "Angel Investor", full: "Angel Investor", emoji: "😇", desc: "A wealthy individual who invests their own money in early-stage startups. Less formal than VCs.", example: "Google`s first investor Andy Bechtolsheim wrote a $100k cheque before Google was even a company." },
+  { term: "Angel Investor", full: "Angel Investor", emoji: "😇", desc: "A wealthy individual who invests their own money in early-stage startups. Less formal than VCs.", example: "Google's first investor Andy Bechtolsheim wrote a $100k cheque before Google was even a company." },
   { term: "Runway", full: "Financial Runway", emoji: "✈️", desc: "How many months your startup can survive before running out of money. Cash divided by monthly burn.", example: "If you have $120,000 and spend $10,000 per month, your runway is 12 months." },
   { term: "Burn Rate", full: "Monthly Spend", emoji: "🔥", desc: "How much money your startup spends per month. High burn with low revenue means danger.", example: "Fast.co burned $10M per month with only $600k revenue. They shut down in 2022." },
   { term: "Equity", full: "Ownership Stake", emoji: "📈", desc: "The percentage of a company you own. When you take investment you give away equity for cash.", example: "If your company is worth $1M and you give 10% equity for $100k, you sold 10% of your business." },
   { term: "Pivot", full: "Change Direction", emoji: "🔄", desc: "Changing your product or business model based on what you have learned. Not failure — smart adaptation.", example: "Instagram started as Burbn (check-in app). They pivoted to photos and became a $1B company." },
   { term: "Bootstrap", full: "Self-Funded Growth", emoji: "👢", desc: "Building a company using only your own money and revenue — no investors. Slower but you keep control.", example: "Mailchimp bootstrapped for 12 years before any investment. It sold for $12B." },
-  { term: "TAM", full: "Total Addressable Market", emoji: "🌍", desc: "The total revenue opportunity if you captured 100% of your market. Used to show investors how big the prize is.", example: "Global food delivery TAM is $1.4 trillion. Your city`s TAM is $50M." },
+  { term: "TAM", full: "Total Addressable Market", emoji: "🌍", desc: "The total revenue opportunity if you captured 100% of your market. Used to show investors how big the prize is.", example: "Global food delivery TAM is $1.4 trillion. Your city's TAM is $50M." },
   { term: "CAC", full: "Customer Acquisition Cost", emoji: "🧲", desc: "How much it costs to get one new paying customer through marketing and sales.", example: "If you spend $1,000 on ads and get 10 customers, your CAC is $100." },
   { term: "LTV", full: "Customer Lifetime Value", emoji: "💎", desc: "Total revenue a customer generates over their entire time with your business.", example: "Customer pays $20 per month and stays 2 years: LTV = $480." },
   { term: "Vesting", full: "Equity Schedule", emoji: "⏳", desc: "A schedule for when founders and employees actually own their equity. Protects against early departures.", example: "4 years vesting, 1-year cliff: someone who leaves after 6 months gets zero equity." },
@@ -1138,7 +1229,7 @@ const LEARN_RESOURCES = [
 ];
 
 // ── LEARN HUB PAGE ──
-function LearnHub({ t }) {
+function LearnHub() {
   const [qIdx, setQIdx] = useState(0);
   const [openGloss, setOpenGloss] = useState(null);
   const [search, setSearch] = useState("");
@@ -1167,7 +1258,7 @@ function LearnHub({ t }) {
       {/* Quote Carousel */}
       <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "2.5rem 1.5rem" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.3)", marginBottom: "1.25rem" }}>💬 Wisdom from the World`s Greatest Founders</div>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.3)", marginBottom: "1.25rem" }}>💬 Wisdom from the World's Greatest Founders</div>
           <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 16, padding: "2rem 1.75rem", minHeight: 160, display: "flex", flexDirection: "column", justifyContent: "center", animation: "fadeUp 0.4s ease" }}>
             <p style={{ fontSize: "clamp(0.9rem,2vw,1.1rem)", color: "#fff", lineHeight: 1.7, marginBottom: "1.25rem", fontStyle: "italic" }}>"{q.text}"</p>
             <div style={{ display: "flex", alignItems: "center", gap: "0.7rem", justifyContent: "center" }}>
@@ -1300,6 +1391,7 @@ function LearnHub({ t }) {
 // ── IT PARK AD ──
 function ItParkAd({ t }) {
   return (
+    <>
     <div style={{ background: "linear-gradient(135deg,#0a2e1a,#1a5c30)", borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "relative", zIndex: 1 }}>
         <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>{t.blog.sponsoredBy}</div>
@@ -1308,6 +1400,35 @@ function ItParkAd({ t }) {
         <a href="https://it-park.uz" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "#fff", color: GREEN, fontSize: "0.75rem", fontWeight: 700, padding: "0.4rem 0.9rem", borderRadius: 6, textDecoration: "none" }}>{t.blog.itparkCta}</a>
       </div>
     </div>
+    {/* Research Papers */}
+    <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem", marginTop: "1rem" }}>
+      <div style={{ fontSize: "0.62rem", fontWeight: 700, color: GREEN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.85rem" }}>📚 Latest Research</div>
+      {[
+        { title: "Is Marketing the Problem? Evidence from Startup Failures", journal: "JEEE · Under Review", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6600918", tag: "Marketing" },
+        { title: "Why Startups Fail: A Comparative Study of Uzbekistan and the United Kingdom", journal: "JEIEE · Under Review", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6494638", tag: "Comparative" },
+        { title: "Fashion Consumer Behaviour in an Emerging Market", journal: "SSRN Working Paper", url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6341986", tag: "Consumer" },
+      ].map((p, i) => (
+        <a key={i} href={p.url} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", padding: "0.65rem 0", borderBottom: i < 2 ? "1px solid #f0f7f0" : "none" }}>
+          <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#0d3a1e", lineHeight: 1.4, marginBottom: "0.25rem" }}>{p.title}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "0.62rem", color: "#7a9a7a" }}>{p.journal}</span>
+            <span style={{ fontSize: "0.6rem", background: "#f0f7f0", color: GREEN, padding: "0.1rem 0.45rem", borderRadius: 100, fontWeight: 600, border: "1px solid #c8dfc8" }}>{p.tag}</span>
+          </div>
+        </a>
+      ))}
+      <div style={{ marginTop: "0.75rem", paddingTop: "0.65rem", borderTop: "1px solid #f0f7f0", display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+        {[
+          { label: "SSRN", url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=8574040" },
+          { label: "Scholar", url: "https://scholar.google.co.uk/citations?user=0jK5GpEAAAAJ&hl=en&authuser=1" },
+          { label: "ResearchGate", url: "https://www.researchgate.net/profile/Abdulaziz-Ruzmatov" },
+          { label: "LinkedIn", url: "https://www.linkedin.com/in/abdulaziz-ruzmatov/" },
+          { label: "ORCID", url: "https://orcid.org/0009-0008-5771-0181" },
+        ].map((l, i) => (
+          <a key={i} href={l.url} target="_blank" rel="noreferrer" style={{ fontSize: "0.63rem", color: GREEN, fontWeight: 600, textDecoration: "none", background: "#f0f7f0", padding: "0.15rem 0.5rem", borderRadius: 100, border: "1px solid #c8dfc8" }}>{l.label}</a>
+        ))}
+      </div>
+    </div>
+    </>
   );
 }
 
@@ -1423,7 +1544,7 @@ function AIChatWidget({ t, problems }) {
     setLoading(true);
     const context = problems.slice(0, 6).map(p => "Case: \"" + p.title + "\" (" + p.industry + ", " + p.country + ")\nLesson: " + p.lesson).join("\n\n");
     try {
-      const text = await callAI("You are an AI business advisor for MistakeMap. Real cases:\n\n" + context + "\n\nUser: " + userMsg + "\n\nBe concise and practical. Respond in the user`s language.");
+      const text = await callAI("You are an AI business advisor for MistakeMap. Real cases:\n\n" + context + "\n\nUser: " + userMsg + "\n\nBe concise and practical. Respond in the user's language.");
       setMessages(prev => [...prev, { role: "assistant", content: text || "Sorry, try again." }]);
     } catch { setMessages(prev => [...prev, { role: "assistant", content: "Connection error." }]); }
     setLoading(false);
@@ -1525,6 +1646,20 @@ function FounderSection() {
               </div>
             ))}
           </div>
+          <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {[
+              { label: "LinkedIn", icon: "💼", url: "https://www.linkedin.com/in/abdulaziz-ruzmatov/" },
+              { label: "SSRN", icon: "📄", url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=8574040" },
+              { label: "Google Scholar", icon: "🎓", url: "https://scholar.google.co.uk/citations?user=0jK5GpEAAAAJ&hl=en&authuser=1" },
+              { label: "ResearchGate", icon: "🔬", url: "https://www.researchgate.net/profile/Abdulaziz-Ruzmatov" },
+              { label: "ORCID", icon: "🆔", url: "https://orcid.org/0009-0008-5771-0181" },
+            ].map((l, i) => (
+              <a key={i} href={l.url} target="_blank" rel="noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 100, padding: "0.28rem 0.75rem", fontSize: "0.71rem", color: "rgba(255,255,255,0.75)", textDecoration: "none", fontWeight: 600 }}>
+                {l.icon} {l.label}
+              </a>
+            ))}
+          </div>
           <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.35)" }}>
             Questions? <a href="mailto:abdulaziz.ruzmatov@northumbria.ac.uk" style={{ color: "#7ffba0", textDecoration: "none", fontWeight: 600 }}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
           </div>
@@ -1619,63 +1754,6 @@ function ContactForm({ t, toast }) {
       <FG label={t.contact.countryL}><select value={f.country} onChange={e => set("country", e.target.value)} style={sel()}><option value="">Select country</option><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
       <FG label={t.contact.msgL}><textarea value={f.message} onChange={e => set("message", e.target.value)} style={{ ...inp(), minHeight: 90, resize: "vertical" }} /></FG>
       <button onClick={send} style={{ width: "100%", background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.65rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.84rem", cursor: "pointer", marginTop: "0.25rem" }}>{t.contact.send}</button>
-    </div>
-  );
-}
-
-// ── LIKE COUNTER ──
-function LikeCounter() {
-  const BASE = 532;
-  const stored = () => { try { return parseInt(localStorage.getItem("mm_likes") || BASE); } catch { return BASE; } };
-  const [count, setCount] = useState(stored);
-  const [animKey, setAnimKey] = useState(0);
-  const [ripples, setRipples] = useState([]);
-  const [toasts, setToasts] = useState([]);
-  const [btnPop, setBtnPop] = useState(false);
-  const btnRef = useRef(null);
-  const EMOJIS = ["👍","🙌","🔥","✅","💚","⭐","🚀","💡"];
-
-  const handleLike = (e) => {
-    const rect = btnRef.current.getBoundingClientRect();
-    const rid = Date.now();
-    setRipples(r => [...r, { id: rid, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
-    setTimeout(() => setRipples(r => r.filter(i => i.id !== rid)), 900);
-    const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-    const tid = rid + 1;
-    setToasts(t => [...t, { id: tid, x: e.clientX - 20, y: e.clientY - 30, emoji }]);
-    setTimeout(() => setToasts(t => t.filter(i => i.id !== tid)), 1100);
-    setBtnPop(true);
-    setTimeout(() => setBtnPop(false), 350);
-    const next = count + 1;
-    setCount(next);
-    setAnimKey(k => k + 1);
-    try { localStorage.setItem("mm_likes", next); } catch {}
-  };
-
-  return (
-    <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3rem 1.5rem", position: "relative" }}>
-      {toasts.map(t => (
-        <div key={t.id} style={{ position: "fixed", left: t.x, top: t.y, pointerEvents: "none", fontFamily: "Inter,sans-serif", fontSize: "1rem", fontWeight: 800, color: "#7ffba0", animation: "fadeUp 1.1s ease-out forwards", zIndex: 9999 }}>{t.emoji} +1</div>
-      ))}
-      <div style={{ maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
-        <div style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#7ffba0", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "0.28rem 1rem", borderRadius: 100, marginBottom: "1rem" }}>Community Feedback</div>
-        <h2 style={{ fontSize: "clamp(1.3rem,3vw,1.75rem)", fontWeight: 900, color: "#fff", marginBottom: "0.5rem" }}>Did you find MistakeMap helpful?</h2>
-        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.86rem", marginBottom: "2rem" }}>Let us know — every click counts!</p>
-        <div key={animKey} style={{ fontSize: "clamp(3.5rem,10vw,5.5rem)", fontWeight: 900, color: "#fff", lineHeight: 1, letterSpacing: "-0.04em", marginBottom: "0.35rem", animation: animKey > 0 ? "countPop 0.35s ease" : "none" }}>
-          {count.toLocaleString()}
-        </div>
-        <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.13em", color: "rgba(255,255,255,0.4)", marginBottom: "1.5rem" }}>people found this useful</div>
-        <div style={{ height: 5, background: "rgba(255,255,255,0.1)", borderRadius: 100, overflow: "hidden", marginBottom: "2rem" }}>
-          <div style={{ height: "100%", width: Math.min(100, count / 10) + "%", background: "linear-gradient(90deg,#7ffba0,#22c55e)", borderRadius: 100, transition: "width 0.5s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 10px rgba(127,251,160,0.4)" }} />
-        </div>
-        <div style={{ position: "relative", display: "inline-block", width: "100%", maxWidth: 400 }}>
-          <button ref={btnRef} onClick={handleLike} style={{ width: "100%", padding: "1.1rem 2rem", background: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "Inter,sans-serif", fontSize: "1.05rem", fontWeight: 800, color: GREEN, position: "relative", overflow: "hidden", transition: "transform 0.15s", transform: btnPop ? "scale(0.95)" : "scale(1)", boxShadow: "0 6px 28px rgba(0,0,0,0.2)" }}>
-            {ripples.map(r => <span key={r.id} style={{ position: "absolute", left: r.x - 15, top: r.y - 15, width: 30, height: 30, borderRadius: "50%", background: "rgba(26,92,48,0.15)", animation: "slideUp 0.9s ease-out forwards", pointerEvents: "none" }} />)}
-            👍 Yes, this is helpful!
-          </button>
-        </div>
-        <p style={{ marginTop: "0.75rem", fontSize: "0.73rem", color: "rgba(255,255,255,0.3)" }}>Tap as many times as you like — unlimited ✓</p>
-      </div>
     </div>
   );
 }
@@ -1791,6 +1869,9 @@ export default function App() {
     return true;
   }).sort((a, b) => sort === "up" ? b.upvotes - a.upvotes : sort === "com" ? (comments[b.id]?.length || 0) - (comments[a.id]?.length || 0) : new Date(b.created_at) - new Date(a.created_at));
 
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const paginated = filtered.slice((browsePage - 1) * PER_PAGE, browsePage * PER_PAGE);
+
   const indCounts = (() => { const src = curCountry ? problems.filter(p => p.country === curCountry) : problems; const c = {}; src.forEach(p => { c[p.industry] = (c[p.industry] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]); })();
   const det = problems.find(p => p.id === detId);
   const detComments = detId ? (comments[detId] || []) : [];
@@ -1804,7 +1885,7 @@ export default function App() {
   const ctryLabel = c => c === "United Kingdom" ? "🇬🇧 UK" : "🇺🇿 Uzbekistan";
 
   return (
-    <div style={{ fontFamily: "'Inter`, sans-serif", background: "#f8faf8", color: "#1a2e1a", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: "#f8faf8", color: "#1a2e1a", minHeight: "100vh" }}>
       {/* NAV */}
       <nav style={{ background: "#fff", borderBottom: "1px solid #dceadc", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56, position: "sticky", top: 0, zIndex: 100, flexWrap: "wrap", gap: "0.4rem" }}>
         <div onClick={() => setPage("home")} style={{ fontWeight: 700, fontSize: "0.95rem", color: GREEN, cursor: "pointer" }}>
@@ -1859,13 +1940,13 @@ export default function App() {
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.country}</div>
               {[["", t.sidebar.both], ["United Kingdom", t.sidebar.uk], ["Uzbekistan", t.sidebar.uz]].map(([val, label]) => (
-                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); }}>{label}</FilterBtn>
+                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); setBrowsePage(1); }}>{label}</FilterBtn>
               ))}
             </div>
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.industry}</div>
-              <FilterBtn active={curIndustry === ""} onClick={() => setCurIndustry("")}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
-              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => setCurIndustry(ind)}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
+              <FilterBtn active={curIndustry === ""} onClick={() => { setCurIndustry(""); setBrowsePage(1); }}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
+              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => { setCurIndustry(ind); setBrowsePage(1); }}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
             </div>
             <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
               <div style={sideTitle()}>{t.sidebar.chart}</div>
@@ -1884,10 +1965,10 @@ export default function App() {
                 <span style={{ position: "absolute", left: "0.7rem", top: "50%", transform: "translateY(-50%)", color: "#aaa", fontSize: "0.78rem" }}>🔍</span>
                 <input value={q} onChange={e => setQ(e.target.value)} placeholder={t.filters.search} style={inp({ paddingLeft: "2.1rem" })} />
               </div>
-              <select value={sort} onChange={e => setSort(e.target.value)} style={sel()}>
+              <select value={sort} onChange={e => { setSort(e.target.value); setBrowsePage(1); }} style={sel()}>
                 <option value="new">{t.filters.newest}</option><option value="up">{t.filters.upvoted}</option><option value="com">{t.filters.discussed}</option>
               </select>
-              <select value={sev} onChange={e => setSev(e.target.value)} style={sel()}>
+              <select value={sev} onChange={e => { setSev(e.target.value); setBrowsePage(1); }} style={sel()}>
                 <option value="">{t.filters.allImp}</option><option value="high">{t.filters.high}</option><option value="medium">{t.filters.medium}</option><option value="low">{t.filters.low}</option>
               </select>
             </div>
@@ -1900,7 +1981,7 @@ export default function App() {
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {filtered.map(p => (
+                {paginated.map(p => (
                   <div key={p.id} onClick={() => setDetId(p.id)} style={{ background: "#fff", border: "1px solid #dceadc", borderLeft: "3px solid transparent", borderRadius: 10, padding: "1.1rem 1.25rem", cursor: "pointer", transition: "all 0.15s" }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.borderLeftColor = GREEN; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,48,0.08)"; }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.boxShadow = "none"; }}>
@@ -1920,6 +2001,26 @@ export default function App() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+            {/* Pagination */}
+            {!loading && totalPages > 1 && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.4rem", marginTop: "1.5rem", flexWrap: "wrap" }}>
+                <button onClick={() => { setBrowsePage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={browsePage === 1}
+                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: browsePage === 1 ? "#f5f5f5" : "#fff", color: browsePage === 1 ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: browsePage === 1 ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>← Prev</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).filter(n => n === 1 || n === totalPages || Math.abs(n - browsePage) <= 2).reduce((acc, n, idx, arr) => {
+                  if (idx > 0 && n - arr[idx - 1] > 1) acc.push("...");
+                  acc.push(n);
+                  return acc;
+                }, []).map((n, i) => n === "..." ? (
+                  <span key={"e" + i} style={{ padding: "0 0.3rem", color: "#aaa", fontSize: "0.8rem" }}>…</span>
+                ) : (
+                  <button key={n} onClick={() => { setBrowsePage(n); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    style={{ width: 34, height: 34, borderRadius: 7, border: "1px solid " + (browsePage === n ? GREEN : "#c8dfc8"), background: browsePage === n ? GREEN : "#fff", color: browsePage === n ? "#fff" : GREEN, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{n}</button>
+                ))}
+                <button onClick={() => { setBrowsePage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={browsePage === totalPages}
+                  style={{ padding: "0.4rem 0.85rem", borderRadius: 7, border: "1px solid #c8dfc8", background: browsePage === totalPages ? "#f5f5f5" : "#fff", color: browsePage === totalPages ? "#ccc" : GREEN, fontWeight: 600, fontSize: "0.8rem", cursor: browsePage === totalPages ? "default" : "pointer", fontFamily: "Inter,sans-serif" }}>Next →</button>
+                <span style={{ fontSize: "0.74rem", color: "#aaa", marginLeft: "0.5rem" }}>{filtered.length} stories · page {browsePage}/{totalPages}</span>
               </div>
             )}
           </div>
@@ -2055,7 +2156,6 @@ export default function App() {
       {showBlogForm && <BlogModal t={t} onClose={() => setShowBlogForm(false)} onSubmit={submitBlog} toast={showToast} />}
       {showAuth && <AuthModal t={t} onClose={() => setShowAuth(false)} onSuccess={type => { setShowAuth(false); showToast(type === "login" ? t.toast.loginSuccess : t.toast.regSuccess); }} />}
 
-      <LikeCounter />
       <FounderSection />
       <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
 
