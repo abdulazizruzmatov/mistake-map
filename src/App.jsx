@@ -332,34 +332,42 @@ function SiteLikeCounter() {
     setCount(newCount);
     setLiked(true);
     setBurst(true);
-    setTimeout(() => setBurst(false), 500);
+    setTimeout(() => setBurst(false), 600);
     localStorage.setItem("mm_site_liked", "true");
     localStorage.setItem("mm_site_count", String(newCount));
     try { await supabase.from("site_stats").upsert({ key: "likes", value: newCount }); } catch {}
   };
 
   return (
-    <div
-      onClick={handleLike}
-      title={liked ? "Thanks for the love! 💚" : "Like this platform"}
-      style={{
-        position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 998,
-        display: "flex", alignItems: "center", gap: "0.4rem",
-        background: liked ? GREEN : "#fff",
-        border: "1.5px solid " + (liked ? GREEN : "#dceadc"),
-        borderRadius: 100, padding: "0.45rem 0.95rem",
-        cursor: liked ? "default" : "pointer",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
-        transition: "all 0.2s",
-        transform: burst ? "scale(1.18)" : "scale(1)",
-        fontFamily: "Inter,sans-serif",
-        userSelect: "none",
-      }}
-    >
-      <span style={{ fontSize: "0.95rem" }}>{liked ? "❤️" : "🤍"}</span>
-      <span style={{ fontSize: "0.79rem", fontWeight: 700, color: liked ? "#fff" : "#1a2e1a", minWidth: 24 }}>
-        {count.toLocaleString()}
-      </span>
+    <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "3.5rem 1.5rem", textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+      <p style={{ fontSize: "0.78rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", marginBottom: "1rem" }}>Was this platform useful?</p>
+      <div style={{ fontSize: "clamp(1.8rem,5vw,2.8rem)", fontWeight: 900, color: "#fff", marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>
+        {count.toLocaleString()} <span style={{ color: liked ? "#ff6b6b" : "rgba(255,255,255,0.25)" }}>founders</span>
+      </div>
+      <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.45)", marginBottom: "2rem" }}>found MistakeMap helpful</p>
+      <button
+        onClick={handleLike}
+        disabled={liked}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: "0.65rem",
+          background: liked ? "rgba(255,107,107,0.15)" : "rgba(255,255,255,0.07)",
+          border: "2px solid " + (liked ? "rgba(255,107,107,0.5)" : "rgba(255,255,255,0.15)"),
+          borderRadius: 100, padding: "0.85rem 2.2rem",
+          cursor: liked ? "default" : "pointer",
+          transition: "all 0.2s",
+          transform: burst ? "scale(1.1)" : "scale(1)",
+          fontFamily: "Inter,sans-serif",
+          userSelect: "none",
+        }}
+        onMouseEnter={e => { if (!liked) { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}}
+        onMouseLeave={e => { if (!liked) { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}}
+      >
+        <span style={{ fontSize: "1.6rem", transition: "transform 0.3s", transform: burst ? "scale(1.3) rotate(-10deg)" : "scale(1)" }}>{liked ? "❤️" : "🤍"}</span>
+        <span style={{ fontSize: "1rem", fontWeight: 700, color: liked ? "rgba(255,107,107,0.9)" : "rgba(255,255,255,0.8)" }}>
+          {liked ? "Thanks for the love!" : "I found this useful"}
+        </span>
+      </button>
+      {liked && <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.3)", marginTop: "1rem" }}>You're helping the community grow 🌱</p>}
     </div>
   );
 }
@@ -2213,8 +2221,8 @@ export default function App() {
       {showAuth && <AuthModal t={t} onClose={() => setShowAuth(false)} onSuccess={type => { setShowAuth(false); showToast(type === "login" ? t.toast.loginSuccess : t.toast.regSuccess); }} />}
 
       <FounderSection />
-      <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
       <SiteLikeCounter />
+      <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
 
       {toastMsg && <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", background: GREEN, color: "#fff", padding: "0.7rem 1.1rem", borderRadius: 8, fontSize: "0.84rem", fontWeight: 500, zIndex: 999, maxWidth: 300, boxShadow: "0 4px 20px rgba(26,92,48,0.25)", animation: "slideUp 0.25s ease" }}>{toastMsg}</div>}
     </div>
