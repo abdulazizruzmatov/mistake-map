@@ -1,2075 +1,2065 @@
-import { useState, useEffect, useRef } from “react”;
-import { createClient } from “@supabase/supabase-js”;
+import { useState, useEffect, useRef } from "react";
+import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = “https://ofilqtstiztflvarmkxa.supabase.co”;
-const SUPABASE_ANON_KEY = “sb_publishable_6_OJbucbFlW0tXqzj11Ttw_XI02F9uq”;
+const SUPABASE_URL = "https://ofilqtstiztflvarmkxa.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_6_OJbucbFlW0tXqzj11Ttw_XI02F9uq";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const API_KEY = () => import.meta.env.VITE_ANTHROPIC_KEY || “”;
+const API_KEY = () => import.meta.env.VITE_ANTHROPIC_KEY || "";
 
 const SESSION_ID = (() => {
-let id = sessionStorage.getItem(“mm_session”);
-if (!id) { id = Math.random().toString(36).slice(2); sessionStorage.setItem(“mm_session”, id); }
-return id;
+  let id = sessionStorage.getItem("mm_session");
+  if (!id) { id = Math.random().toString(36).slice(2); sessionStorage.setItem("mm_session", id); }
+  return id;
 })();
 
-const GREEN = “#1a5c30”;
-const DARK = “#0d3a1e”;
+const GREEN = "#1a5c30";
+const DARK = "#0d3a1e";
 
 // ── GRAVEYARD DATA ──
 const GRAVEYARD = [
-{ name: “FTX”, industry: “Crypto/Fintech”, country: “🇧🇸 Bahamas”, founded: 2019, died: 2022, raised: 1800000000, lost: 32000000000, reason: “Fraud and misuse of customer funds. Founder Sam Bankman-Fried convicted of wire fraud.”, lesson: “Never commingle customer funds with operations. Transparency and audits matter more than growth.” },
-{ name: “Theranos”, industry: “Healthcare”, country: “🇺🇸 USA”, founded: 2003, died: 2018, raised: 945000000, lost: 700000000, reason: “Fraudulent technology claims. Blood testing devices never worked as advertised.”, lesson: “Validate technical claims before scaling. Hype kills companies when reality catches up.” },
-{ name: “WeWork”, industry: “Real Estate”, country: “🇺🇸 USA”, founded: 2010, died: 2023, raised: 22000000000, lost: 11500000000, reason: “Aggressive growth, unsustainable lease commitments, founder governance issues.”, lesson: “Real estate is not tech. Don’t dress up traditional businesses as software valuations.” },
-{ name: “Quibi”, industry: “Media”, country: “🇺🇸 USA”, founded: 2018, died: 2020, raised: 1750000000, lost: 1750000000, reason: “Built short-form mobile video during pandemic when users wanted long content on TVs.”, lesson: “Validate market timing. $1.75B and famous founders can’t save a wrong product.” },
-{ name: “Byju’s”, industry: “EdTech”, country: “🇮🇳 India”, founded: 2011, died: 2024, raised: 5500000000, lost: 22000000000, reason: “Aggressive sales tactics, accounting irregularities, post-COVID demand collapse.”, lesson: “Growth at all costs creates fragile businesses. Sustainable unit economics beat vanity metrics.” },
-{ name: “Wirecard”, industry: “Fintech”, country: “🇩🇪 Germany”, founded: 1999, died: 2020, raised: 1900000000, lost: 1900000000, reason: “$2B accounting fraud — funds simply did not exist. CEO arrested.”, lesson: “Audit everything. Big-name auditors miss massive fraud — boards must dig deeper.” },
-{ name: “Northvolt”, industry: “CleanTech”, country: “🇸🇪 Sweden”, founded: 2016, died: 2024, raised: 13800000000, lost: 13800000000, reason: “Could not compete with Chinese battery makers on cost and scale.”, lesson: “Capital alone can’t beat 10-year manufacturing experience curves.” },
-{ name: “Argo AI”, industry: “Autonomous Vehicles”, country: “🇺🇸 USA”, founded: 2016, died: 2022, raised: 3600000000, lost: 3600000000, reason: “Self-driving timeline pushed back, investors Ford and VW pulled funding.”, lesson: “Don’t depend on a few corporate investors. They cut losses faster than VCs do.” },
-{ name: “Faraday Future”, industry: “EV/Automotive”, country: “🇺🇸 USA”, founded: 2014, died: 2024, raised: 3000000000, lost: 3000000000, reason: “Endless delays, leadership chaos, never delivered cars at scale.”, lesson: “Building cars is brutally hard. Don’t underestimate manufacturing complexity.” },
-{ name: “Vice Media”, industry: “Media”, country: “🇺🇸 USA”, founded: 1994, died: 2023, raised: 2500000000, lost: 2500000000, reason: “Could not monetize digital media, advertising decline, mismanaged growth.”, lesson: “Digital ad-supported media at scale is broken. Subscription revenue is essential.” },
-{ name: “Nikola Motor”, industry: “EV/Automotive”, country: “🇺🇸 USA”, founded: 2014, died: 2024, raised: 1000000000, lost: 1000000000, reason: “Founder fraud — fake truck demo videos. SEC charges, bankruptcy.”, lesson: “Don’t fake it till you make it with hardware. Due diligence will find out.” },
-{ name: “Quirky”, industry: “Hardware”, country: “🇺🇸 USA”, founded: 2009, died: 2015, raised: 200000000, lost: 200000000, reason: “Launched 50 products per year — too many to support. Burned cash on marketing.”, lesson: “Focus beats breadth. Better to nail one product than launch 50 mediocre ones.” },
-{ name: “Solyndra”, industry: “CleanTech”, country: “🇺🇸 USA”, founded: 2005, died: 2011, raised: 1100000000, lost: 1100000000, reason: “Chinese solar panels became cheaper than Solyndra’s manufacturing cost.”, lesson: “Watch global commodity prices. Chinese manufacturing scale crushes Western hardware startups.” },
-{ name: “Jawbone”, industry: “Consumer Electronics”, country: “🇺🇸 USA”, founded: 1999, died: 2017, raised: 930000000, lost: 930000000, reason: “Lost wearables war to Fitbit and Apple. Product issues, customer complaints.”, lesson: “Hardware needs continuous quality improvement. One bad product cycle can kill the brand.” },
-{ name: “MoviePass”, industry: “Entertainment”, country: “🇺🇸 USA”, founded: 2011, died: 2020, raised: 300000000, lost: 300000000, reason: “Unsustainable $9.95/month for unlimited movies. Lost money on every customer.”, lesson: “If unit economics are negative, scaling makes losses worse, not better.” },
-{ name: “Hopin”, industry: “Events/SaaS”, country: “🇬🇧 UK”, founded: 2019, died: 2024, raised: 1600000000, lost: 1600000000, reason: “Built virtual events platform during COVID, demand collapsed when pandemic ended.”, lesson: “Don’t bet the company on temporary tailwinds. Build for normal times.” },
-{ name: “Convoy”, industry: “Logistics”, country: “🇺🇸 USA”, founded: 2015, died: 2023, raised: 900000000, lost: 900000000, reason: “Freight market collapse, could not sustain unit economics, ran out of cash.”, lesson: “Marketplace businesses need positive contribution margins per transaction.” },
-{ name: “Bird”, industry: “Micromobility”, country: “🇺🇸 USA”, founded: 2017, died: 2023, raised: 776000000, lost: 776000000, reason: “Scooter unit economics never worked. Maintenance costs ate revenue.”, lesson: “Real-world hardware in public spaces gets destroyed. Account for that in unit economics.” },
-{ name: “Juicero”, industry: “Consumer Electronics”, country: “🇺🇸 USA”, founded: 2013, died: 2017, raised: 120000000, lost: 120000000, reason: “$400 juice machine when juice packets could be squeezed by hand.”, lesson: “Test if your hardware actually adds value versus a $1 alternative.” },
-{ name: “Beepi”, industry: “Auto Marketplace”, country: “🇺🇸 USA”, founded: 2013, died: 2017, raised: 148000000, lost: 148000000, reason: “Executives spent $7M per month on salaries and perks. Burn rate killed company.”, lesson: “Founder extravagance kills startups. Conserve cash like it is your last dollar.” },
-{ name: “Pets.com”, industry: “E-commerce”, country: “🇺🇸 USA”, founded: 1998, died: 2000, raised: 300000000, lost: 300000000, reason: “Selling pet food online with shipping costs higher than products. Dot-com poster child.”, lesson: “Heavy products with low margins don’t ship economically. Math matters.” },
-{ name: “Webvan”, industry: “Grocery Delivery”, country: “🇺🇸 USA”, founded: 1996, died: 2001, raised: 830000000, lost: 830000000, reason: “Built $1B+ warehouse infrastructure before validating demand. Dot-com bust.”, lesson: “Don’t build infrastructure for hypothetical demand. Validate first, scale second.” },
-{ name: “Vine”, industry: “Social Media”, country: “🇺🇸 USA”, founded: 2012, died: 2017, raised: 30000000, lost: 30000000, reason: “Twitter shut down its 6-second video app. Failed to monetize creators.”, lesson: “Creator platforms must share revenue early. Otherwise creators leave for competitors.” },
-{ name: “Yik Yak”, industry: “Social Media”, country: “🇺🇸 USA”, founded: 2013, died: 2017, raised: 73500000, lost: 73500000, reason: “Anonymous app became toxic. Cyberbullying drove users away.”, lesson: “Anonymous social products have inherent moderation problems. Plan for abuse early.” },
-{ name: “HQ Trivia”, industry: “Mobile Gaming”, country: “🇺🇸 USA”, founded: 2017, died: 2020, raised: 15000000, lost: 15000000, reason: “Live trivia game peaked fast then declined. Could not monetize fad.”, lesson: “Viral fads are not businesses. Build for sustained engagement.” },
-{ name: “Pebble”, industry: “Consumer Electronics”, country: “🇺🇸 USA”, founded: 2011, died: 2016, raised: 43000000, lost: 43000000, reason: “Smartwatch pioneer crushed by Apple Watch. Could not compete with iPhone integration.”, lesson: “Big platforms can crush you. Build defensibility against your platform partners.” },
-{ name: “Fast”, industry: “Fintech”, country: “🇺🇸 USA”, founded: 2019, died: 2022, raised: 120000000, lost: 120000000, reason: “Burning $10M per month with $600k revenue. CEO ousted.”, lesson: “Burn must match revenue trajectory. A 100x ratio is unsustainable.” },
-{ name: “IRL”, industry: “Social Media”, country: “🇺🇸 USA”, founded: 2017, died: 2023, raised: 170000000, lost: 170000000, reason: “95% of users were fake bots. Founder fraud allegations.”, lesson: “Real engagement metrics matter. Vanity numbers eventually catch up.” },
-{ name: “Babylon Health”, industry: “Telehealth”, country: “🇬🇧 UK”, founded: 2013, died: 2023, raised: 1200000000, lost: 1200000000, reason: “AI-driven telehealth could not sustain unit economics. NHS contract ended.”, lesson: “Healthcare margins are thin. AI promises do not change underlying economics.” },
-{ name: “Hyperloop One”, industry: “Transportation”, country: “🇺🇸 USA”, founded: 2014, died: 2023, raised: 450000000, lost: 450000000, reason: “Vacuum tube transport never reached commercial viability.”, lesson: “Some ideas remain science fiction for a reason. Validate physics before investing $450M.” },
-{ name: “Brandless”, industry: “E-commerce”, country: “🇺🇸 USA”, founded: 2016, died: 2020, raised: 292000000, lost: 292000000, reason: “Generic products at $3 could not sustain unit economics. Acquisition costs too high.”, lesson: “Cheap products plus high CAC equals death. Pricing must support customer acquisition costs.” },
-{ name: “Magic Leap”, industry: “AR/VR”, country: “🇺🇸 USA”, founded: 2010, died: 2020, raised: 3500000000, lost: 3500000000, reason: “Technology never matched the hype. Sold 6,000 units against 1M target.”, lesson: “Do not build to demos. Ship products customers will actually buy and use.” },
-{ name: “Munchery”, industry: “Food Delivery”, country: “🇺🇸 USA”, founded: 2010, died: 2019, raised: 125000000, lost: 125000000, reason: “Premium meal delivery could not beat DoorDash on convenience or price.”, lesson: “Premium food delivery is a niche. Mass market beats premium in food.” },
-{ name: “Homejoy”, industry: “On-demand Services”, country: “🇺🇸 USA”, founded: 2012, died: 2015, raised: 40000000, lost: 40000000, reason: “Customer retention 25%. Lawsuits over worker classification.”, lesson: “Without retention, you are filling a leaky bucket. Fix retention before scaling acquisition.” },
-{ name: “Rdio”, industry: “Music Streaming”, country: “🇺🇸 USA”, founded: 2008, died: 2015, raised: 118000000, lost: 118000000, reason: “Lost to Spotify and Apple Music. Could not compete on catalogue or marketing.”, lesson: “In platform wars, second place usually means dead. Build moats or exit early.” },
-{ name: “Aereo”, industry: “Streaming”, country: “🇺🇸 USA”, founded: 2012, died: 2014, raised: 97000000, lost: 97000000, reason: “TV streaming startup ruled illegal by Supreme Court. Business model died overnight.”, lesson: “Do not build companies on legal grey areas. One court ruling can kill you.” },
-{ name: “Anki”, industry: “Robotics”, country: “🇺🇸 USA”, founded: 2010, died: 2019, raised: 182000000, lost: 182000000, reason: “Could not raise next round despite $100M revenue. Hardware margins too thin.”, lesson: “Even with revenue, hardware companies need constant capital injection.” },
-{ name: “Essential Products”, industry: “Consumer Electronics”, country: “🇺🇸 USA”, founded: 2015, died: 2020, raised: 330000000, lost: 330000000, reason: “Andy Rubin’s smartphone could not dent Apple/Samsung duopoly.”, lesson: “Smartphone hardware market is closed. Do not enter saturated commodity markets.” },
-{ name: “Zenefits”, industry: “HR Tech”, country: “🇺🇸 USA”, founded: 2013, died: 2022, raised: 584000000, lost: 584000000, reason: “Cheated insurance compliance training. Founder ousted, valuation crashed.”, lesson: “Compliance shortcuts kill regulated businesses. Do it right or do not do it.” },
-{ name: “Compass Real Estate”, industry: “Real Estate”, country: “🇺🇸 USA”, founded: 2012, died: 2024, raised: 1500000000, lost: 1500000000, reason: “Tech-disguised real estate brokerage. Profit margins same as competitors.”, lesson: “Putting tech in your pitch does not change underlying business margins.” },
-{ name: “Frank”, industry: “Fintech”, country: “🇺🇸 USA”, founded: 2017, died: 2023, raised: 20000000, lost: 175000000, reason: “Founder fabricated 4M users for JPMorgan acquisition. Fraud charges.”, lesson: “Do not fabricate users. Acquisition due diligence will find out.” },
-{ name: “Boo.com”, industry: “E-commerce”, country: “🇬🇧 UK”, founded: 1998, died: 2000, raised: 135000000, lost: 135000000, reason: “Premature scaling, complex tech, expensive lifestyle marketing. Burned $135M in 18 months.”, lesson: “The original cautionary tale of premature scaling. Walk before you run.” },
-{ name: “Fab.com”, industry: “E-commerce”, country: “🇺🇸 USA”, founded: 2011, died: 2015, raised: 336000000, lost: 336000000, reason: “Hyper-growth pivot from gay social network to flash sales. Lost focus.”, lesson: “Multiple identity changes confuse customers and burn capital.” },
-{ name: “Katerra”, industry: “Construction Tech”, country: “🇺🇸 USA”, founded: 2015, died: 2021, raised: 2000000000, lost: 2000000000, reason: “Software thinking applied to construction. Manufacturing issues, project failures.”, lesson: “Software thinking does not translate to physical industries with regulatory complexity.” },
-{ name: “Zume Pizza”, industry: “Food Tech”, country: “🇺🇸 USA”, founded: 2015, died: 2023, raised: 445000000, lost: 445000000, reason: “Robotic pizza-making in delivery trucks. Cheese slid off in transit.”, lesson: “Pilot the physics before raising hundreds of millions. Sometimes physics wins.” },
-{ name: “Plenty”, industry: “AgTech”, country: “🇺🇸 USA”, founded: 2014, died: 2025, raised: 941000000, lost: 941000000, reason: “Vertical farming energy costs higher than traditional agriculture.”, lesson: “Tech-enabled agriculture cannot beat the sun in cost-per-pound.” },
-{ name: “Olive AI”, industry: “Healthcare AI”, country: “🇺🇸 USA”, founded: 2012, died: 2023, raised: 856000000, lost: 856000000, reason: “RPA company rebranded as AI. Could not deliver on AI promises to hospitals.”, lesson: “Do not rebrand boring tech as AI. Customers eventually see through it.” },
-{ name: “Cerebral”, industry: “Telehealth”, country: “🇺🇸 USA”, founded: 2020, died: 2024, raised: 300000000, lost: 300000000, reason: “Over-prescribed ADHD medications. DEA investigation, executive turnover.”, lesson: “Speed in healthcare leads to compliance failure. Move slowly with prescriptions.” },
-{ name: “Inflection AI”, industry: “AI”, country: “🇺🇸 USA”, founded: 2022, died: 2024, raised: 1500000000, lost: 1500000000, reason: “Pi chatbot could not compete with ChatGPT. Microsoft acqui-hired team.”, lesson: “AI consumer products need 10x better experience to dethrone incumbents.” },
-{ name: “Builder.ai”, industry: “AI/SaaS”, country: “🇬🇧 UK”, founded: 2016, died: 2025, raised: 445000000, lost: 445000000, reason: “Claimed AI built apps — humans actually did the work. Misleading marketing.”, lesson: “Do not fake your AI. The cost to discover is too high once at scale.” },
+  { name: "FTX", industry: "Crypto/Fintech", country: "🇧🇸 Bahamas", founded: 2019, died: 2022, raised: 1800000000, lost: 32000000000, reason: "Fraud and misuse of customer funds. Founder Sam Bankman-Fried convicted of wire fraud.", lesson: "Never commingle customer funds with operations. Transparency and audits matter more than growth." },
+  { name: "Theranos", industry: "Healthcare", country: "🇺🇸 USA", founded: 2003, died: 2018, raised: 945000000, lost: 700000000, reason: "Fraudulent technology claims. Blood testing devices never worked as advertised.", lesson: "Validate technical claims before scaling. Hype kills companies when reality catches up." },
+  { name: "WeWork", industry: "Real Estate", country: "🇺🇸 USA", founded: 2010, died: 2023, raised: 22000000000, lost: 11500000000, reason: "Aggressive growth, unsustainable lease commitments, founder governance issues.", lesson: "Real estate is not tech. Don`t dress up traditional businesses as software valuations." },
+  { name: "Quibi", industry: "Media", country: "🇺🇸 USA", founded: 2018, died: 2020, raised: 1750000000, lost: 1750000000, reason: "Built short-form mobile video during pandemic when users wanted long content on TVs.", lesson: "Validate market timing. $1.75B and famous founders can`t save a wrong product." },
+  { name: "Byju`s", industry: "EdTech", country: "🇮🇳 India", founded: 2011, died: 2024, raised: 5500000000, lost: 22000000000, reason: "Aggressive sales tactics, accounting irregularities, post-COVID demand collapse.", lesson: "Growth at all costs creates fragile businesses. Sustainable unit economics beat vanity metrics." },
+  { name: "Wirecard", industry: "Fintech", country: "🇩🇪 Germany", founded: 1999, died: 2020, raised: 1900000000, lost: 1900000000, reason: "$2B accounting fraud — funds simply did not exist. CEO arrested.", lesson: "Audit everything. Big-name auditors miss massive fraud — boards must dig deeper." },
+  { name: "Northvolt", industry: "CleanTech", country: "🇸🇪 Sweden", founded: 2016, died: 2024, raised: 13800000000, lost: 13800000000, reason: "Could not compete with Chinese battery makers on cost and scale.", lesson: "Capital alone can`t beat 10-year manufacturing experience curves." },
+  { name: "Argo AI", industry: "Autonomous Vehicles", country: "🇺🇸 USA", founded: 2016, died: 2022, raised: 3600000000, lost: 3600000000, reason: "Self-driving timeline pushed back, investors Ford and VW pulled funding.", lesson: "Don`t depend on a few corporate investors. They cut losses faster than VCs do." },
+  { name: "Faraday Future", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 3000000000, lost: 3000000000, reason: "Endless delays, leadership chaos, never delivered cars at scale.", lesson: "Building cars is brutally hard. Don`t underestimate manufacturing complexity." },
+  { name: "Vice Media", industry: "Media", country: "🇺🇸 USA", founded: 1994, died: 2023, raised: 2500000000, lost: 2500000000, reason: "Could not monetize digital media, advertising decline, mismanaged growth.", lesson: "Digital ad-supported media at scale is broken. Subscription revenue is essential." },
+  { name: "Nikola Motor", industry: "EV/Automotive", country: "🇺🇸 USA", founded: 2014, died: 2024, raised: 1000000000, lost: 1000000000, reason: "Founder fraud — fake truck demo videos. SEC charges, bankruptcy.", lesson: "Don`t fake it till you make it with hardware. Due diligence will find out." },
+  { name: "Quirky", industry: "Hardware", country: "🇺🇸 USA", founded: 2009, died: 2015, raised: 200000000, lost: 200000000, reason: "Launched 50 products per year — too many to support. Burned cash on marketing.", lesson: "Focus beats breadth. Better to nail one product than launch 50 mediocre ones." },
+  { name: "Solyndra", industry: "CleanTech", country: "🇺🇸 USA", founded: 2005, died: 2011, raised: 1100000000, lost: 1100000000, reason: "Chinese solar panels became cheaper than Solyndra`s manufacturing cost.", lesson: "Watch global commodity prices. Chinese manufacturing scale crushes Western hardware startups." },
+  { name: "Jawbone", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 1999, died: 2017, raised: 930000000, lost: 930000000, reason: "Lost wearables war to Fitbit and Apple. Product issues, customer complaints.", lesson: "Hardware needs continuous quality improvement. One bad product cycle can kill the brand." },
+  { name: "MoviePass", industry: "Entertainment", country: "🇺🇸 USA", founded: 2011, died: 2020, raised: 300000000, lost: 300000000, reason: "Unsustainable $9.95/month for unlimited movies. Lost money on every customer.", lesson: "If unit economics are negative, scaling makes losses worse, not better." },
+  { name: "Hopin", industry: "Events/SaaS", country: "🇬🇧 UK", founded: 2019, died: 2024, raised: 1600000000, lost: 1600000000, reason: "Built virtual events platform during COVID, demand collapsed when pandemic ended.", lesson: "Don`t bet the company on temporary tailwinds. Build for normal times." },
+  { name: "Convoy", industry: "Logistics", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 900000000, lost: 900000000, reason: "Freight market collapse, could not sustain unit economics, ran out of cash.", lesson: "Marketplace businesses need positive contribution margins per transaction." },
+  { name: "Bird", industry: "Micromobility", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 776000000, lost: 776000000, reason: "Scooter unit economics never worked. Maintenance costs ate revenue.", lesson: "Real-world hardware in public spaces gets destroyed. Account for that in unit economics." },
+  { name: "Juicero", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 120000000, lost: 120000000, reason: "$400 juice machine when juice packets could be squeezed by hand.", lesson: "Test if your hardware actually adds value versus a $1 alternative." },
+  { name: "Beepi", industry: "Auto Marketplace", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 148000000, lost: 148000000, reason: "Executives spent $7M per month on salaries and perks. Burn rate killed company.", lesson: "Founder extravagance kills startups. Conserve cash like it is your last dollar." },
+  { name: "Pets.com", industry: "E-commerce", country: "🇺🇸 USA", founded: 1998, died: 2000, raised: 300000000, lost: 300000000, reason: "Selling pet food online with shipping costs higher than products. Dot-com poster child.", lesson: "Heavy products with low margins don`t ship economically. Math matters." },
+  { name: "Webvan", industry: "Grocery Delivery", country: "🇺🇸 USA", founded: 1996, died: 2001, raised: 830000000, lost: 830000000, reason: "Built $1B+ warehouse infrastructure before validating demand. Dot-com bust.", lesson: "Don`t build infrastructure for hypothetical demand. Validate first, scale second." },
+  { name: "Vine", industry: "Social Media", country: "🇺🇸 USA", founded: 2012, died: 2017, raised: 30000000, lost: 30000000, reason: "Twitter shut down its 6-second video app. Failed to monetize creators.", lesson: "Creator platforms must share revenue early. Otherwise creators leave for competitors." },
+  { name: "Yik Yak", industry: "Social Media", country: "🇺🇸 USA", founded: 2013, died: 2017, raised: 73500000, lost: 73500000, reason: "Anonymous app became toxic. Cyberbullying drove users away.", lesson: "Anonymous social products have inherent moderation problems. Plan for abuse early." },
+  { name: "HQ Trivia", industry: "Mobile Gaming", country: "🇺🇸 USA", founded: 2017, died: 2020, raised: 15000000, lost: 15000000, reason: "Live trivia game peaked fast then declined. Could not monetize fad.", lesson: "Viral fads are not businesses. Build for sustained engagement." },
+  { name: "Pebble", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2011, died: 2016, raised: 43000000, lost: 43000000, reason: "Smartwatch pioneer crushed by Apple Watch. Could not compete with iPhone integration.", lesson: "Big platforms can crush you. Build defensibility against your platform partners." },
+  { name: "Fast", industry: "Fintech", country: "🇺🇸 USA", founded: 2019, died: 2022, raised: 120000000, lost: 120000000, reason: "Burning $10M per month with $600k revenue. CEO ousted.", lesson: "Burn must match revenue trajectory. A 100x ratio is unsustainable." },
+  { name: "IRL", industry: "Social Media", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 170000000, lost: 170000000, reason: "95% of users were fake bots. Founder fraud allegations.", lesson: "Real engagement metrics matter. Vanity numbers eventually catch up." },
+  { name: "Babylon Health", industry: "Telehealth", country: "🇬🇧 UK", founded: 2013, died: 2023, raised: 1200000000, lost: 1200000000, reason: "AI-driven telehealth could not sustain unit economics. NHS contract ended.", lesson: "Healthcare margins are thin. AI promises do not change underlying economics." },
+  { name: "Hyperloop One", industry: "Transportation", country: "🇺🇸 USA", founded: 2014, died: 2023, raised: 450000000, lost: 450000000, reason: "Vacuum tube transport never reached commercial viability.", lesson: "Some ideas remain science fiction for a reason. Validate physics before investing $450M." },
+  { name: "Brandless", industry: "E-commerce", country: "🇺🇸 USA", founded: 2016, died: 2020, raised: 292000000, lost: 292000000, reason: "Generic products at $3 could not sustain unit economics. Acquisition costs too high.", lesson: "Cheap products plus high CAC equals death. Pricing must support customer acquisition costs." },
+  { name: "Magic Leap", industry: "AR/VR", country: "🇺🇸 USA", founded: 2010, died: 2020, raised: 3500000000, lost: 3500000000, reason: "Technology never matched the hype. Sold 6,000 units against 1M target.", lesson: "Do not build to demos. Ship products customers will actually buy and use." },
+  { name: "Munchery", industry: "Food Delivery", country: "🇺🇸 USA", founded: 2010, died: 2019, raised: 125000000, lost: 125000000, reason: "Premium meal delivery could not beat DoorDash on convenience or price.", lesson: "Premium food delivery is a niche. Mass market beats premium in food." },
+  { name: "Homejoy", industry: "On-demand Services", country: "🇺🇸 USA", founded: 2012, died: 2015, raised: 40000000, lost: 40000000, reason: "Customer retention 25%. Lawsuits over worker classification.", lesson: "Without retention, you are filling a leaky bucket. Fix retention before scaling acquisition." },
+  { name: "Rdio", industry: "Music Streaming", country: "🇺🇸 USA", founded: 2008, died: 2015, raised: 118000000, lost: 118000000, reason: "Lost to Spotify and Apple Music. Could not compete on catalogue or marketing.", lesson: "In platform wars, second place usually means dead. Build moats or exit early." },
+  { name: "Aereo", industry: "Streaming", country: "🇺🇸 USA", founded: 2012, died: 2014, raised: 97000000, lost: 97000000, reason: "TV streaming startup ruled illegal by Supreme Court. Business model died overnight.", lesson: "Do not build companies on legal grey areas. One court ruling can kill you." },
+  { name: "Anki", industry: "Robotics", country: "🇺🇸 USA", founded: 2010, died: 2019, raised: 182000000, lost: 182000000, reason: "Could not raise next round despite $100M revenue. Hardware margins too thin.", lesson: "Even with revenue, hardware companies need constant capital injection." },
+  { name: "Essential Products", industry: "Consumer Electronics", country: "🇺🇸 USA", founded: 2015, died: 2020, raised: 330000000, lost: 330000000, reason: "Andy Rubin`s smartphone could not dent Apple/Samsung duopoly.", lesson: "Smartphone hardware market is closed. Do not enter saturated commodity markets." },
+  { name: "Zenefits", industry: "HR Tech", country: "🇺🇸 USA", founded: 2013, died: 2022, raised: 584000000, lost: 584000000, reason: "Cheated insurance compliance training. Founder ousted, valuation crashed.", lesson: "Compliance shortcuts kill regulated businesses. Do it right or do not do it." },
+  { name: "Compass Real Estate", industry: "Real Estate", country: "🇺🇸 USA", founded: 2012, died: 2024, raised: 1500000000, lost: 1500000000, reason: "Tech-disguised real estate brokerage. Profit margins same as competitors.", lesson: "Putting tech in your pitch does not change underlying business margins." },
+  { name: "Frank", industry: "Fintech", country: "🇺🇸 USA", founded: 2017, died: 2023, raised: 20000000, lost: 175000000, reason: "Founder fabricated 4M users for JPMorgan acquisition. Fraud charges.", lesson: "Do not fabricate users. Acquisition due diligence will find out." },
+  { name: "Boo.com", industry: "E-commerce", country: "🇬🇧 UK", founded: 1998, died: 2000, raised: 135000000, lost: 135000000, reason: "Premature scaling, complex tech, expensive lifestyle marketing. Burned $135M in 18 months.", lesson: "The original cautionary tale of premature scaling. Walk before you run." },
+  { name: "Fab.com", industry: "E-commerce", country: "🇺🇸 USA", founded: 2011, died: 2015, raised: 336000000, lost: 336000000, reason: "Hyper-growth pivot from gay social network to flash sales. Lost focus.", lesson: "Multiple identity changes confuse customers and burn capital." },
+  { name: "Katerra", industry: "Construction Tech", country: "🇺🇸 USA", founded: 2015, died: 2021, raised: 2000000000, lost: 2000000000, reason: "Software thinking applied to construction. Manufacturing issues, project failures.", lesson: "Software thinking does not translate to physical industries with regulatory complexity." },
+  { name: "Zume Pizza", industry: "Food Tech", country: "🇺🇸 USA", founded: 2015, died: 2023, raised: 445000000, lost: 445000000, reason: "Robotic pizza-making in delivery trucks. Cheese slid off in transit.", lesson: "Pilot the physics before raising hundreds of millions. Sometimes physics wins." },
+  { name: "Plenty", industry: "AgTech", country: "🇺🇸 USA", founded: 2014, died: 2025, raised: 941000000, lost: 941000000, reason: "Vertical farming energy costs higher than traditional agriculture.", lesson: "Tech-enabled agriculture cannot beat the sun in cost-per-pound." },
+  { name: "Olive AI", industry: "Healthcare AI", country: "🇺🇸 USA", founded: 2012, died: 2023, raised: 856000000, lost: 856000000, reason: "RPA company rebranded as AI. Could not deliver on AI promises to hospitals.", lesson: "Do not rebrand boring tech as AI. Customers eventually see through it." },
+  { name: "Cerebral", industry: "Telehealth", country: "🇺🇸 USA", founded: 2020, died: 2024, raised: 300000000, lost: 300000000, reason: "Over-prescribed ADHD medications. DEA investigation, executive turnover.", lesson: "Speed in healthcare leads to compliance failure. Move slowly with prescriptions." },
+  { name: "Inflection AI", industry: "AI", country: "🇺🇸 USA", founded: 2022, died: 2024, raised: 1500000000, lost: 1500000000, reason: "Pi chatbot could not compete with ChatGPT. Microsoft acqui-hired team.", lesson: "AI consumer products need 10x better experience to dethrone incumbents." },
+  { name: "Builder.ai", industry: "AI/SaaS", country: "🇬🇧 UK", founded: 2016, died: 2025, raised: 445000000, lost: 445000000, reason: "Claimed AI built apps — humans actually did the work. Misleading marketing.", lesson: "Do not fake your AI. The cost to discover is too high once at scale." },
 ];
 
 // ── VENTURE FUNDS ──
 const VENTURE_FUNDS = [
-{ name: “IT Park Uzbekistan”, focus: “Tech startups”, stage: “Early & Growth”, url: “https://it-park.uz”, contact: “startup@it-park.uz”, flag: “🇺🇿” },
-{ name: “Seedstars Uzbekistan”, focus: “Emerging markets”, stage: “Seed”, url: “https://seedstars.com”, contact: “apply@seedstars.com”, flag: “🌍” },
-{ name: “Uzinfocom”, focus: “ICT sector”, stage: “Early”, url: “https://uzinfocom.uz”, contact: “info@uzinfocom.uz”, flag: “🇺🇿” },
-{ name: “EBRD Uzbekistan”, focus: “SME & Tech”, stage: “Growth”, url: “https://ebrd.com”, contact: “uzbekistan@ebrd.com”, flag: “🏦” },
-{ name: “Plug and Play Tashkent”, focus: “All sectors”, stage: “Seed”, url: “https://plugandplaytechcenter.com”, contact: “tashkent@pnptc.com”, flag: “🇺🇿” },
+  { name: "IT Park Uzbekistan", focus: "Tech startups", stage: "Early & Growth", url: "https://it-park.uz", contact: "startup@it-park.uz", flag: "🇺🇿" },
+  { name: "Seedstars Uzbekistan", focus: "Emerging markets", stage: "Seed", url: "https://seedstars.com", contact: "apply@seedstars.com", flag: "🌍" },
+  { name: "Uzinfocom", focus: "ICT sector", stage: "Early", url: "https://uzinfocom.uz", contact: "info@uzinfocom.uz", flag: "🇺🇿" },
+  { name: "EBRD Uzbekistan", focus: "SME & Tech", stage: "Growth", url: "https://ebrd.com", contact: "uzbekistan@ebrd.com", flag: "🏦" },
+  { name: "Plug and Play Tashkent", focus: "All sectors", stage: "Seed", url: "https://plugandplaytechcenter.com", contact: "tashkent@pnptc.com", flag: "🇺🇿" },
 ];
 
 // ── RESOURCES ──
 const RESOURCES = {
-youtube: [
-{ title: “Y Combinator”, url: “https://youtube.com/@ycombinator”, desc: “Best startup advice from Silicon Valley” },
-{ title: “Simon Sinek”, url: “https://youtube.com/@SimonSinek”, desc: “Leadership & business thinking” },
-{ title: “Alex Hormozi”, url: “https://youtube.com/@AlexHormozi”, desc: “Practical business & marketing tactics” },
-],
-books: [
-{ title: “The Lean Startup”, author: “Eric Ries”, desc: “Build, measure, learn methodology” },
-{ title: “Zero to One”, author: “Peter Thiel”, desc: “Building monopolies & unique value” },
-{ title: “Crossing the Chasm”, author: “Geoffrey Moore”, desc: “Marketing high-tech to mainstream” },
-],
-globalProducts: [
-{ name: “Rappi (Colombia)”, desc: “On-demand delivery that conquered Latin America”, url: “https://rappi.com” },
-{ name: “Payme (Uzbekistan)”, desc: “Local fintech success story”, url: “https://payme.uz” },
-{ name: “Yango”, desc: “How a global brand adapted to Uzbekistan”, url: “https://yango.com” },
-],
+  youtube: [
+    { title: "Y Combinator", url: "https://youtube.com/@ycombinator", desc: "Best startup advice from Silicon Valley" },
+    { title: "Simon Sinek", url: "https://youtube.com/@SimonSinek", desc: "Leadership & business thinking" },
+    { title: "Alex Hormozi", url: "https://youtube.com/@AlexHormozi", desc: "Practical business & marketing tactics" },
+  ],
+  books: [
+    { title: "The Lean Startup", author: "Eric Ries", desc: "Build, measure, learn methodology" },
+    { title: "Zero to One", author: "Peter Thiel", desc: "Building monopolies & unique value" },
+    { title: "Crossing the Chasm", author: "Geoffrey Moore", desc: "Marketing high-tech to mainstream" },
+  ],
+  globalProducts: [
+    { name: "Rappi (Colombia)", desc: "On-demand delivery that conquered Latin America", url: "https://rappi.com" },
+    { name: "Payme (Uzbekistan)", desc: "Local fintech success story", url: "https://payme.uz" },
+    { name: "Yango", desc: "How a global brand adapted to Uzbekistan", url: "https://yango.com" },
+  ],
 };
 
 // ── STARTUP COMPETITIONS ──
 const STARTUP_COMPETITIONS = [
-{ name: “IT Park Demo Day”, location: “🇺🇿 Tashkent”, prize: “$50,000”, deadline: “2026-05-20”, url: “https://it-park.uz” },
-{ name: “Seedstars Uzbekistan”, location: “🇺🇿 Tashkent”, prize: “$500,000”, deadline: “2026-06-01”, url: “https://seedstars.com” },
-{ name: “Global Startup Awards”, location: “🌍 Global”, prize: “€100,000”, deadline: “2026-06-15”, url: “https://globalstartupawards.com” },
-{ name: “TechCrunch Disrupt”, location: “🇺🇸 San Francisco”, prize: “$100,000”, deadline: “2026-07-01”, url: “https://techcrunch.com” },
-{ name: “Startup World Cup”, location: “🌍 Global”, prize: “$1,000,000”, deadline: “2026-07-30”, url: “https://startupworldcup.io” },
+  { name: "IT Park Demo Day", location: "🇺🇿 Tashkent", prize: "$50,000", deadline: "2026-05-20", url: "https://it-park.uz" },
+  { name: "Seedstars Uzbekistan", location: "🇺🇿 Tashkent", prize: "$500,000", deadline: "2026-06-01", url: "https://seedstars.com" },
+  { name: "Global Startup Awards", location: "🌍 Global", prize: "€100,000", deadline: "2026-06-15", url: "https://globalstartupawards.com" },
+  { name: "TechCrunch Disrupt", location: "🇺🇸 San Francisco", prize: "$100,000", deadline: "2026-07-01", url: "https://techcrunch.com" },
+  { name: "Startup World Cup", location: "🌍 Global", prize: "$1,000,000", deadline: "2026-07-30", url: "https://startupworldcup.io" },
 ];
 
 // ── STYLES ──
-const STYLES = ’
+const STYLES = `
 @keyframes moneyFall { 0% { transform:translateY(-60px) rotate(0deg); opacity:1; } 100% { transform:translateY(110vh) rotate(720deg); opacity:0; } }
 @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 @keyframes chatSlide { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
 @keyframes stepIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
-’;
-if (!document.getElementById(“mm-styles”)) {
-const s = document.createElement(“style”);
-s.id = “mm-styles”;
-s.textContent = STYLES;
-document.head.appendChild(s);
+@keyframes countPop { 0% { transform:scale(1); } 40% { transform:scale(1.2); } 100% { transform:scale(1); } }
+`;
+if (!document.getElementById("mm-styles")) {
+  const s = document.createElement("style");
+  s.id = "mm-styles";
+  s.textContent = STYLES;
+  document.head.appendChild(s);
 }
 
 // ── TRANSLATIONS ──
 const T = {
-en: {
-nav: { browse: “Browse”, graveyard: “🪦 Graveyard”, learn: “📚 Learn”, blog: “Blog”, validate: “🧪 Validate”, contact: “Contact”, share: “+ Share a Mistake”, login: “Sign In”, logout: “Sign Out” },
-hero: { tag: “🇬🇧 UK & 🇺🇿 Uzbekistan”, h1a: “Stop Making”, h1b: “Mistakes”, h1c: “Others Already Made”, sub: “A community where business owners share real failures — so you can learn before it costs you.”, cta: “Share Your Story →”, browse: “Browse Problems” },
-stats: { problems: “Stories shared”, upvotes: “Total upvotes”, countries: “Countries”, live: “● Live” },
-sidebar: { country: “Country”, both: “🌍 Both Countries”, uk: “🇬🇧 United Kingdom”, uz: “🇺🇿 Uzbekistan”, industry: “Industry”, all: “All Industries”, chart: “By Industry”, leaderboard: “🏆 Monthly Top Contributors”, leaderboardSub: “Top 5 this month” },
-filters: { search: “Search stories…”, newest: “Newest”, upvoted: “Most upvoted”, discussed: “Most discussed”, allImp: “All impact”, high: “🔴 High”, medium: “🟡 Medium”, low: “🟢 Low” },
-empty: { title: “No stories found”, sub: “Try a different filter or be the first to share here.” },
-topCases: { title: “💸 Big Loss Cases”, sub: “Real business failures that cost $100k+”, noData: “No $100k+ cases yet.” },
-form: { title: “Share a Business Mistake”, sub: “Your story could save someone else’s business.”, industry: “Industry *”, country: “Country *”, ptitle: “What went wrong? (title) *”, problem: “What happened? *”, lesson: “Lesson learned *”, impact: “Impact”, name: “Your name”, namePh: “Anonymous”, cancel: “Cancel”, publish: “Publish →”, loss: “Loss Amount ($)”, lossph: “e.g. 50000”, image: “Upload Image (optional)”, industries: [“Fashion & Retail”,“Technology & SaaS”,“Food & Restaurant”,“Marketing & Agency”,“Finance & Banking”,“E-commerce”,“Manufacturing”,“Education”,“Healthcare”,“Travel & Tourism”,“Real Estate”,“Other”], high: “🔴 High — nearly fatal”, medium: “🟡 Medium — major setback”, low: “🟢 Low — minor but useful”, selectInd: “Select industry”, selectCou: “Select country” },
-detail: { lesson: “✅ Lesson Learned”, comments: “Comments”, noComments: “No comments yet.”, commentPh: “Add a comment…”, post: “Post”, reviews: “⭐ Reviews”, noReviews: “No reviews yet.”, reviewPh: “Share your thoughts…”, submitReview: “Post Review”, loginReview: “Sign in to write a review”, lossLabel: “💸 Total Loss”, providers: “🤝 Get Help With This Problem” },
-blog: { title: “Blog & Stories”, sub: “Insights from the UK and Uzbekistan business community.”, write: “Write a Post”, readMore: “Read more →”, noPost: “No blog posts yet.”, noPostSub: “Be the first to share a story.”, postTitle: “Post Title *”, postBody: “Write your story *”, postTag: “Tag”, publish: “Publish Post”, competitions: “🏆 Startup Competitions”, sponsoredBy: “Sponsored”, daysLeft: “days left”, applyNow: “Apply →”, itparkAd: “IT Park Uzbekistan — The home of tech innovation. Apply for residency, funding & mentorship.”, itparkCta: “Learn More →” },
-contact: { title: “Contact Us”, sub: “Questions or partnership ideas?”, email: “Email”, emailV: “hello@mistakemap.co.uk”, resp: “Response time”, respV: “Within 24 hours”, serving: “Serving”, servingV: “UK & Uzbekistan only”, formTitle: “Send a message”, formSub: “We read every message.”, nameL: “Name *”, emailL: “Email *”, countryL: “Country”, msgL: “Message *”, send: “Send Message →” },
-auth: { loginTitle: “Welcome Back”, regTitle: “Create Account”, email: “Email *”, password: “Password *”, name: “Your Name *”, company: “Company / Business”, country: “Country”, loginBtn: “Sign In”, regBtn: “Create Account”, switchToReg: “Don’t have an account? Register →”, switchToLogin: “Already have an account? Sign in →”, verifyNote: “Please verify your email after signing up.”, verified: “✓ Verified”, notVerified: “Email not verified” },
-toast: { published: “✓ Published!”, comment: “Comment posted!”, contact: “✓ Message sent!”, blogPublished: “✓ Blog post published!”, fill: “Please fill in all required fields.”, loginSuccess: “Welcome back!”, regSuccess: “Account created! Check your email.”, loggedOut: “Signed out.”, reviewPosted: “Review posted!”, verifyResent: “Verification email resent.” },
-impact: { high: “High”, medium: “Medium”, low: “Low” },
-chat: { title: “AI Business Advisor”, placeholder: “Ask about business mistakes…”, send: “Send”, thinking: “Thinking…”, welcome: “Hi! I’m your AI business advisor. Ask me anything about business mistakes and how to avoid them.” },
-failAnim: { title: “Every Day Businesses Fail”, sub: “Don’t be a statistic. Learn from those who’ve been there.”, stat1: “90% of startups fail”, stat2: “38% run out of cash”, stat3: “35% no market need”, stat4: “$1.4M avg loss”, stat5: “20% fail year one”, cta: “See Real $100k+ Cases →” },
-graveyard: {
-title: “🪦 The Startup Graveyard”,
-sub: “50+ real startup failures · $100B+ in lessons · Don’t repeat their mistakes”,
-filterAll: “All”, filterMega: “Mega ($1B+)”, filterMajor: “Major ($100M-$1B)”, filterRecent: “Recent (2023+)”,
-sortLost: “💰 Money Lost”, sortYear: “📅 Year Died”, sortName: “🔤 Name”,
-raised: “Raised”, lost: “Lost”, reason: “Why it died”, lesson: “Lesson”,
-yearsAlive: “years alive”, showing: “Showing”, of: “of”,
-statBuried: “startups buried”, statLost: “total lost”, statAvg: “avg lifespan”,
-searchPh: “Search startups…”, clickToRead: “Click to read story →”,
-failedIn: “Failed”, failureAnalysis: “Failure Risk Analysis”,
-failureScore: “Failure Score”, marketFitRisk: “Market Fit Risk”,
-burnRateRisk: “Burn Rate Risk”, founderRisk: “Founder Risk”,
-timeline: “What Happened: The Timeline”,
-rootCauses: “Root Causes”, keyLessons: “Key Lessons Learned”,
-competitorsThatWon: “Competitors That Won”,
-couldBePrevented: “Could This Failure Have Been Prevented?”,
-analysing: “Analysing failure patterns…”,
-},
-validator: {
-title: “🧪 Business Idea Validator”,
-sub: “Test your idea against the Uzbekistan market before you invest”,
-step1Title: “Tell us your idea”,
-ideaLabel: “Business Idea *”, ideaPh: “e.g. Online grocery delivery for Tashkent”,
-industryLabel: “Industry *”, priceLabel: “Price point ($)”, pricePh: “e.g. 15”,
-budgetLabel: “Startup budget ($)”, budgetPh: “e.g. 5000”,
-analyseBtn: “Analyse My Idea →”,
-steps: [“Market Research”, “Target Segments”, “Competitor Analysis”, “Affordability”, “Final Verdict”],
-analysing: “Analysing…”,
-goVerdict: “✅ GO — Strong opportunity”,
-cautionVerdict: “⚠️ CAUTION — Proceed carefully”,
-nogoVerdict: “❌ NO-GO — High risk”,
-scoreLabel: “Opportunity Score”,
-restart: “← Validate Another Idea”,
-tabSummary: “Summary”, tabScores: “Scores”, tabMarket: “Market”,
-tabFinancials: “Financials”, tabRoadmap: “Roadmap”,
-execSummary: “Executive Summary”, greenLights: “Green Lights”, redFlags: “Red Flags”,
-problemVal: “Problem Validation”, solutionVal: “Solution Validation”, marketVal: “Market Validation”,
-marketFactors: “Market Factors”, execFactors: “Execution Factors”,
-marketSize: “Market Size”, targetRegions: “Target Regions”,
-competitive: “Competitive Landscape”, strengths: “STRENGTHS”, weaknesses: “WEAKNESSES”,
-yourOpportunity: “YOUR OPPORTUNITY”,
-unitEconomics: “Unit Economics”, startupCosts: “STARTUP COSTS”,
-breakEven: “BREAK-EVEN”, growth: “GROWTH (CAGR)”, revenueModels: “Revenue Models”,
-quickWins: “Quick Wins”, underOneWeek: “UNDER 1 WEEK EACH”,
-immediate: “IMMEDIATE (1 WEEK)”, shortTerm: “SHORT-TERM (1-3 MO)”,
-rawAnalysis: “Raw Analysis”, validatingText: “Validating your idea…”,
-investorReady: “Investor-Ready — Contact These Funds”,
-},
-},
-uz: {
-nav: { browse: “Ko’rish”, graveyard: “🪦 Qabriston”, learn: “📚 O’rganish”, blog: “Blog”, validate: “🧪 Tekshirish”, contact: “Aloqa”, share: “+ Xatoni ulashing”, login: “Kirish”, logout: “Chiqish” },
-hero: { tag: “🇬🇧 UK va 🇺🇿 O’zbekiston”, h1a: “Boshqalar qilgan”, h1b: “Xatolarni”, h1c: “Takrorlamang”, sub: “Biznes egalari haqiqiy muvaffaqiyatsizliklarini baham ko’radigan jamiyat.”, cta: “Hikoyangizni ulashing →”, browse: “Muammolarni ko’rish” },
-stats: { problems: “Ulashilgan hikoyalar”, upvotes: “Jami ovozlar”, countries: “Mamlakatlar”, live: “● Jonli” },
-sidebar: { country: “Mamlakat”, both: “🌍 Ikkala mamlakat”, uk: “🇬🇧 Birlashgan Qirollik”, uz: “🇺🇿 O’zbekiston”, industry: “Soha”, all: “Barcha sohalar”, chart: “Soha bo’yicha”, leaderboard: “🏆 Oylik Top Hissadorlar”, leaderboardSub: “Bu oyda top 5” },
-filters: { search: “Hikoyalarni qidirish…”, newest: “Eng yangi”, upvoted: “Ko’p ovoz olgan”, discussed: “Ko’p muhokama”, allImp: “Barcha ta’sir”, high: “🔴 Yuqori”, medium: “🟡 O’rtacha”, low: “🟢 Past” },
-empty: { title: “Hikoyalar topilmadi”, sub: “Boshqa filtrni sinab ko’ring.” },
-topCases: { title: “💸 Katta zarar holatlari”, sub: “$100k+ zarar ko’rgan biznes holatlari”, noData: “Hali $100k+ holat yo’q.” },
-form: { title: “Biznes xatosini ulashing”, sub: “Hikoyangiz boshqalarni saqlab qolishi mumkin.”, industry: “Soha *”, country: “Mamlakat *”, ptitle: “Nima noto’g’ri ketdi? *”, problem: “Nima bo’ldi? *”, lesson: “O’rganilgan dars *”, impact: “Ta’sir”, name: “Ismingiz”, namePh: “Anonim”, cancel: “Bekor qilish”, publish: “Nashr etish →”, loss: “Zarar miqdori ($)”, lossph: “masalan: 50000”, image: “Rasm yuklash”, industries: [“Moda va chakana savdo”,“Texnologiya va SaaS”,“Oziq-ovqat va restoran”,“Marketing va agentlik”,“Moliya va bank”,“Elektron tijorat”,“Ishlab chiqarish”,“Ta’lim”,“Sog’liqni saqlash”,“Sayohat va turizm”,“Ko’chmas mulk”,“Boshqa”], high: “🔴 Yuqori — deyarli halokatli”, medium: “🟡 O’rtacha — katta to’siq”, low: “🟢 Past — kichik lekin foydali”, selectInd: “Sohani tanlang”, selectCou: “Mamlakatni tanlang” },
-detail: { lesson: “✅ O’rganilgan dars”, comments: “Izohlar”, noComments: “Hali izoh yo’q.”, commentPh: “Izoh qo’shing…”, post: “Yuborish”, reviews: “⭐ Sharhlar”, noReviews: “Hali sharh yo’q.”, reviewPh: “Fikringizni ulashing…”, submitReview: “Sharh jo’natish”, loginReview: “Sharh yozish uchun kiring”, lossLabel: “💸 Umumiy zarar”, providers: “🤝 Bu muammo bo’yicha yordam” },
-blog: { title: “Blog va Hikoyalar”, sub: “UK va O’zbekiston biznes hamjamiyatidan tushunchalar.”, write: “Post yozing”, readMore: “Ko’proq o’qish →”, noPost: “Hali blog postlari yo’q.”, noPostSub: “Birinchi bo’lib ulashing.”, postTitle: “Post sarlavhasi *”, postBody: “Hikoyangizni yozing *”, postTag: “Teg”, publish: “Postni nashr etish”, competitions: “🏆 Startup musobaqalari”, sponsoredBy: “Homiy”, daysLeft: “kun qoldi”, applyNow: “Ariza →”, itparkAd: “IT Park O’zbekiston — Texnologik innovatsiyalar markazi.”, itparkCta: “Ko’proq →” },
-contact: { title: “Biz bilan bog’laning”, sub: “Savollar yoki hamkorlik g’oyalari?”, email: “Elektron pochta”, emailV: “hello@mistakemap.co.uk”, resp: “Javob vaqti”, respV: “24 soat ichida”, serving: “Xizmat”, servingV: “Faqat UK va O’zbekiston”, formTitle: “Xabar yuboring”, formSub: “Har bir xabarni o’qiymiz.”, nameL: “Ism *”, emailL: “Elektron pochta *”, countryL: “Mamlakat”, msgL: “Xabar *”, send: “Xabar yuborish →” },
-auth: { loginTitle: “Xush kelibsiz”, regTitle: “Hisob yaratish”, email: “Elektron pochta *”, password: “Parol *”, name: “Ismingiz *”, company: “Kompaniya”, country: “Mamlakat”, loginBtn: “Kirish”, regBtn: “Hisob yaratish”, switchToReg: “Hisobingiz yo’qmi? →”, switchToLogin: “Hisobingiz bormi? →”, verifyNote: “Emailingizni tasdiqlang.”, verified: “✓ Tasdiqlangan”, notVerified: “Tasdiqlanmagan” },
-toast: { published: “✓ Nashr etildi!”, comment: “Izoh qo’shildi!”, contact: “✓ Xabar yuborildi!”, blogPublished: “✓ Nashr etildi!”, fill: “Barcha maydonlarni to’ldiring.”, loginSuccess: “Xush kelibsiz!”, regSuccess: “Hisob yaratildi!”, loggedOut: “Chiqildi.”, reviewPosted: “Sharh qo’shildi!”, verifyResent: “Email qayta yuborildi.” },
-impact: { high: “Yuqori”, medium: “O’rtacha”, low: “Past” },
-chat: { title: “AI Biznes Maslahatchisi”, placeholder: “Biznes xatolari haqida so’rang…”, send: “Yuborish”, thinking: “O’ylamoqda…”, welcome: “Salom! Men AI biznes maslahatchingizman.” },
-failAnim: { title: “Har kuni bizneslar yopiladi”, sub: “Statistika bo’lmang.”, stat1: “90% startuplar yopiladi”, stat2: “38% pul tugaydi”, stat3: “35% bozor yo’q”, stat4: “$1.4M o’rtacha zarar”, stat5: “20% 1-yilda yopiladi”, cta: “Haqiqiy $100k+ holatlar →” },
-graveyard: {
-title: “🪦 Startup Qabristoni”,
-sub: “50+ haqiqiy startup muvaffaqiyatsizliklari · $100B+ darslar”,
-filterAll: “Barchasi”, filterMega: “Mega ($1B+)”, filterMajor: “Katta ($100M-$1B)”, filterRecent: “Yangi (2023+)”,
-sortLost: “💰 Yo’qotilgan”, sortYear: “📅 O’lgan yil”, sortName: “🔤 Ism”,
-raised: “Yig’ilgan”, lost: “Yo’qotilgan”, reason: “Nega o’ldi”, lesson: “Dars”,
-yearsAlive: “yil yashagan”, showing: “Ko’rsatilmoqda”, of: “/”,
-statBuried: “ko’milgan”, statLost: “umumiy zarar”, statAvg: “o’rtacha umr”,
-searchPh: “Startuplarni qidirish…”, clickToRead: “Hikoyani o’qish →”,
-failedIn: “Yopildi”, failureAnalysis: “Muvaffaqiyatsizlik xavfi tahlili”,
-failureScore: “Muvaffaqiyatsizlik bali”, marketFitRisk: “Bozor mosligi xavfi”,
-burnRateRisk: “Pul sarflash xavfi”, founderRisk: “Asoschiga bog’liq xavf”,
-timeline: “Nima bo’ldi: Vaqt jadvali”,
-rootCauses: “Asosiy sabablar”, keyLessons: “Asosiy o’rganilgan darslar”,
-competitorsThatWon: “G’olib bo’lgan raqobatchilar”,
-couldBePrevented: “Bu muvaffaqiyatsizlik oldini olish mumkin edi?”,
-analysing: “Muvaffaqiyatsizlik namunalari tahlil qilinmoqda…”,
-},
-validator: {
-title: “🧪 Biznes Fikr Tekshirgich”,
-sub: “O’zbekiston bozorida fikringizni test qiling”,
-step1Title: “Fikringizni aytib bering”,
-ideaLabel: “Biznes fikr *”, ideaPh: “masalan: Toshkent uchun online oziq-ovqat”,
-industryLabel: “Soha *”, priceLabel: “Narx ($)”, pricePh: “masalan: 15”,
-budgetLabel: “Boshlang’ich byudjet ($)”, budgetPh: “masalan: 5000”,
-analyseBtn: “Tahlil qilish →”,
-steps: [“Bozor tadqiqoti”, “Maqsad segmentlar”, “Raqobatchilar”, “Sotib olish qobiliyati”, “Yakuniy hukm”],
-analysing: “Tahlil qilinmoqda…”,
-goVerdict: “✅ BORING — Kuchli imkoniyat”,
-cautionVerdict: “⚠️ EHTIYOT — Ehtiyotkorlik bilan”,
-nogoVerdict: “❌ BORING EMAS — Yuqori xavf”,
-scoreLabel: “Imkoniyat bali”,
-restart: “← Boshqa fikrni tekshirish”,
-tabSummary: “Xulosa”, tabScores: “Ballar”, tabMarket: “Bozor”,
-tabFinancials: “Moliya”, tabRoadmap: “Yo’l xaritasi”,
-execSummary: “Ijroiya xulosa”, greenLights: “Yashil chiroqlar”, redFlags: “Qizil bayroqlar”,
-problemVal: “Muammo tasdiqi”, solutionVal: “Yechim tasdiqi”, marketVal: “Bozor tasdiqi”,
-marketFactors: “Bozor omillari”, execFactors: “Ijro omillari”,
-marketSize: “Bozor hajmi”, targetRegions: “Maqsadli hududlar”,
-competitive: “Raqobat muhiti”, strengths: “KUCHLI TOMONLAR”, weaknesses: “ZAIF TOMONLAR”,
-yourOpportunity: “SIZNING IMKONIYATINGIZ”,
-unitEconomics: “Birlik iqtisodiyoti”, startupCosts: “BOSHLANG’ICH XARAJATLAR”,
-breakEven: “ZARAR KO’RMASLIK”, growth: “O’SISH (CAGR)”, revenueModels: “Daromad modellari”,
-quickWins: “Tezkor g’alabalar”, underOneWeek: “HAR BIRI 1 HAFTA ICHIDA”,
-immediate: “DARHOL (1 HAFTA)”, shortTerm: “QISQA MUDDAT (1-3 OY)”,
-rawAnalysis: “Xom tahlil”, validatingText: “Fikringiz tekshirilmoqda…”,
-investorReady: “Investorga tayyor — Bu fondlarga murojaat qiling”,
-},
-},
+  en: {
+    nav: { browse: "Browse", graveyard: "🪦 Graveyard", learn: "📚 Learn", blog: "Blog", validate: "🧪 Validate", contact: "Contact", share: "+ Share a Mistake", login: "Sign In", logout: "Sign Out" },
+    hero: { tag: "🇬🇧 UK & 🇺🇿 Uzbekistan", h1a: "Stop Making", h1b: "Mistakes", h1c: "Others Already Made", sub: "A community where business owners share real failures — so you can learn before it costs you.", cta: "Share Your Story →", browse: "Browse Problems" },
+    stats: { problems: "Stories shared", upvotes: "Total upvotes", countries: "Countries", live: "● Live" },
+    sidebar: { country: "Country", both: "🌍 Both Countries", uk: "🇬🇧 United Kingdom", uz: "🇺🇿 Uzbekistan", industry: "Industry", all: "All Industries", chart: "By Industry", leaderboard: "🏆 Monthly Top Contributors", leaderboardSub: "Top 5 this month" },
+    filters: { search: "Search stories...", newest: "Newest", upvoted: "Most upvoted", discussed: "Most discussed", allImp: "All impact", high: "🔴 High", medium: "🟡 Medium", low: "🟢 Low" },
+    empty: { title: "No stories found", sub: "Try a different filter or be the first to share here." },
+    topCases: { title: "💸 Big Loss Cases", sub: "Real business failures that cost $100k+", noData: "No $100k+ cases yet." },
+    form: { title: "Share a Business Mistake", sub: "Your story could save someone else`s business.", industry: "Industry *", country: "Country *", ptitle: "What went wrong? (title) *", problem: "What happened? *", lesson: "Lesson learned *", impact: "Impact", name: "Your name", namePh: "Anonymous", cancel: "Cancel", publish: "Publish →", loss: "Loss Amount ($)", lossph: "e.g. 50000", image: "Upload Image (optional)", industries: ["Fashion & Retail","Technology & SaaS","Food & Restaurant","Marketing & Agency","Finance & Banking","E-commerce","Manufacturing","Education","Healthcare","Travel & Tourism","Real Estate","Other"], high: "🔴 High — nearly fatal", medium: "🟡 Medium — major setback", low: "🟢 Low — minor but useful", selectInd: "Select industry", selectCou: "Select country" },
+    detail: { lesson: "✅ Lesson Learned", comments: "Comments", noComments: "No comments yet.", commentPh: "Add a comment...", post: "Post", reviews: "⭐ Reviews", noReviews: "No reviews yet.", reviewPh: "Share your thoughts...", submitReview: "Post Review", loginReview: "Sign in to write a review", lossLabel: "💸 Total Loss", providers: "🤝 Get Help With This Problem" },
+    blog: { title: "Blog & Stories", sub: "Insights from the UK and Uzbekistan business community.", write: "Write a Post", readMore: "Read more →", noPost: "No blog posts yet.", noPostSub: "Be the first to share a story.", postTitle: "Post Title *", postBody: "Write your story *", postTag: "Tag", publish: "Publish Post", competitions: "🏆 Startup Competitions", sponsoredBy: "Sponsored", daysLeft: "days left", applyNow: "Apply →", itparkAd: "IT Park Uzbekistan — The home of tech innovation. Apply for residency, funding & mentorship.", itparkCta: "Learn More →" },
+    contact: { title: "Contact Us", sub: "Questions or partnership ideas?", email: "Email", emailV: "hello@mistakemap.co.uk", resp: "Response time", respV: "Within 24 hours", serving: "Serving", servingV: "UK & Uzbekistan only", formTitle: "Send a message", formSub: "We read every message.", nameL: "Name *", emailL: "Email *", countryL: "Country", msgL: "Message *", send: "Send Message →" },
+    auth: { loginTitle: "Welcome Back", regTitle: "Create Account", email: "Email *", password: "Password *", name: "Your Name *", company: "Company / Business", country: "Country", loginBtn: "Sign In", regBtn: "Create Account", switchToReg: "Don`t have an account? Register →", switchToLogin: "Already have an account? Sign in →", verifyNote: "Please verify your email after signing up.", verified: "✓ Verified", notVerified: "Email not verified" },
+    toast: { published: "✓ Published!", comment: "Comment posted!", contact: "✓ Message sent!", blogPublished: "✓ Blog post published!", fill: "Please fill in all required fields.", loginSuccess: "Welcome back!", regSuccess: "Account created! Check your email.", loggedOut: "Signed out.", reviewPosted: "Review posted!", verifyResent: "Verification email resent." },
+    impact: { high: "High", medium: "Medium", low: "Low" },
+    chat: { title: "AI Business Advisor", placeholder: "Ask about business mistakes...", send: "Send", thinking: "Thinking...", welcome: "Hi! I`m your AI business advisor. Ask me anything about business mistakes and how to avoid them." },
+    failAnim: { title: "Every Day Businesses Fail", sub: "Don`t be a statistic. Learn from those who`ve been there.", stat1: "90% of startups fail", stat2: "38% run out of cash", stat3: "35% no market need", stat4: "$1.4M avg loss", stat5: "20% fail year one", cta: "See Real $100k+ Cases →" },
+    graveyard: {
+      title: "🪦 The Startup Graveyard",
+      sub: "50+ real startup failures · $100B+ in lessons · Don`t repeat their mistakes",
+      filterAll: "All", filterMega: "Mega ($1B+)", filterMajor: "Major ($100M-$1B)", filterRecent: "Recent (2023+)",
+      sortLost: "💰 Money Lost", sortYear: "📅 Year Died", sortName: "🔤 Name",
+      raised: "Raised", lost: "Lost", reason: "Why it died", lesson: "Lesson",
+      yearsAlive: "years alive", showing: "Showing", of: "of",
+      statBuried: "startups buried", statLost: "total lost", statAvg: "avg lifespan",
+      searchPh: "Search startups...", clickToRead: "Click to read story →",
+      failedIn: "Failed", failureAnalysis: "Failure Risk Analysis",
+      failureScore: "Failure Score", marketFitRisk: "Market Fit Risk",
+      burnRateRisk: "Burn Rate Risk", founderRisk: "Founder Risk",
+      timeline: "What Happened: The Timeline",
+      rootCauses: "Root Causes", keyLessons: "Key Lessons Learned",
+      competitorsThatWon: "Competitors That Won",
+      couldBePrevented: "Could This Failure Have Been Prevented?",
+      analysing: "Analysing failure patterns...",
+    },
+    validator: {
+      title: "🧪 Business Idea Validator",
+      sub: "Test your idea against the Uzbekistan market before you invest",
+      step1Title: "Tell us your idea",
+      ideaLabel: "Business Idea *", ideaPh: "e.g. Online grocery delivery for Tashkent",
+      industryLabel: "Industry *", priceLabel: "Price point ($)", pricePh: "e.g. 15",
+      budgetLabel: "Startup budget ($)", budgetPh: "e.g. 5000",
+      analyseBtn: "Analyse My Idea →",
+      steps: ["Market Research", "Target Segments", "Competitor Analysis", "Affordability", "Final Verdict"],
+      analysing: "Analysing...",
+      goVerdict: "✅ GO — Strong opportunity",
+      cautionVerdict: "⚠️ CAUTION — Proceed carefully",
+      nogoVerdict: "❌ NO-GO — High risk",
+      scoreLabel: "Opportunity Score",
+      restart: "← Validate Another Idea",
+      tabSummary: "Summary", tabScores: "Scores", tabMarket: "Market",
+      tabFinancials: "Financials", tabRoadmap: "Roadmap",
+      execSummary: "Executive Summary", greenLights: "Green Lights", redFlags: "Red Flags",
+      problemVal: "Problem Validation", solutionVal: "Solution Validation", marketVal: "Market Validation",
+      marketFactors: "Market Factors", execFactors: "Execution Factors",
+      marketSize: "Market Size", targetRegions: "Target Regions",
+      competitive: "Competitive Landscape", strengths: "STRENGTHS", weaknesses: "WEAKNESSES",
+      yourOpportunity: "YOUR OPPORTUNITY",
+      unitEconomics: "Unit Economics", startupCosts: "STARTUP COSTS",
+      breakEven: "BREAK-EVEN", growth: "GROWTH (CAGR)", revenueModels: "Revenue Models",
+      quickWins: "Quick Wins", underOneWeek: "UNDER 1 WEEK EACH",
+      immediate: "IMMEDIATE (1 WEEK)", shortTerm: "SHORT-TERM (1-3 MO)",
+      rawAnalysis: "Raw Analysis", validatingText: "Validating your idea...",
+      investorReady: "Investor-Ready — Contact These Funds",
+    },
+  },
+  uz: {
+    nav: { browse: "Ko'rish", graveyard: "🪦 Qabriston", learn: "📚 O`rganish", blog: "Blog", validate: "🧪 Tekshirish", contact: "Aloqa", share: "+ Xatoni ulashing", login: "Kirish", logout: "Chiqish" },
+    hero: { tag: "🇬🇧 UK va 🇺🇿 O`zbekiston", h1a: "Boshqalar qilgan", h1b: "Xatolarni", h1c: "Takrorlamang", sub: "Biznes egalari haqiqiy muvaffaqiyatsizliklarini baham ko'radigan jamiyat.", cta: "Hikoyangizni ulashing →", browse: "Muammolarni ko`rish" },
+    stats: { problems: "Ulashilgan hikoyalar", upvotes: "Jami ovozlar", countries: "Mamlakatlar", live: "● Jonli" },
+    sidebar: { country: "Mamlakat", both: "🌍 Ikkala mamlakat", uk: "🇬🇧 Birlashgan Qirollik", uz: "🇺🇿 O`zbekiston", industry: "Soha", all: "Barcha sohalar", chart: "Soha bo`yicha", leaderboard: "🏆 Oylik Top Hissadorlar", leaderboardSub: "Bu oyda top 5" },
+    filters: { search: "Hikoyalarni qidirish...", newest: "Eng yangi", upvoted: "Ko`p ovoz olgan", discussed: "Ko'p muhokama", allImp: "Barcha ta'sir", high: "🔴 Yuqori", medium: "🟡 O`rtacha", low: "🟢 Past" },
+    empty: { title: "Hikoyalar topilmadi", sub: "Boshqa filtrni sinab ko`ring." },
+    topCases: { title: "💸 Katta zarar holatlari", sub: "$100k+ zarar ko'rgan biznes holatlari", noData: "Hali $100k+ holat yo`q." },
+    form: { title: "Biznes xatosini ulashing", sub: "Hikoyangiz boshqalarni saqlab qolishi mumkin.", industry: "Soha *", country: "Mamlakat *", ptitle: "Nima noto`g'ri ketdi? *", problem: "Nima bo'ldi? *", lesson: "O'rganilgan dars *", impact: "Ta'sir", name: "Ismingiz", namePh: "Anonim", cancel: "Bekor qilish", publish: "Nashr etish →", loss: "Zarar miqdori ($)", lossph: "masalan: 50000", image: "Rasm yuklash", industries: ["Moda va chakana savdo","Texnologiya va SaaS","Oziq-ovqat va restoran","Marketing va agentlik","Moliya va bank","Elektron tijorat","Ishlab chiqarish","Ta'lim","Sog'liqni saqlash","Sayohat va turizm","Ko'chmas mulk","Boshqa"], high: "🔴 Yuqori — deyarli halokatli", medium: "🟡 O'rtacha — katta to`siq", low: "🟢 Past — kichik lekin foydali", selectInd: "Sohani tanlang", selectCou: "Mamlakatni tanlang" },
+    detail: { lesson: "✅ O`rganilgan dars", comments: "Izohlar", noComments: "Hali izoh yo'q.", commentPh: "Izoh qo'shing...", post: "Yuborish", reviews: "⭐ Sharhlar", noReviews: "Hali sharh yo'q.", reviewPh: "Fikringizni ulashing...", submitReview: "Sharh jo'natish", loginReview: "Sharh yozish uchun kiring", lossLabel: "💸 Umumiy zarar", providers: "🤝 Bu muammo bo`yicha yordam" },
+    blog: { title: "Blog va Hikoyalar", sub: "UK va O`zbekiston biznes hamjamiyatidan tushunchalar.", write: "Post yozing", readMore: "Ko'proq o'qish →", noPost: "Hali blog postlari yo'q.", noPostSub: "Birinchi bo'lib ulashing.", postTitle: "Post sarlavhasi *", postBody: "Hikoyangizni yozing *", postTag: "Teg", publish: "Postni nashr etish", competitions: "🏆 Startup musobaqalari", sponsoredBy: "Homiy", daysLeft: "kun qoldi", applyNow: "Ariza →", itparkAd: "IT Park O'zbekiston — Texnologik innovatsiyalar markazi.", itparkCta: "Ko`proq →" },
+    contact: { title: "Biz bilan bog`laning", sub: "Savollar yoki hamkorlik g'oyalari?", email: "Elektron pochta", emailV: "hello@mistakemap.co.uk", resp: "Javob vaqti", respV: "24 soat ichida", serving: "Xizmat", servingV: "Faqat UK va O'zbekiston", formTitle: "Xabar yuboring", formSub: "Har bir xabarni o`qiymiz.", nameL: "Ism *", emailL: "Elektron pochta *", countryL: "Mamlakat", msgL: "Xabar *", send: "Xabar yuborish →" },
+    auth: { loginTitle: "Xush kelibsiz", regTitle: "Hisob yaratish", email: "Elektron pochta *", password: "Parol *", name: "Ismingiz *", company: "Kompaniya", country: "Mamlakat", loginBtn: "Kirish", regBtn: "Hisob yaratish", switchToReg: "Hisobingiz yo`qmi? →", switchToLogin: "Hisobingiz bormi? →", verifyNote: "Emailingizni tasdiqlang.", verified: "✓ Tasdiqlangan", notVerified: "Tasdiqlanmagan" },
+    toast: { published: "✓ Nashr etildi!", comment: "Izoh qo'shildi!", contact: "✓ Xabar yuborildi!", blogPublished: "✓ Nashr etildi!", fill: "Barcha maydonlarni to'ldiring.", loginSuccess: "Xush kelibsiz!", regSuccess: "Hisob yaratildi!", loggedOut: "Chiqildi.", reviewPosted: "Sharh qo`shildi!", verifyResent: "Email qayta yuborildi." },
+    impact: { high: "Yuqori", medium: "O`rtacha", low: "Past" },
+    chat: { title: "AI Biznes Maslahatchisi", placeholder: "Biznes xatolari haqida so'rang...", send: "Yuborish", thinking: "O`ylamoqda...", welcome: "Salom! Men AI biznes maslahatchingizman." },
+    failAnim: { title: "Har kuni bizneslar yopiladi", sub: "Statistika bo`lmang.", stat1: "90% startuplar yopiladi", stat2: "38% pul tugaydi", stat3: "35% bozor yo'q", stat4: "$1.4M o`rtacha zarar", stat5: "20% 1-yilda yopiladi", cta: "Haqiqiy $100k+ holatlar →" },
+    graveyard: {
+      title: "🪦 Startup Qabristoni",
+      sub: "50+ haqiqiy startup muvaffaqiyatsizliklari · $100B+ darslar",
+      filterAll: "Barchasi", filterMega: "Mega ($1B+)", filterMajor: "Katta ($100M-$1B)", filterRecent: "Yangi (2023+)",
+      sortLost: "💰 Yo`qotilgan", sortYear: "📅 O`lgan yil", sortName: "🔤 Ism",
+      raised: "Yig`ilgan", lost: "Yo'qotilgan", reason: "Nega o`ldi", lesson: "Dars",
+      yearsAlive: "yil yashagan", showing: "Ko`rsatilmoqda", of: "/",
+      statBuried: "ko'milgan", statLost: "umumiy zarar", statAvg: "o`rtacha umr",
+      searchPh: "Startuplarni qidirish...", clickToRead: "Hikoyani o`qish →",
+      failedIn: "Yopildi", failureAnalysis: "Muvaffaqiyatsizlik xavfi tahlili",
+      failureScore: "Muvaffaqiyatsizlik bali", marketFitRisk: "Bozor mosligi xavfi",
+      burnRateRisk: "Pul sarflash xavfi", founderRisk: "Asoschiga bog`liq xavf",
+      timeline: "Nima bo`ldi: Vaqt jadvali",
+      rootCauses: "Asosiy sabablar", keyLessons: "Asosiy o`rganilgan darslar",
+      competitorsThatWon: "G`olib bo`lgan raqobatchilar",
+      couldBePrevented: "Bu muvaffaqiyatsizlik oldini olish mumkin edi?",
+      analysing: "Muvaffaqiyatsizlik namunalari tahlil qilinmoqda...",
+    },
+    validator: {
+      title: "🧪 Biznes Fikr Tekshirgich",
+      sub: "O`zbekiston bozorida fikringizni test qiling",
+      step1Title: "Fikringizni aytib bering",
+      ideaLabel: "Biznes fikr *", ideaPh: "masalan: Toshkent uchun online oziq-ovqat",
+      industryLabel: "Soha *", priceLabel: "Narx ($)", pricePh: "masalan: 15",
+      budgetLabel: "Boshlang`ich byudjet ($)", budgetPh: "masalan: 5000",
+      analyseBtn: "Tahlil qilish →",
+      steps: ["Bozor tadqiqoti", "Maqsad segmentlar", "Raqobatchilar", "Sotib olish qobiliyati", "Yakuniy hukm"],
+      analysing: "Tahlil qilinmoqda...",
+      goVerdict: "✅ BORING — Kuchli imkoniyat",
+      cautionVerdict: "⚠️ EHTIYOT — Ehtiyotkorlik bilan",
+      nogoVerdict: "❌ BORING EMAS — Yuqori xavf",
+      scoreLabel: "Imkoniyat bali",
+      restart: "← Boshqa fikrni tekshirish",
+      tabSummary: "Xulosa", tabScores: "Ballar", tabMarket: "Bozor",
+      tabFinancials: "Moliya", tabRoadmap: "Yo`l xaritasi",
+      execSummary: "Ijroiya xulosa", greenLights: "Yashil chiroqlar", redFlags: "Qizil bayroqlar",
+      problemVal: "Muammo tasdiqi", solutionVal: "Yechim tasdiqi", marketVal: "Bozor tasdiqi",
+      marketFactors: "Bozor omillari", execFactors: "Ijro omillari",
+      marketSize: "Bozor hajmi", targetRegions: "Maqsadli hududlar",
+      competitive: "Raqobat muhiti", strengths: "KUCHLI TOMONLAR", weaknesses: "ZAIF TOMONLAR",
+      yourOpportunity: "SIZNING IMKONIYATINGIZ",
+      unitEconomics: "Birlik iqtisodiyoti", startupCosts: "BOSHLANG`ICH XARAJATLAR",
+      breakEven: "ZARAR KO`RMASLIK", growth: "O`SISH (CAGR)", revenueModels: "Daromad modellari",
+      quickWins: "Tezkor g`alabalar", underOneWeek: "HAR BIRI 1 HAFTA ICHIDA",
+      immediate: "DARHOL (1 HAFTA)", shortTerm: "QISQA MUDDAT (1-3 OY)",
+      rawAnalysis: "Xom tahlil", validatingText: "Fikringiz tekshirilmoqda...",
+      investorReady: "Investorga tayyor — Bu fondlarga murojaat qiling",
+    },
+  },
 };
 
 // ── SOLUTION PROVIDERS ──
 const SOLUTION_PROVIDERS = {
-“Finance & Banking”: [
-{ name: “Uzbek Accounting Pro”, role: “Certified Accountant”, desc: “Tax compliance, bookkeeping & financial planning for SMEs.”, contact: “hello@uzaccpro.uz”, icon: “💼” },
-{ name: “FinAdvisor UZ”, role: “Financial Advisor”, desc: “Investment strategy, cash flow management and business loans.”, contact: “info@finadvisor.uz”, icon: “📊” },
-],
-“Marketing & Agency”: [
-{ name: “Growth Hive Agency”, role: “Marketing Consultant”, desc: “Digital marketing, brand strategy and customer acquisition.”, contact: “hello@growthhive.uz”, icon: “📣” },
-{ name: “Brand Studio UZ”, role: “Brand Strategist”, desc: “Brand identity, positioning and go-to-market strategy.”, contact: “studio@branduz.com”, icon: “🎨” },
-],
-“Technology & SaaS”: [
-{ name: “IT Park Uzbekistan”, role: “Tech Accelerator”, desc: “Funding, mentorship and infrastructure for tech startups.”, contact: “info@it-park.uz”, icon: “🚀” },
-{ name: “DevConsult UZ”, role: “Tech Consultant”, desc: “Software architecture, product development and CTO-as-a-service.”, contact: “hi@devconsult.uz”, icon: “💻” },
-],
-“Fashion & Retail”: [
-{ name: “Retail Strategy UZ”, role: “Retail Consultant”, desc: “Supply chain optimisation, inventory management and retail expansion.”, contact: “hello@retailstrat.uz”, icon: “🏪” },
-],
-“Food & Restaurant”: [
-{ name: “HospitalityPro UZ”, role: “Restaurant Consultant”, desc: “Menu costing, kitchen operations and franchise development.”, contact: “info@hospro.uz”, icon: “🍽️” },
-],
-“E-commerce”: [
-{ name: “Ecom Rocket UZ”, role: “E-commerce Consultant”, desc: “Marketplace strategy, logistics setup and conversion optimisation.”, contact: “hi@ecomrocket.uz”, icon: “📦” },
-],
-“Other”: [
-{ name: “BizAdvisor UZ”, role: “General Business Advisor”, desc: “Business plan, registration, funding and growth strategy.”, contact: “hello@bizadvisor.uz”, icon: “🧭” },
-],
+  "Finance & Banking": [
+    { name: "Uzbek Accounting Pro", role: "Certified Accountant", desc: "Tax compliance, bookkeeping & financial planning for SMEs.", contact: "hello@uzaccpro.uz", icon: "💼" },
+    { name: "FinAdvisor UZ", role: "Financial Advisor", desc: "Investment strategy, cash flow management and business loans.", contact: "info@finadvisor.uz", icon: "📊" },
+  ],
+  "Marketing & Agency": [
+    { name: "Growth Hive Agency", role: "Marketing Consultant", desc: "Digital marketing, brand strategy and customer acquisition.", contact: "hello@growthhive.uz", icon: "📣" },
+    { name: "Brand Studio UZ", role: "Brand Strategist", desc: "Brand identity, positioning and go-to-market strategy.", contact: "studio@branduz.com", icon: "🎨" },
+  ],
+  "Technology & SaaS": [
+    { name: "IT Park Uzbekistan", role: "Tech Accelerator", desc: "Funding, mentorship and infrastructure for tech startups.", contact: "info@it-park.uz", icon: "🚀" },
+    { name: "DevConsult UZ", role: "Tech Consultant", desc: "Software architecture, product development and CTO-as-a-service.", contact: "hi@devconsult.uz", icon: "💻" },
+  ],
+  "Fashion & Retail": [
+    { name: "Retail Strategy UZ", role: "Retail Consultant", desc: "Supply chain optimisation, inventory management and retail expansion.", contact: "hello@retailstrat.uz", icon: "🏪" },
+  ],
+  "Food & Restaurant": [
+    { name: "HospitalityPro UZ", role: "Restaurant Consultant", desc: "Menu costing, kitchen operations and franchise development.", contact: "info@hospro.uz", icon: "🍽️" },
+  ],
+  "E-commerce": [
+    { name: "Ecom Rocket UZ", role: "E-commerce Consultant", desc: "Marketplace strategy, logistics setup and conversion optimisation.", contact: "hi@ecomrocket.uz", icon: "📦" },
+  ],
+  "Other": [
+    { name: "BizAdvisor UZ", role: "General Business Advisor", desc: "Business plan, registration, funding and growth strategy.", contact: "hello@bizadvisor.uz", icon: "🧭" },
+  ],
 };
 
 // ── HELPERS ──
-function inp(extra = {}) { return { background: “#f8faf8”, border: “1px solid #dceadc”, borderRadius: 7, padding: “0.6rem 0.8rem”, fontFamily: “Inter,sans-serif”, fontSize: “0.84rem”, color: “#1a2e1a”, outline: “none”, width: “100%”, boxSizing: “border-box”, …extra }; }
-function sel() { return { …inp(), cursor: “pointer”, appearance: “none”, backgroundImage: “url("data:image/svg+xml,%3Csvg width=‘10’ height=‘6’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cpath d=‘M1 1l4 4 4-4’ stroke=’%23aaa’ stroke-width=‘1.5’ fill=‘none’ stroke-linecap=‘round’/%3E%3C/svg%3E")”, backgroundRepeat: “no-repeat”, backgroundPosition: “right 0.7rem center”, paddingRight: “2rem” }; }
-function darkInp() { return { background: “rgba(255,255,255,0.05)”, border: “1px solid rgba(139,92,246,0.3)”, borderRadius: 8, padding: “0.75rem”, color: “#fff”, fontSize: “0.88rem”, fontFamily: “Inter,sans-serif”, outline: “none”, width: “100%”, boxSizing: “border-box” }; }
-function darkSel() { return { …darkInp(), cursor: “pointer”, appearance: “none” }; }
-function xBtn() { return { background: “#f0f7f0”, border: “1px solid #dceadc”, borderRadius: 6, width: 30, height: 30, display: “flex”, alignItems: “center”, justifyContent: “center”, cursor: “pointer”, color: “#aaa”, fontSize: “0.85rem”, flexShrink: 0, fontFamily: “Inter,sans-serif” }; }
-function FG({ label, children }) { return <div style={{ display: “flex”, flexDirection: “column”, gap: “0.3rem”, marginBottom: “0.75rem” }}><label style={{ fontSize: “0.77rem”, fontWeight: 600, color: “#5a7a5a” }}>{label}</label>{children}</div>; }
-function Overlay({ children, onClick }) { return <div onClick={onClick} style={{ position: “fixed”, inset: 0, background: “rgba(13,58,30,0.45)”, backdropFilter: “blur(4px)”, zIndex: 200, display: “flex”, alignItems: “flex-start”, justifyContent: “center”, padding: “2rem 1rem”, overflowY: “auto” }}>{children}</div>; }
-function FilterBtn({ children, active, onClick }) { return <button onClick={onClick} style={{ display: “flex”, alignItems: “center”, gap: “0.4rem”, width: “100%”, padding: “0.43rem 0.6rem”, borderRadius: 6, border: “1px solid “ + (active ? “#b8d8bc” : “transparent”), background: active ? “#e8f5eb” : “none”, color: active ? GREEN : “#1a2e1a”, fontFamily: “Inter,sans-serif”, fontSize: “0.82rem”, fontWeight: active ? 600 : 400, cursor: “pointer”, textAlign: “left” }}>{children}</button>; }
-function Pill({ children }) { return <span style={{ fontSize: “0.69rem”, background: “#f0f7f0”, padding: “0.1rem 0.4rem”, borderRadius: 100, color: “#7a9a7a” }}>{children}</span>; }
-function sideTitle() { return { fontSize: “0.67rem”, fontWeight: 700, textTransform: “uppercase”, letterSpacing: “0.07em”, color: “#7a9a7a”, marginBottom: “0.7rem” }; }
+function inp(extra = {}) { return { background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 7, padding: "0.6rem 0.8rem", fontFamily: "Inter,sans-serif", fontSize: "0.84rem", color: "#1a2e1a", outline: "none", width: "100%", boxSizing: "border-box", ...extra }; }
+function sel() { return { ...inp(), cursor: "pointer", appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round`/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.7rem center", paddingRight: "2rem" }; }
+function darkInp() { return { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box" }; }
+function darkSel() { return { ...darkInp(), cursor: "pointer", appearance: "none" }; }
+function xBtn() { return { background: "#f0f7f0", border: "1px solid #dceadc", borderRadius: 6, width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#aaa", fontSize: "0.85rem", flexShrink: 0, fontFamily: "Inter,sans-serif" }; }
+function FG({ label, children }) { return <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", marginBottom: "0.75rem" }}><label style={{ fontSize: "0.77rem", fontWeight: 600, color: "#5a7a5a" }}>{label}</label>{children}</div>; }
+function Overlay({ children, onClick }) { return <div onClick={onClick} style={{ position: "fixed", inset: 0, background: "rgba(13,58,30,0.45)", backdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "2rem 1rem", overflowY: "auto" }}>{children}</div>; }
+function FilterBtn({ children, active, onClick }) { return <button onClick={onClick} style={{ display: "flex", alignItems: "center", gap: "0.4rem", width: "100%", padding: "0.43rem 0.6rem", borderRadius: 6, border: "1px solid " + (active ? "#b8d8bc" : "transparent"), background: active ? "#e8f5eb" : "none", color: active ? GREEN : "#1a2e1a", fontFamily: "Inter,sans-serif", fontSize: "0.82rem", fontWeight: active ? 600 : 400, cursor: "pointer", textAlign: "left" }}>{children}</button>; }
+function Pill({ children }) { return <span style={{ fontSize: "0.69rem", background: "#f0f7f0", padding: "0.1rem 0.4rem", borderRadius: 100, color: "#7a9a7a" }}>{children}</span>; }
+function sideTitle() { return { fontSize: "0.67rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "#7a9a7a", marginBottom: "0.7rem" }; }
 
 function renderMD(text) {
-if (!text) return “”;
-return text
-.replace(/**(.+?)**/g, “<strong>$1</strong>”)
-.replace(/^## (.+)$/gm, “<div style="font-weight:700;color:#0d3a1e;margin:0.6rem 0 0.25rem">$1</div>”)
-.replace(/^- (.+)$/gm, “<div style="display:flex;gap:0.4rem;margin-bottom:0.25rem"><span style="color:#1a5c30">•</span><span>$1</span></div>”);
+  if (!text) return "";
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/^## (.+)$/gm, "<div style=\"font-weight:700;color:#0d3a1e;margin:0.6rem 0 0.25rem\">$1</div>")
+    .replace(/^- (.+)$/gm, "<div style=\"display:flex;gap:0.4rem;margin-bottom:0.25rem\"><span style=\"color:#1a5c30\">•</span><span>$1</span></div>");
 }
-function MDText({ text }) { return <div style={{ fontSize: “0.83rem”, color: “#5a7a5a”, lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || “”) }} />; }
-function DarkMD({ text }) { return <div style={{ fontSize: “0.82rem”, color: “rgba(255,255,255,0.75)”, lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || “”) }} />; }
+function MDText({ text }) { return <div style={{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || "") }} />; }
+function DarkMD({ text }) { return <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || "") }} />; }
 
 const callAI = async (prompt, maxTok = 1000) => {
-const res = await fetch(“https://api.anthropic.com/v1/messages”, {
-method: “POST”,
-headers: {
-“Content-Type”: “application/json”,
-“x-api-key”: API_KEY(),
-“anthropic-version”: “2023-06-01”,
-“anthropic-dangerous-direct-browser-access”: “true”,
-},
-body: JSON.stringify({ model: “claude-sonnet-4-5”, max_tokens: maxTok, messages: [{ role: “user”, content: prompt }] }),
-});
-const data = await res.json();
-return data.content?.[0]?.text || “”;
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY(),
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: maxTok, messages: [{ role: "user", content: prompt }] }),
+  });
+  const data = await res.json();
+  return data.content?.[0]?.text || "";
 };
 
 // ── MONEY PARTICLE ──
 function MoneyParticle({ style }) {
-const emojis = [“💸”, “💰”, “🤑”, “💵”];
-const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-return <div style={{ position: “absolute”, top: “-60px”, fontSize: ‘${1 + Math.random()}rem’, animation: ‘moneyFall ${3 + Math.random() * 4}s linear infinite’, animationDelay: ‘${Math.random() * 5}s’, pointerEvents: “none”, zIndex: 0, …style }}>{emoji}</div>;
+  const emojis = ["💸", "💰", "🤑", "💵"];
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+  return <div style={{ position: "absolute", top: "-60px", fontSize: `${1 + Math.random()}rem', animation: 'moneyFall ${3 + Math.random() * 4}s linear infinite', animationDelay: '${Math.random() * 5}s`, pointerEvents: "none", zIndex: 0, ...style }}>{emoji}</div>;
 }
 
 // ── STARTUP FAIL SECTION ──
 function StartupFailSection({ t, onCta }) {
-const stats = [
-{ emoji: “🔥”, text: t.failAnim.stat1 },
-{ emoji: “💸”, text: t.failAnim.stat2 },
-{ emoji: “🔍”, text: t.failAnim.stat3 },
-{ emoji: “📉”, text: t.failAnim.stat4 },
-{ emoji: “📅”, text: t.failAnim.stat5 },
-];
-return (
-<div style={{ position: “relative”, overflow: “hidden”, background: “linear-gradient(135deg,#0a1f10,#0d3a1e)”, padding: “4rem 1.5rem”, textAlign: “center” }}>
-{Array.from({ length: 14 }, (_, i) => <MoneyParticle key={i} style={{ left: ‘${(i / 14) * 100}%’ }} />)}
-<div style={{ position: “relative”, zIndex: 1 }}>
-<div style={{ display: “inline-block”, background: “rgba(127,251,160,0.1)”, border: “1px solid rgba(127,251,160,0.3)”, color: “#7ffba0”, fontSize: “0.72rem”, fontWeight: 700, textTransform: “uppercase”, letterSpacing: “0.1em”, padding: “0.28rem 0.9rem”, borderRadius: 100, marginBottom: “1.25rem” }}>⚠ Business Failure Reality Check</div>
-<h2 style={{ fontSize: “clamp(1.6rem,4vw,2.8rem)”, fontWeight: 800, color: “#fff”, lineHeight: 1.15, marginBottom: “0.75rem” }}>{t.failAnim.title}</h2>
-<p style={{ color: “rgba(255,255,255,0.55)”, fontSize: “0.95rem”, marginBottom: “2.5rem” }}>{t.failAnim.sub}</p>
-<div style={{ display: “flex”, gap: “1rem”, justifyContent: “center”, flexWrap: “wrap”, marginBottom: “2.5rem” }}>
-{stats.map((s, i) => (
-<div key={i} style={{ background: “rgba(255,255,255,0.05)”, border: “1px solid rgba(255,255,255,0.1)”, borderRadius: 12, padding: “1rem 1.25rem”, minWidth: 130, backdropFilter: “blur(6px)” }}>
-<div style={{ fontSize: “1.5rem”, marginBottom: “0.35rem” }}>{s.emoji}</div>
-<div style={{ fontSize: “0.8rem”, color: “rgba(255,255,255,0.8)”, fontWeight: 600, lineHeight: 1.3 }}>{s.text}</div>
-</div>
-))}
-</div>
-<button onClick={onCta} style={{ background: “linear-gradient(135deg,#e53e3e,#c53030)”, color: “#fff”, border: “none”, borderRadius: 9, padding: “0.8rem 2rem”, fontWeight: 700, fontSize: “0.95rem”, cursor: “pointer”, fontFamily: “Inter,sans-serif”, boxShadow: “0 8px 30px rgba(229,62,62,0.35)” }}>{t.failAnim.cta}</button>
-</div>
-</div>
-);
+  const stats = [
+    { emoji: "🔥", text: t.failAnim.stat1 },
+    { emoji: "💸", text: t.failAnim.stat2 },
+    { emoji: "🔍", text: t.failAnim.stat3 },
+    { emoji: "📉", text: t.failAnim.stat4 },
+    { emoji: "📅", text: t.failAnim.stat5 },
+  ];
+  return (
+    <div style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem", textAlign: "center" }}>
+      {Array.from({ length: 14 }, (_, i) => <MoneyParticle key={i} style={{ left: `${(i / 14) * 100}%` }} />)}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ display: "inline-block", background: "rgba(127,251,160,0.1)", border: "1px solid rgba(127,251,160,0.3)", color: "#7ffba0", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "0.28rem 0.9rem", borderRadius: 100, marginBottom: "1.25rem" }}>⚠ Business Failure Reality Check</div>
+        <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.8rem)", fontWeight: 800, color: "#fff", lineHeight: 1.15, marginBottom: "0.75rem" }}>{t.failAnim.title}</h2>
+        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem", marginBottom: "2.5rem" }}>{t.failAnim.sub}</p>
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "2.5rem" }}>
+          {stats.map((s, i) => (
+            <div key={i} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.25rem", minWidth: 130, backdropFilter: "blur(6px)" }}>
+              <div style={{ fontSize: "1.5rem", marginBottom: "0.35rem" }}>{s.emoji}</div>
+              <div style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.8)", fontWeight: 600, lineHeight: 1.3 }}>{s.text}</div>
+            </div>
+          ))}
+        </div>
+        <button onClick={onCta} style={{ background: "linear-gradient(135deg,#e53e3e,#c53030)", color: "#fff", border: "none", borderRadius: 9, padding: "0.8rem 2rem", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer", fontFamily: "Inter,sans-serif", boxShadow: "0 8px 30px rgba(229,62,62,0.35)" }}>{t.failAnim.cta}</button>
+      </div>
+    </div>
+  );
 }
 
 // ── TOP CASES ──
 function TopCases({ t, problems, onOpen, votedIds, onUpvote }) {
-const top = problems.filter(p => p.loss_amount && p.loss_amount >= 100000).sort((a, b) => b.loss_amount - a.loss_amount);
-const fmt = n => n >= 1000000 ? “$” + (n / 1000000).toFixed(1) + “M” : “$” + Math.round(n / 1000) + “k”;
-return (
-<div id=“top-cases” style={{ background: “#fff9f9”, borderTop: “1px solid #ffe0e0”, padding: “2.5rem 1.5rem” }}>
-<div style={{ maxWidth: 1100, margin: “0 auto” }}>
-<div style={{ textAlign: “center”, marginBottom: “1.75rem” }}>
-<h2 style={{ fontSize: “1.5rem”, fontWeight: 800, color: “#7f1d1d”, marginBottom: “0.4rem” }}>{t.topCases.title}</h2>
-<p style={{ color: “#b45309”, fontSize: “0.86rem” }}>{t.topCases.sub}</p>
-</div>
-{top.length === 0 ? <p style={{ textAlign: “center”, color: “#aaa” }}>{t.topCases.noData}</p> : (
-<div style={{ display: “grid”, gridTemplateColumns: “repeat(auto-fill, minmax(280px, 1fr))”, gap: “1rem” }}>
-{top.map(p => (
-<div key={p.id} onClick={() => onOpen(p.id)} style={{ background: “#fff”, border: “2px solid #fca5a5”, borderRadius: 12, overflow: “hidden”, cursor: “pointer”, transition: “all 0.15s” }}
-onMouseEnter={e => { e.currentTarget.style.borderColor = “#ef4444”; }}
-onMouseLeave={e => { e.currentTarget.style.borderColor = “#fca5a5”; }}>
-{p.image_url && <img src={p.image_url} alt={p.title} style={{ width: “100%”, height: 140, objectFit: “cover” }} />}
-<div style={{ padding: “1rem” }}>
-<div style={{ display: “inline-block”, background: “linear-gradient(135deg,#7f1d1d,#ef4444)”, color: “#fff”, fontSize: “1.1rem”, fontWeight: 800, padding: “0.3rem 0.8rem”, borderRadius: 8, marginBottom: “0.65rem”, fontFamily: “monospace” }}>{fmt(p.loss_amount)}</div>
-<div style={{ fontWeight: 700, fontSize: “0.88rem”, color: “#1a2e1a”, marginBottom: “0.4rem” }}>{p.title}</div>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “center”, marginTop: “0.75rem” }}>
-<span style={{ fontSize: “0.73rem”, color: “#bbb” }}>👤 {p.name}</span>
-<button onClick={e => { e.stopPropagation(); onUpvote(p.id, e); }} style={{ background: votedIds.has(p.id) ? GREEN : “#f0f7f0”, color: votedIds.has(p.id) ? “#fff” : GREEN, border: “1px solid “ + (votedIds.has(p.id) ? GREEN : “#c8dfc8”), borderRadius: 5, padding: “0.22rem 0.55rem”, fontSize: “0.74rem”, fontWeight: 600, cursor: “pointer”, fontFamily: “Inter,sans-serif” }}>▲ {p.upvotes}</button>
-</div>
-</div>
-</div>
-))}
-</div>
-)}
-</div>
-</div>
-);
+  const top = problems.filter(p => p.loss_amount && p.loss_amount >= 100000).sort((a, b) => b.loss_amount - a.loss_amount);
+  const fmt = n => n >= 1000000 ? "$" + (n / 1000000).toFixed(1) + "M" : "$" + Math.round(n / 1000) + "k";
+  return (
+    <div id="top-cases" style={{ background: "#fff9f9", borderTop: "1px solid #ffe0e0", padding: "2.5rem 1.5rem" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#7f1d1d", marginBottom: "0.4rem" }}>{t.topCases.title}</h2>
+          <p style={{ color: "#b45309", fontSize: "0.86rem" }}>{t.topCases.sub}</p>
+        </div>
+        {top.length === 0 ? <p style={{ textAlign: "center", color: "#aaa" }}>{t.topCases.noData}</p> : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+            {top.map(p => (
+              <div key={p.id} onClick={() => onOpen(p.id)} style={{ background: "#fff", border: "2px solid #fca5a5", borderRadius: 12, overflow: "hidden", cursor: "pointer", transition: "all 0.15s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#ef4444"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "#fca5a5"; }}>
+                {p.image_url && <img src={p.image_url} alt={p.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />}
+                <div style={{ padding: "1rem" }}>
+                  <div style={{ display: "inline-block", background: "linear-gradient(135deg,#7f1d1d,#ef4444)", color: "#fff", fontSize: "1.1rem", fontWeight: 800, padding: "0.3rem 0.8rem", borderRadius: 8, marginBottom: "0.65rem", fontFamily: "monospace" }}>{fmt(p.loss_amount)}</div>
+                  <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#1a2e1a", marginBottom: "0.4rem" }}>{p.title}</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.75rem" }}>
+                    <span style={{ fontSize: "0.73rem", color: "#bbb" }}>👤 {p.name}</span>
+                    <button onClick={e => { e.stopPropagation(); onUpvote(p.id, e); }} style={{ background: votedIds.has(p.id) ? GREEN : "#f0f7f0", color: votedIds.has(p.id) ? "#fff" : GREEN, border: "1px solid " + (votedIds.has(p.id) ? GREEN : "#c8dfc8"), borderRadius: 5, padding: "0.22rem 0.55rem", fontSize: "0.74rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>▲ {p.upvotes}</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // ── LEADERBOARD ──
 function Leaderboard({ t }) {
-const [leaders, setLeaders] = useState([]);
-const medals = [“🥇”, “🥈”, “🥉”, “4️⃣”, “5️⃣”];
-const demo = [
-{ name: “Sardor M.”, company: “TechHub UZ”, country: “Uzbekistan”, is_verified: true, upvotes_received: 47 },
-{ name: “Tom H.”, company: “London Ventures”, country: “United Kingdom”, is_verified: true, upvotes_received: 32 },
-{ name: “Kamola R.”, company: “Silk Road Capital”, country: “Uzbekistan”, is_verified: false, upvotes_received: 28 },
-{ name: “Akbar N.”, company: “Manchester Startup”, country: “United Kingdom”, is_verified: true, upvotes_received: 21 },
-{ name: “Dilnoza K.”, company: “IT Park UZ”, country: “Uzbekistan”, is_verified: false, upvotes_received: 15 },
-];
-useEffect(() => { supabase.rpc(“get_monthly_leaderboard”).then(({ data }) => { if (data && data.length) setLeaders(data); }); }, []);
-const list = leaders.length ? leaders : demo;
-return (
-<div style={{ background: “#fff”, border: “1px solid #dceadc”, borderRadius: 12, padding: “1rem” }}>
-<div style={sideTitle()}>{t.sidebar.leaderboard}</div>
-<div style={{ fontSize: “0.7rem”, color: “#bbb”, marginBottom: “0.85rem” }}>{t.sidebar.leaderboardSub}</div>
-{list.map((l, i) => (
-<div key={i} style={{ display: “flex”, alignItems: “center”, gap: “0.6rem”, padding: “0.55rem 0.5rem”, borderRadius: 8, background: i === 0 ? “linear-gradient(90deg,rgba(255,215,0,0.1),transparent)” : “transparent”, marginBottom: “0.25rem” }}>
-<span style={{ fontSize: “1.1rem”, flexShrink: 0 }}>{medals[i]}</span>
-<div style={{ flex: 1, minWidth: 0 }}>
-<div style={{ fontSize: “0.8rem”, fontWeight: 700, color: “#0d3a1e”, display: “flex”, alignItems: “center”, gap: “0.3rem” }}>
-{l.name}{l.is_verified && <span style={{ fontSize: “0.6rem”, background: GREEN, color: “#fff”, padding: “0.05rem 0.35rem”, borderRadius: 100 }}>✓</span>}
-</div>
-<div style={{ fontSize: “0.69rem”, color: “#9a9a9a” }}>{l.company || l.country || “”}</div>
-</div>
-<div style={{ fontSize: “0.72rem”, fontWeight: 700, color: GREEN }}>▲ {l.upvotes_received}</div>
-</div>
-))}
-{list[0] && <div style={{ marginTop: “0.6rem”, background: “linear-gradient(135deg,#fef3c7,#fde68a)”, borderRadius: 8, padding: “0.5rem 0.7rem”, fontSize: “0.73rem”, color: “#92400e”, fontWeight: 600, textAlign: “center” }}>👑 Top Contributor: {list[0].name}</div>}
-</div>
-);
+  const [leaders, setLeaders] = useState([]);
+  const medals = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"];
+  const demo = [
+    { name: "Sardor M.", company: "TechHub UZ", country: "Uzbekistan", is_verified: true, upvotes_received: 47 },
+    { name: "Tom H.", company: "London Ventures", country: "United Kingdom", is_verified: true, upvotes_received: 32 },
+    { name: "Kamola R.", company: "Silk Road Capital", country: "Uzbekistan", is_verified: false, upvotes_received: 28 },
+    { name: "Akbar N.", company: "Manchester Startup", country: "United Kingdom", is_verified: true, upvotes_received: 21 },
+    { name: "Dilnoza K.", company: "IT Park UZ", country: "Uzbekistan", is_verified: false, upvotes_received: 15 },
+  ];
+  useEffect(() => { supabase.rpc("get_monthly_leaderboard").then(({ data }) => { if (data && data.length) setLeaders(data); }); }, []);
+  const list = leaders.length ? leaders : demo;
+  return (
+    <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem" }}>
+      <div style={sideTitle()}>{t.sidebar.leaderboard}</div>
+      <div style={{ fontSize: "0.7rem", color: "#bbb", marginBottom: "0.85rem" }}>{t.sidebar.leaderboardSub}</div>
+      {list.map((l, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.55rem 0.5rem", borderRadius: 8, background: i === 0 ? "linear-gradient(90deg,rgba(255,215,0,0.1),transparent)" : "transparent", marginBottom: "0.25rem" }}>
+          <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{medals[i]}</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0d3a1e", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+              {l.name}{l.is_verified && <span style={{ fontSize: "0.6rem", background: GREEN, color: "#fff", padding: "0.05rem 0.35rem", borderRadius: 100 }}>✓</span>}
+            </div>
+            <div style={{ fontSize: "0.69rem", color: "#9a9a9a" }}>{l.company || l.country || ""}</div>
+          </div>
+          <div style={{ fontSize: "0.72rem", fontWeight: 700, color: GREEN }}>▲ {l.upvotes_received}</div>
+        </div>
+      ))}
+      {list[0] && <div style={{ marginTop: "0.6rem", background: "linear-gradient(135deg,#fef3c7,#fde68a)", borderRadius: 8, padding: "0.5rem 0.7rem", fontSize: "0.73rem", color: "#92400e", fontWeight: 600, textAlign: "center" }}>👑 Top Contributor: {list[0].name}</div>}
+    </div>
+  );
 }
 
 // ── GRAVEYARD SECTION ──
 function GraveyardSection({ t }) {
-const gt = t.graveyard;
-const [filter, setFilter] = useState(“all”);
-const [sort, setSort] = useState(“lost”);
-const [search, setSearch] = useState(””);
-const [selected, setSelected] = useState(null);
+  const gt = t.graveyard;
+  const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState("lost");
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
 
-const fmt = n => { if (!n) return “$0”; if (n >= 1e9) return “$” + (n / 1e9).toFixed(1) + “B”; if (n >= 1e6) return “$” + (n / 1e6).toFixed(0) + “M”; return “$” + (n / 1e3).toFixed(0) + “k”; };
+  const fmt = n => { if (!n) return "$0"; if (n >= 1e9) return "$" + (n / 1e9).toFixed(1) + "B"; if (n >= 1e6) return "$" + (n / 1e6).toFixed(0) + "M"; return "$" + (n / 1e3).toFixed(0) + "k"; };
 
-const filtered = GRAVEYARD.filter(g => {
-if (filter === “mega” && g.lost < 1e9) return false;
-if (filter === “major” && (g.lost < 1e8 || g.lost >= 1e9)) return false;
-if (filter === “recent” && g.died < 2023) return false;
-if (search && !(g.name + g.industry + g.country).toLowerCase().includes(search.toLowerCase())) return false;
-return true;
-}).sort((a, b) => sort === “lost” ? b.lost - a.lost : sort === “year” ? b.died - a.died : a.name.localeCompare(b.name));
+  const filtered = GRAVEYARD.filter(g => {
+    if (filter === "mega" && g.lost < 1e9) return false;
+    if (filter === "major" && (g.lost < 1e8 || g.lost >= 1e9)) return false;
+    if (filter === "recent" && g.died < 2023) return false;
+    if (search && !(g.name + g.industry + g.country).toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => sort === "lost" ? b.lost - a.lost : sort === "year" ? b.died - a.died : a.name.localeCompare(b.name));
 
-const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
-const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
+  const totalLost = GRAVEYARD.reduce((s, g) => s + (g.lost || 0), 0);
+  const avgLife = (GRAVEYARD.reduce((s, g) => s + (g.died - g.founded), 0) / GRAVEYARD.length).toFixed(1);
 
-const yearGroups = {};
-filtered.forEach(g => { if (!yearGroups[g.died]) yearGroups[g.died] = []; yearGroups[g.died].push(g); });
-const years = Object.keys(yearGroups).sort((a, b) => b - a);
+  const yearGroups = {};
+  filtered.forEach(g => { if (!yearGroups[g.died]) yearGroups[g.died] = []; yearGroups[g.died].push(g); });
+  const years = Object.keys(yearGroups).sort((a, b) => b - a);
 
-return (
-<div style={{ background: “linear-gradient(135deg,#0a1f10,#0d3a1e)”, padding: “4rem 1.5rem” }}>
-<div style={{ maxWidth: 1100, margin: “0 auto” }}>
-<div style={{ textAlign: “center”, marginBottom: “2rem” }}>
-<h2 style={{ fontSize: “clamp(1.6rem,4vw,2.4rem)”, fontWeight: 800, color: “#fff”, marginBottom: “0.5rem” }}>{gt.title}</h2>
-<p style={{ color: “rgba(255,255,255,0.5)”, fontSize: “0.9rem” }}>{gt.sub}</p>
-</div>
-<div style={{ display: “flex”, gap: “1rem”, justifyContent: “center”, flexWrap: “wrap”, marginBottom: “1.5rem” }}>
-{[{ v: GRAVEYARD.length, l: gt.statBuried }, { v: fmt(totalLost), l: gt.statLost }, { v: avgLife + “y”, l: gt.statAvg }].map((s, i) => (
-<div key={i} style={{ background: “rgba(255,255,255,0.04)”, border: “1px solid rgba(255,255,255,0.1)”, borderRadius: 12, padding: “1rem 1.5rem”, textAlign: “center”, minWidth: 130 }}>
-<div style={{ fontSize: “1.4rem”, fontWeight: 800, color: “#ff6060” }}>{s.v}</div>
-<div style={{ fontSize: “0.72rem”, color: “rgba(255,255,255,0.5)”, marginTop: “0.2rem” }}>{s.l}</div>
-</div>
-))}
-</div>
-<div style={{ display: “flex”, gap: “0.5rem”, justifyContent: “center”, flexWrap: “wrap”, marginBottom: “0.75rem” }}>
-{[[“all”, gt.filterAll], [“mega”, gt.filterMega], [“major”, gt.filterMajor], [“recent”, gt.filterRecent]].map(([k, label]) => (
-<button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? “linear-gradient(135deg,#ef4444,#dc2626)” : “rgba(255,255,255,0.05)”, color: filter === k ? “#fff” : “rgba(255,255,255,0.7)”, border: “1px solid “ + (filter === k ? “#ef4444” : “rgba(255,255,255,0.15)”), borderRadius: 100, padding: “0.4rem 1rem”, fontSize: “0.78rem”, fontWeight: 600, cursor: “pointer”, fontFamily: “Inter,sans-serif” }}>{label}</button>
-))}
-</div>
-<div style={{ display: “flex”, gap: “0.6rem”, maxWidth: 600, margin: “0 auto 1.5rem”, flexWrap: “wrap” }}>
-<input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, minWidth: 180, background: “rgba(255,255,255,0.05)”, border: “1px solid rgba(255,255,255,0.15)”, borderRadius: 8, padding: “0.55rem 0.85rem”, color: “#fff”, fontSize: “0.84rem”, fontFamily: “Inter,sans-serif”, outline: “none” }} />
-<select value={sort} onChange={e => setSort(e.target.value)} style={{ background: “rgba(255,255,255,0.05)”, border: “1px solid rgba(255,255,255,0.15)”, borderRadius: 8, padding: “0.55rem 0.85rem”, color: “#fff”, fontSize: “0.84rem”, fontFamily: “Inter,sans-serif”, cursor: “pointer”, outline: “none” }}>
-<option value=“lost” style={{ background: “#1a1a1a” }}>{gt.sortLost}</option>
-<option value=“year” style={{ background: “#1a1a1a” }}>{gt.sortYear}</option>
-<option value=“name” style={{ background: “#1a1a1a” }}>{gt.sortName}</option>
-</select>
-</div>
-<p style={{ textAlign: “center”, color: “rgba(255,255,255,0.35)”, fontSize: “0.78rem”, marginBottom: “1.5rem” }}>{gt.showing} {filtered.length} {gt.of} {GRAVEYARD.length}</p>
-{/* Timeline */}
-<div style={{ maxWidth: 860, margin: “0 auto” }}>
-{sort === “year” ? years.map(year => (
-<div key={year}>
-<div style={{ display: “flex”, alignItems: “center”, gap: “1rem”, margin: “1.5rem 0 0.5rem” }}>
-<div style={{ flex: 1, height: 1, background: “rgba(239,68,68,0.2)” }} />
-<span style={{ background: “linear-gradient(135deg,#ef4444,#b91c1c)”, color: “#fff”, fontWeight: 800, fontSize: “0.82rem”, padding: “0.3rem 1rem”, borderRadius: 100, flexShrink: 0 }}>✝ {year}</span>
-<div style={{ flex: 1, height: 1, background: “rgba(239,68,68,0.2)” }} />
-</div>
-{yearGroups[year].map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === yearGroups[year].length - 1} />)}
-</div>
-)) : filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === filtered.length - 1} />)}
-</div>
-{filtered.length === 0 && <div style={{ textAlign: “center”, padding: “3rem”, color: “rgba(255,255,255,0.4)” }}><div style={{ fontSize: “3rem”, marginBottom: “0.75rem” }}>🪦</div><p>No startups found</p></div>}
-</div>
-{selected && <GraveDetail g={selected} gt={gt} fmt={fmt} onClose={() => setSelected(null)} />}
-</div>
-);
+  return (
+    <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "4rem 1.5rem" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h2 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{gt.title}</h2>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{gt.sub}</p>
+        </div>
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+          {[{ v: GRAVEYARD.length, l: gt.statBuried }, { v: fmt(totalLost), l: gt.statLost }, { v: avgLife + "y", l: gt.statAvg }].map((s, i) => (
+            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem 1.5rem", textAlign: "center", minWidth: 130 }}>
+              <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ff6060" }}>{s.v}</div>
+              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", marginTop: "0.2rem" }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "0.75rem" }}>
+          {[["all", gt.filterAll], ["mega", gt.filterMega], ["major", gt.filterMajor], ["recent", gt.filterRecent]].map(([k, label]) => (
+            <button key={k} onClick={() => setFilter(k)} style={{ background: filter === k ? "linear-gradient(135deg,#ef4444,#dc2626)" : "rgba(255,255,255,0.05)", color: filter === k ? "#fff" : "rgba(255,255,255,0.7)", border: "1px solid " + (filter === k ? "#ef4444" : "rgba(255,255,255,0.15)"), borderRadius: 100, padding: "0.4rem 1rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: "0.6rem", maxWidth: 600, margin: "0 auto 1.5rem", flexWrap: "wrap" }}>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={gt.searchPh} style={{ flex: 1, minWidth: 180, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
+          <select value={sort} onChange={e => setSort(e.target.value)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "0.55rem 0.85rem", color: "#fff", fontSize: "0.84rem", fontFamily: "Inter,sans-serif", cursor: "pointer", outline: "none" }}>
+            <option value="lost" style={{ background: "#1a1a1a" }}>{gt.sortLost}</option>
+            <option value="year" style={{ background: "#1a1a1a" }}>{gt.sortYear}</option>
+            <option value="name" style={{ background: "#1a1a1a" }}>{gt.sortName}</option>
+          </select>
+        </div>
+        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>{gt.showing} {filtered.length} {gt.of} {GRAVEYARD.length}</p>
+        {/* Timeline */}
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          {sort === "year" ? years.map(year => (
+            <div key={year}>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0 0.5rem" }}>
+                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+                <span style={{ background: "linear-gradient(135deg,#ef4444,#b91c1c)", color: "#fff", fontWeight: 800, fontSize: "0.82rem", padding: "0.3rem 1rem", borderRadius: 100, flexShrink: 0 }}>✝ {year}</span>
+                <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+              </div>
+              {yearGroups[year].map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === yearGroups[year].length - 1} />)}
+            </div>
+          )) : filtered.map((g, i) => <GraveCard key={i} g={g} fmt={fmt} gt={gt} onOpen={() => setSelected(g)} isLast={i === filtered.length - 1} />)}
+        </div>
+        {filtered.length === 0 && <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}><div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🪦</div><p>No startups found</p></div>}
+      </div>
+      {selected && <GraveDetail g={selected} gt={gt} fmt={fmt} onClose={() => setSelected(null)} />}
+    </div>
+  );
 }
 
 function GraveCard({ g, fmt, gt, onOpen, isLast }) {
-const years = g.died - g.founded;
-return (
-<div onClick={onOpen} style={{ display: “grid”, gridTemplateColumns: “1fr auto 1fr”, gap: 0, cursor: “pointer” }}>
-{/* Left side */}
-<div style={{ padding: “0 1rem 0 0”, display: “flex”, justifyContent: “flex-end”, paddingBottom: “0.5rem” }}>
-<div style={{ background: “rgba(30,10,10,0.9)”, border: “1px solid rgba(239,68,68,0.25)”, borderRadius: 10, padding: “0.85rem 1rem”, maxWidth: 300, width: “100%”, transition: “border-color 0.2s” }}
-onMouseEnter={e => e.currentTarget.style.borderColor = “rgba(239,68,68,0.6)”}
-onMouseLeave={e => e.currentTarget.style.borderColor = “rgba(239,68,68,0.25)”}>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “flex-start”, marginBottom: “0.4rem” }}>
-<div style={{ fontWeight: 800, fontSize: “0.92rem”, color: “#fff” }}>🪦 {g.name}</div>
-<div style={{ fontWeight: 800, fontSize: “0.9rem”, color: “#ff6060”, fontFamily: “monospace”, flexShrink: 0, marginLeft: “0.5rem” }}>{fmt(g.lost)}</div>
-</div>
-<div style={{ fontSize: “0.68rem”, color: “rgba(255,255,255,0.4)”, marginBottom: “0.4rem” }}>{g.industry} · {g.country}</div>
-<p style={{ fontSize: “0.73rem”, color: “rgba(255,255,255,0.5)”, lineHeight: 1.5, margin: “0 0 0.35rem”, display: “-webkit-box”, WebkitLineClamp: 2, WebkitBoxOrient: “vertical”, overflow: “hidden” }}>{g.reason}</p>
-<div style={{ display: “flex”, gap: “0.35rem”, flexWrap: “wrap” }}>
-<span style={{ fontSize: “0.62rem”, background: “rgba(239,68,68,0.15)”, color: “#ff8080”, padding: “0.1rem 0.4rem”, borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
-<span style={{ fontSize: “0.62rem”, background: “rgba(255,255,255,0.05)”, color: “rgba(255,255,255,0.45)”, padding: “0.1rem 0.4rem”, borderRadius: 100 }}>⏱ {years}y</span>
-</div>
-</div>
-</div>
+  const years = g.died - g.founded;
+  return (
+    <div onClick={onOpen} style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, cursor: "pointer" }}>
+      {/* Left side */}
+      <div style={{ padding: "0 1rem 0 0", display: "flex", justifyContent: "flex-end", paddingBottom: "0.5rem" }}>
+        <div style={{ background: "rgba(30,10,10,0.9)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300, width: "100%", transition: "border-color 0.2s" }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"}
+          onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(239,68,68,0.25)"}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.4rem" }}>
+            <div style={{ fontWeight: 800, fontSize: "0.92rem", color: "#fff" }}>🪦 {g.name}</div>
+            <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#ff6060", fontFamily: "monospace", flexShrink: 0, marginLeft: "0.5rem" }}>{fmt(g.lost)}</div>
+          </div>
+          <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.4rem" }}>{g.industry} · {g.country}</div>
+          <p style={{ fontSize: "0.73rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: "0 0 0.35rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.reason}</p>
+          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "0.62rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", padding: "0.1rem 0.4rem", borderRadius: 100, fontWeight: 600 }}>{g.founded}–{g.died}</span>
+            <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "0.1rem 0.4rem", borderRadius: 100 }}>⏱ {years}y</span>
+          </div>
+        </div>
+      </div>
 
-```
-  {/* Center line + dot */}
-  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 32 }}>
-    <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a1f10", boxShadow: "0 0 12px rgba(239,68,68,0.8)", marginTop: "1rem", flexShrink: 0, zIndex: 2 }} />
-    {!isLast && <div style={{ flex: 1, width: 2, background: "rgba(239,68,68,0.3)", minHeight: 30 }} />}
-  </div>
+      {/* Center line + dot */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 32 }}>
+        <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "3px solid #0a1f10", boxShadow: "0 0 12px rgba(239,68,68,0.8)", marginTop: "1rem", flexShrink: 0, zIndex: 2 }} />
+        {!isLast && <div style={{ flex: 1, width: 2, background: "rgba(239,68,68,0.3)", minHeight: 30 }} />}
+      </div>
 
-  {/* Right side — lesson */}
-  <div style={{ padding: "0 0 0.5rem 1rem", paddingTop: "0.85rem" }}>
-    <div style={{ background: "rgba(10,30,15,0.7)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300 }}>
-      <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>💡 {gt.lesson}</div>
-      <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
-      <div style={{ marginTop: "0.5rem", fontSize: "0.65rem", color: "#22c55e", fontWeight: 600 }}>Click to read full story →</div>
+      {/* Right side — lesson */}
+      <div style={{ padding: "0 0 0.5rem 1rem", paddingTop: "0.85rem" }}>
+        <div style={{ background: "rgba(10,30,15,0.7)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.85rem 1rem", maxWidth: 300 }}>
+          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.3rem" }}>💡 {gt.lesson}</div>
+          <p style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: 0 }}>{g.lesson}</p>
+          <div style={{ marginTop: "0.5rem", fontSize: "0.65rem", color: "#22c55e", fontWeight: 600 }}>Click to read full story →</div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-```
-
-);
+  );
 }
 
 function GraveDetail({ g, gt, fmt, onClose }) {
-const [detail, setDetail] = useState(null);
-const [loading, setLoading] = useState(true);
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-const run = async () => {
-try {
-const prompt = ‘Analyse failure of “${g.name}” (${g.industry}, ${g.country}, ${g.founded}-${g.died}, raised ${fmt(g.raised)}).
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const prompt = `Analyse failure of "${g.name}" (${g.industry}, ${g.country}, ${g.founded}-${g.died}, raised ${fmt(g.raised)}).
 Known reason: ${g.reason}. Known lesson: ${g.lesson}.
 Output ONLY valid JSON (no markdown):
-{“failureScore”:75,“marketFitRisk”:70,“burnRateRisk”:80,“founderRisk”:50,“timeline”:[{“year”:${g.founded},“event”:“Company founded”},{“year”:${g.died-1},“event”:“Warning signs appear”},{“year”:${g.died},“event”:“Company closes”}],“rootCauses”:[“cause 1”,“cause 2”,“cause 3”],“keyLessons”:[{“title”:“Lesson 1”,“desc”:“explanation”},{“title”:“Lesson 2”,“desc”:“explanation”},{“title”:“Lesson 3”,“desc”:“explanation”}],“competitorsThatWon”:[{“name”:“Competitor”,“why”:“reason they won”,“outcome”:“outcome”},{“name”:“Competitor 2”,“why”:“reason”,“outcome”:“outcome”}],“couldHaveBeenPrevented”:“honest 2-sentence assessment”}’;
-const text = await callAI(prompt, 1200);
-const clean = text.replace(/’’‘json|’’’/g, “”).trim();
-setDetail(JSON.parse(clean));
-} catch {
-setDetail({ failureScore: 75, marketFitRisk: 70, burnRateRisk: 80, founderRisk: 50, timeline: [{ year: g.founded, event: “Founded” }, { year: g.died, event: “Closed” }], rootCauses: [g.reason], keyLessons: [{ title: “Key Lesson”, desc: g.lesson }], competitorsThatWon: [], couldHaveBeenPrevented: “Analysis unavailable.” });
-}
-setLoading(false);
-};
-run();
-}, [g]);
+{"failureScore":75,"marketFitRisk":70,"burnRateRisk":80,"founderRisk":50,"timeline":[{"year":${g.founded},"event":"Company founded"},{"year":${g.died-1},"event":"Warning signs appear"},{"year":${g.died},"event":"Company closes"}],"rootCauses":["cause 1","cause 2","cause 3"],"keyLessons":[{"title":"Lesson 1","desc":"explanation"},{"title":"Lesson 2","desc":"explanation"},{"title":"Lesson 3","desc":"explanation"}],"competitorsThatWon":[{"name":"Competitor","why":"reason they won","outcome":"outcome"},{"name":"Competitor 2","why":"reason","outcome":"outcome"}],"couldHaveBeenPrevented":"honest 2-sentence assessment"}`;
+        const text = await callAI(prompt, 1200);
+        const clean = text.replace(/`''json|''`/g, "").trim();
+        setDetail(JSON.parse(clean));
+      } catch {
+        setDetail({ failureScore: 75, marketFitRisk: 70, burnRateRisk: 80, founderRisk: 50, timeline: [{ year: g.founded, event: "Founded" }, { year: g.died, event: "Closed" }], rootCauses: [g.reason], keyLessons: [{ title: "Key Lesson", desc: g.lesson }], competitorsThatWon: [], couldHaveBeenPrevented: "Analysis unavailable." });
+      }
+      setLoading(false);
+    };
+    run();
+  }, [g]);
 
-return (
-<div style={{ position: “fixed”, inset: 0, background: “rgba(0,0,0,0.85)”, backdropFilter: “blur(8px)”, zIndex: 400, display: “flex”, alignItems: “flex-start”, justifyContent: “center”, padding: “2rem 1rem”, overflowY: “auto” }} onClick={onClose}>
-<div style={{ background: “#0f0f1a”, border: “1px solid rgba(239,68,68,0.25)”, borderRadius: 16, width: “100%”, maxWidth: 700, padding: “2rem”, animation: “fadeUp 0.3s ease” }} onClick={e => e.stopPropagation()}>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “flex-start”, marginBottom: “1.5rem” }}>
-<div>
-<div style={{ fontSize: “0.72rem”, background: “rgba(239,68,68,0.15)”, color: “#ff8080”, border: “1px solid rgba(239,68,68,0.3)”, padding: “0.2rem 0.65rem”, borderRadius: 100, display: “inline-block”, marginBottom: “0.5rem”, fontWeight: 600 }}>{gt.failedIn} {g.died}</div>
-<h2 style={{ fontSize: “1.7rem”, fontWeight: 800, color: “#fff”, marginBottom: “0.3rem” }}>{g.name}</h2>
-<p style={{ fontSize: “0.84rem”, color: “rgba(255,255,255,0.5)” }}>{g.industry} · {g.country} · {g.founded}–{g.died}</p>
-</div>
-<button onClick={onClose} style={{ background: “rgba(255,255,255,0.06)”, border: “1px solid rgba(255,255,255,0.12)”, borderRadius: 8, width: 34, height: 34, color: “rgba(255,255,255,0.6)”, cursor: “pointer”, fontFamily: “Inter,sans-serif”, fontSize: “0.9rem” }}>✕</button>
-</div>
-<div style={{ display: “grid”, gridTemplateColumns: “1fr 1fr 1fr 1fr”, gap: “0.6rem”, marginBottom: “1.5rem” }}>
-{[{ l: “Founded → Closed”, v: g.founded + “ → “ + g.died }, { l: “Raised”, v: fmt(g.raised) }, { l: “Lost”, v: fmt(g.lost), c: “#ff8080” }, { l: “Industry”, v: g.industry.split(”/”)[0] }].map((item, i) => (
-<div key={i} style={{ background: “rgba(255,255,255,0.03)”, border: “1px solid rgba(255,255,255,0.07)”, borderRadius: 10, padding: “0.75rem”, textAlign: “center” }}>
-<div style={{ fontSize: “0.6rem”, color: “rgba(255,255,255,0.4)”, fontWeight: 600, textTransform: “uppercase”, marginBottom: “0.35rem” }}>{item.l}</div>
-<div style={{ fontSize: “0.82rem”, fontWeight: 700, color: item.c || “#fff” }}>{item.v}</div>
-</div>
-))}
-</div>
-{loading ? (
-<div style={{ textAlign: “center”, padding: “3rem”, color: “rgba(255,255,255,0.4)” }}>
-<div style={{ fontSize: “2rem”, marginBottom: “0.75rem”, animation: “pulse 1.2s infinite” }}>🪦</div>
-<p>{gt.analysing}</p>
-</div>
-) : detail && (
-<>
-<div style={{ background: “rgba(239,68,68,0.05)”, border: “1px solid rgba(239,68,68,0.15)”, borderRadius: 12, padding: “1.1rem”, marginBottom: “1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: “rgba(255,255,255,0.6)”, marginBottom: “0.85rem” }}>{gt.failureAnalysis}</div>
-<div style={{ display: “flex”, gap: “1.5rem”, flexWrap: “wrap” }}>
-<div style={{ textAlign: “center” }}>
-<div style={{ fontSize: “2.2rem”, fontWeight: 900, color: “#ff6060” }}>{detail.failureScore}</div>
-<div style={{ fontSize: “0.65rem”, color: “rgba(255,255,255,0.4)” }}>{gt.failureScore}</div>
-</div>
-<div style={{ flex: 1, minWidth: 180 }}>
-{[{ l: gt.marketFitRisk, v: detail.marketFitRisk }, { l: gt.burnRateRisk, v: detail.burnRateRisk }, { l: gt.founderRisk, v: detail.founderRisk }].map((item, i) => (
-<div key={i} style={{ marginBottom: “0.6rem” }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, marginBottom: “0.2rem” }}>
-<span style={{ fontSize: “0.73rem”, color: “rgba(255,255,255,0.55)” }}>{item.l}</span>
-<span style={{ fontSize: “0.73rem”, fontWeight: 700, color: “#ff8080” }}>{item.v}</span>
-</div>
-<div style={{ height: 5, background: “rgba(255,255,255,0.06)”, borderRadius: 10 }}>
-<div style={{ height: “100%”, width: item.v + “%”, background: “linear-gradient(90deg,#ef4444,#ff6060)”, borderRadius: 10 }} />
-</div>
-</div>
-))}
-</div>
-</div>
-</div>
-<div style={{ background: “rgba(255,255,255,0.02)”, border: “1px solid rgba(255,255,255,0.07)”, borderRadius: 12, padding: “1.1rem”, marginBottom: “1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: “rgba(255,255,255,0.6)”, marginBottom: “0.85rem” }}>📅 {gt.timeline}</div>
-<div style={{ position: “relative” }}>
-<div style={{ position: “absolute”, left: 16, top: 0, bottom: 0, width: 2, background: “linear-gradient(180deg,#7c3aed,#ef4444)” }} />
-{detail.timeline.map((ev, i) => (
-<div key={i} style={{ display: “flex”, gap: “1rem”, marginBottom: “0.75rem”, position: “relative”, zIndex: 1 }}>
-<div style={{ width: 32, height: 32, borderRadius: “50%”, background: i === detail.timeline.length - 1 ? “#ef4444” : “#7c3aed”, border: “3px solid #0f0f1a”, display: “flex”, alignItems: “center”, justifyContent: “center”, flexShrink: 0 }}>
-<span style={{ fontSize: “0.55rem”, color: “#fff”, fontWeight: 700 }}>{ev.year}</span>
-</div>
-<div style={{ background: “rgba(255,255,255,0.03)”, border: “1px solid rgba(255,255,255,0.06)”, borderRadius: 8, padding: “0.5rem 0.85rem”, flex: 1 }}>
-<span style={{ fontSize: “0.7rem”, color: “rgba(255,255,255,0.4)”, fontWeight: 600 }}>{ev.year} </span>
-<span style={{ fontSize: “0.81rem”, color: “rgba(255,255,255,0.8)” }}>{ev.event}</span>
-</div>
-</div>
-))}
-</div>
-</div>
-<div style={{ background: “rgba(255,255,255,0.02)”, border: “1px solid rgba(255,255,255,0.07)”, borderRadius: 12, padding: “1.1rem”, marginBottom: “1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: “rgba(255,255,255,0.6)”, marginBottom: “0.75rem” }}>⚠️ {gt.rootCauses}</div>
-<div style={{ display: “flex”, flexWrap: “wrap”, gap: “0.5rem” }}>
-{detail.rootCauses.map((c, i) => <span key={i} style={{ fontSize: “0.77rem”, background: “rgba(239,68,68,0.08)”, color: “rgba(255,255,255,0.75)”, border: “1px solid rgba(239,68,68,0.2)”, padding: “0.3rem 0.75rem”, borderRadius: 100 }}>{c}</span>)}
-</div>
-</div>
-<div style={{ background: “rgba(255,255,255,0.02)”, border: “1px solid rgba(255,255,255,0.07)”, borderRadius: 12, padding: “1.1rem”, marginBottom: “1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: “rgba(255,255,255,0.6)”, marginBottom: “0.75rem” }}>✅ {gt.keyLessons}</div>
-{detail.keyLessons.map((l, i) => (
-<div key={i} style={{ borderLeft: “3px solid #22c55e”, paddingLeft: “0.85rem”, marginBottom: “0.75rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.82rem”, color: “#fff”, marginBottom: “0.25rem” }}>{i + 1}. {l.title}</div>
-<p style={{ fontSize: “0.79rem”, color: “rgba(255,255,255,0.6)”, lineHeight: 1.6, margin: 0 }}>{l.desc}</p>
-</div>
-))}
-</div>
-{detail.competitorsThatWon?.length > 0 && (
-<div style={{ background: “rgba(255,255,255,0.02)”, border: “1px solid rgba(255,255,255,0.07)”, borderRadius: 12, padding: “1.1rem”, marginBottom: “1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: “rgba(255,255,255,0.6)”, marginBottom: “0.75rem” }}>🏆 {gt.competitorsThatWon}</div>
-<div style={{ display: “grid”, gridTemplateColumns: “1fr 1fr”, gap: “0.6rem” }}>
-{detail.competitorsThatWon.map((c, i) => (
-<div key={i} style={{ background: “rgba(34,197,94,0.05)”, border: “1px solid rgba(34,197,94,0.2)”, borderRadius: 10, padding: “0.75rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.82rem”, color: “#22c55e”, marginBottom: “0.2rem” }}>{c.name}</div>
-<div style={{ fontSize: “0.67rem”, color: “rgba(255,255,255,0.4)”, marginBottom: “0.35rem”, fontStyle: “italic” }}>{c.outcome}</div>
-<p style={{ fontSize: “0.76rem”, color: “rgba(255,255,255,0.6)”, lineHeight: 1.5, margin: 0 }}>{c.why}</p>
-</div>
-))}
-</div>
-</div>
-)}
-<div style={{ background: “rgba(139,92,246,0.06)”, border: “1px solid rgba(139,92,246,0.2)”, borderRadius: 12, padding: “1.1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: “#a78bfa”, marginBottom: “0.5rem” }}>🤔 {gt.couldBePrevented}</div>
-<p style={{ fontSize: “0.82rem”, color: “rgba(255,255,255,0.65)”, lineHeight: 1.65, margin: 0 }}>{detail.couldHaveBeenPrevented}</p>
-</div>
-</>
-)}
-</div>
-</div>
-);
-}
-
-// ── IDEA VALIDATOR ──
-function IdeaValidator({ t }) {
-const vt = t.validator;
-const [step, setStep] = useState(0);
-const [form, setForm] = useState({ idea: “”, industry: “”, price: “”, budget: “” });
-const [results, setResults] = useState([]);
-const [loading, setLoading] = useState(false);
-const [score, setScore] = useState(null);
-const [tab, setTab] = useState(“summary”);
-const sf = (k, v) => setForm(x => ({ …x, [k]: v }));
-
-const prompts = [
-f => ‘Analyse market demand for “${f.idea}” (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.’,
-f => ‘For “${f.idea}” in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.’,
-f => ‘Main competitors for “${f.idea}” in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.’,
-f => ‘Affordability for “${f.idea}” at $${f.price || “unknown”} in Uzbekistan (avg salary $300-500/month). Give clear verdict.’,
-f => “Score this business idea for Uzbekistan: “ + f.idea + “ (” + f.industry + “, price $” + (f.price||”?”) + “, budget $” + (f.budget||”?”) + “). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.”,
-];
-
-const run = async () => {
-if (!form.idea || !form.industry) return;
-setStep(1); setResults([]); setScore(null); setLoading(true); setTab(“summary”);
-const out = [];
-for (let i = 0; i < 5; i++) {
-setStep(i + 1);
-try {
-const text = await callAI(prompts[i](form), i === 4 ? 3000 : 800);
-if (i === 4) {
-let parsed = null;
-// Strip markdown fences first
-let clean = text.replace(/’’‘json/gi, “”).replace(/’’’/g, “”).trim();
-// Extract JSON object
-const jsonStart = clean.indexOf(”{”);
-const jsonEnd = clean.lastIndexOf(”}”);
-if (jsonStart !== -1 && jsonEnd !== -1) {
-clean = clean.slice(jsonStart, jsonEnd + 1);
-}
-const tries = [
-() => JSON.parse(clean),
-() => JSON.parse(text.replace(/’’‘json|’’’/gi, “”).trim()),
-() => { const m = text.match(/{[\s\S]*}/); return m ? JSON.parse(m[0]) : null; },
-];
-for (const fn of tries) {
-try { parsed = fn(); if (parsed && parsed.score) break; } catch {}
-}
-if (!parsed) {
-parsed = { score: 50, verdict: “CAUTION”, reason: “See analysis below.”, risks: [], nextSteps: [], summary: { executiveSummary: text.slice(0,300), greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: “”, solutionValidationText: “”, marketValidationText: “” }, scores: {}, market: {}, financials: {}, roadmap: {} };
-}
-parsed.score = parsed.score || 50;
-parsed.verdict = parsed.verdict || “CAUTION”;
-parsed.reason = parsed.reason || “Analysis complete.”;
-parsed.summary = parsed.summary || { executiveSummary: parsed.reason, greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: “”, solutionValidationText: “”, marketValidationText: “” };
-parsed.scores = parsed.scores || {};
-parsed.market = parsed.market || {};
-parsed.financials = parsed.financials || {};
-parsed.roadmap = parsed.roadmap || {};
-setScore(parsed);
-out.push({ title: vt.steps[i], content: parsed.reason });
-// Save validation to Supabase
-try {
-await supabase.from(“validations”).insert({
-idea: f.idea,
-industry: f.industry,
-price: f.price ? Number(f.price) : null,
-budget: f.budget ? Number(f.budget) : null,
-score: parsed.score,
-verdict: parsed.verdict,
-reason: parsed.reason,
-created_at: new Date().toISOString(),
-});
-} catch {}
-// Second call: get detailed market/financials/roadmap
-try {
-const detailPrompt = “For startup idea: “ + f.idea + “ (” + f.industry + “) in Uzbekistan. Reply ONLY with JSON no markdown: {scores:{targetMarketClarity:N,marketTiming:N,marketEntryBarriers:N,competitionLevel:N,problemSolutionFit:N,mvpViability:N,valueProposition:N,initialFeasibility:N,resourceRequirements:N},market:{tam:string,sam:string,som:string,maturity:string,targetRegions:[array],competitors:[{name,type,strengths:[],weaknesses:[],opportunity}]},financials:{startupCosts:string,cac:string,ltv:string,ltvcac:string,breakEven:string,growth:string,revenueModels:[2 items],monetizationStrategy:string},roadmap:{quickWins:[{title,desc,effort:LOW/MED,outcome}],immediate:[3 actions],shortTerm:[3 actions]}}”;
-const detail = await callAI(detailPrompt, 1500);
-let dp = null;
-try {
-let dc = detail.replace(/’’‘json/gi,””).replace(/’’’/g,””).trim();
-const ds = dc.indexOf(”{”); const de = dc.lastIndexOf(”}”);
-if (ds !== -1 && de !== -1) dc = dc.slice(ds, de+1);
-dp = JSON.parse(dc);
-} catch {}
-if (dp) {
-setScore(prev => prev ? { …prev, scores: dp.scores||{}, market: dp.market||{}, financials: dp.financials||{}, roadmap: dp.roadmap||{} } : prev);
-}
-} catch {}
-} else { out.push({ title: vt.steps[i], content: text }); }
-setResults([…out]);
-} catch (err) { out.push({ title: vt.steps[i], content: “Step failed.” }); setResults([…out]); }
-}
-setLoading(false); setStep(6);
-};
-
-const vc = v => v === “GO” ? “#22c55e” : v === “CAUTION” ? “#f59e0b” : “#ef4444”;
-const vl = v => v === “GO” ? vt.goVerdict : v === “CAUTION” ? vt.cautionVerdict : vt.nogoVerdict;
-const tabs = [[“summary”, vt.tabSummary], [“scores”, vt.tabScores], [“market”, vt.tabMarket], [“financials”, vt.tabFinancials], [“roadmap”, vt.tabRoadmap]];
-
-return (
-<div style={{ minHeight: “100vh”, background: “#0f0f1a” }}>
-<div style={{ background: “linear-gradient(135deg,#1a0a2e,#0f0f1a)”, padding: “3rem 1.5rem 2rem”, textAlign: “center”, borderBottom: “1px solid rgba(139,92,246,0.2)” }}>
-<h1 style={{ fontSize: “clamp(1.5rem,4vw,2.1rem)”, fontWeight: 800, color: “#fff”, marginBottom: “0.5rem” }}>{vt.title}</h1>
-<p style={{ color: “rgba(255,255,255,0.5)”, fontSize: “0.9rem” }}>{vt.sub}</p>
-</div>
-<div style={{ maxWidth: 960, margin: “0 auto”, padding: “2rem 1.5rem” }}>
-{step === 0 && (
-<div style={{ background: “rgba(255,255,255,0.07)”, border: “1px solid rgba(139,92,246,0.5)”, borderRadius: 16, padding: “2rem”, maxWidth: 560, margin: “0 auto”, boxShadow: “0 0 40px rgba(139,92,246,0.1)” }}>
-<h2 style={{ fontSize: “1rem”, fontWeight: 700, color: “#fff”, marginBottom: “1.25rem” }}>{vt.step1Title}</h2>
-<FG label={<span style={{ color: “rgba(255,255,255,0.7)” }}>{vt.ideaLabel}</span>}>
-<textarea value={form.idea} onChange={e => sf(“idea”, e.target.value)} placeholder={vt.ideaPh} style={{ …darkInp(), minHeight: 80, resize: “vertical” }} />
-</FG>
-<FG label={<span style={{ color: “rgba(255,255,255,0.7)” }}>{vt.industryLabel}</span>}>
-<select value={form.industry} onChange={e => sf(“industry”, e.target.value)} style={darkSel()}>
-<option value=”” style={{ background: “#1a1a2e” }}>{t.form.selectInd}</option>
-{t.form.industries.map(i => <option key={i} style={{ background: “#1a1a2e” }}>{i}</option>)}
-</select>
-</FG>
-<div style={{ display: “grid”, gridTemplateColumns: “1fr 1fr”, gap: “0.75rem” }}>
-<FG label={<span style={{ color: “rgba(255,255,255,0.7)” }}>{vt.priceLabel}</span>}>
-<input value={form.price} onChange={e => sf(“price”, e.target.value)} type=“number” placeholder={vt.pricePh} style={darkInp()} />
-</FG>
-<FG label={<span style={{ color: “rgba(255,255,255,0.7)” }}>{vt.budgetLabel}</span>}>
-<input value={form.budget} onChange={e => sf(“budget”, e.target.value)} type=“number” placeholder={vt.budgetPh} style={darkInp()} />
-</FG>
-</div>
-<button onClick={run} disabled={!form.idea || !form.industry} style={{ width: “100%”, background: form.idea && form.industry ? “linear-gradient(135deg,#7c3aed,#6d28d9)” : “rgba(255,255,255,0.05)”, color: form.idea && form.industry ? “#fff” : “rgba(255,255,255,0.3)”, border: “none”, borderRadius: 10, padding: “0.9rem”, fontWeight: 700, fontSize: “0.95rem”, cursor: form.idea && form.industry ? “pointer” : “not-allowed”, fontFamily: “Inter,sans-serif”, marginTop: “0.5rem” }}>{vt.analyseBtn}</button>
-</div>
-)}
-
-```
-    {step >= 1 && step <= 5 && (
-      <div style={{ maxWidth: 560, margin: "0 auto" }}>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.6rem" }}>
-            <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.84rem" }}>{vt.validatingText}</span>
-            <span style={{ color: "#8b5cf6", fontWeight: 700 }}>{Math.round((step / 5) * 100)}%</span>
-          </div>
-          <div style={{ height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 10, marginBottom: "1rem" }}>
-            <div style={{ height: "100%", width: (step / 5 * 100) + "%", background: "linear-gradient(90deg,#7c3aed,#8b5cf6)", borderRadius: 10, transition: "width 0.5s" }} />
-          </div>
-          {vt.steps.map((s, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.65rem", marginBottom: "0.4rem" }}>
-              <div style={{ width: 18, height: 18, borderRadius: "50%", background: i < step ? "#22c55e" : i === step - 1 ? "#8b5cf6" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.58rem", flexShrink: 0 }}>{i < step ? "✓" : ""}</div>
-              <span style={{ fontSize: "0.79rem", color: i < step ? "#22c55e" : i === step - 1 ? "#a78bfa" : "rgba(255,255,255,0.3)" }}>{s}</span>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-          {results.map((r, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "1rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#22c55e", marginBottom: "0.4rem" }}>✓ {r.title}</div>
-              <DarkMD text={r.content} />
-            </div>
-          ))}
-          {loading && <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "1rem" }}>
-            <span style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.4)", animation: "pulse 1.2s infinite" }}>{vt.steps[step - 1]} — {vt.analysing}</span>
-          </div>}
-        </div>
-      </div>
-    )}
-
-    {step === 6 && (
-      <div style={{ animation: "fadeUp 0.4s ease" }}>
-        {!score && <div style={{ textAlign: "center", padding: "2rem", color: "rgba(255,255,255,0.5)" }}>Analysis complete — processing results...</div>}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", flexWrap: "wrap", gap: "1rem" }}>
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)", zIndex: 400, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "2rem 1rem", overflowY: "auto" }} onClick={onClose}>
+      <div style={{ background: "#0f0f1a", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 16, width: "100%", maxWidth: 700, padding: "2rem", animation: "fadeUp 0.3s ease" }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
           <div>
-            <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{form.idea}</h2>
-            <div style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.45)" }}>{form.industry} · Uzbekistan</div>
+            <div style={{ fontSize: "0.72rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", border: "1px solid rgba(239,68,68,0.3)", padding: "0.2rem 0.65rem", borderRadius: 100, display: "inline-block", marginBottom: "0.5rem", fontWeight: 600 }}>{gt.failedIn} {g.died}</div>
+            <h2 style={{ fontSize: "1.7rem", fontWeight: 800, color: "#fff", marginBottom: "0.3rem" }}>{g.name}</h2>
+            <p style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.5)" }}>{g.industry} · {g.country} · {g.founded}–{g.died}</p>
           </div>
-          {score && <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "2.5rem", fontWeight: 900, color: vc(score.verdict) }}>{score.score}</div>
-              <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)" }}>{vt.scoreLabel}</div>
+          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, width: 34, height: 34, color: "rgba(255,255,255,0.6)", cursor: "pointer", fontFamily: "Inter,sans-serif", fontSize: "0.9rem" }}>✕</button>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "0.6rem", marginBottom: "1.5rem" }}>
+          {[{ l: "Founded → Closed", v: g.founded + " → " + g.died }, { l: "Raised", v: fmt(g.raised) }, { l: "Lost", v: fmt(g.lost), c: "#ff8080" }, { l: "Industry", v: g.industry.split("/")[0] }].map((item, i) => (
+            <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.75rem", textAlign: "center" }}>
+              <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, textTransform: "uppercase", marginBottom: "0.35rem" }}>{item.l}</div>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: item.c || "#fff" }}>{item.v}</div>
             </div>
-          </div>}
-        </div>
-        <div style={{ background: vc(score.verdict) + "15", border: "1px solid " + vc(score.verdict) + "40", borderRadius: 10, padding: "0.85rem 1.1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
-          <span style={{ fontWeight: 700, color: vc(score.verdict) }}>{vl(score.verdict)}</span>
-          <p style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.7)", margin: 0 }}>{score.reason}</p>
-        </div>
-        <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.25rem", background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "0.25rem", flexWrap: "wrap" }}>
-          {tabs.map(([k, label]) => (
-            <button key={k} onClick={() => setTab(k)} style={{ flex: 1, minWidth: 70, background: tab === k ? "rgba(139,92,246,0.3)" : "transparent", color: tab === k ? "#a78bfa" : "rgba(255,255,255,0.45)", border: "1px solid " + (tab === k ? "rgba(139,92,246,0.4)" : "transparent"), borderRadius: 7, padding: "0.4rem 0.4rem", fontSize: "0.73rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
           ))}
         </div>
-
-        {tab === "summary" && score.summary && (
-          <div style={{ animation: "fadeUp 0.3s ease" }}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
-              <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
-                {score.executiveSummary || (score.summary?.executiveSummary && !score.summary.executiveSummary.includes('"score"') ? score.summary.executiveSummary : null) || score.reason || "Analysis complete."}
-              </p>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "0.85rem" }}>
-              <div style={{ background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#22c55e", marginBottom: "0.5rem" }}>✅ {vt.greenLights}</div>
-                {(() => { const items = score.summary?.greenLights?.length ? score.summary.greenLights : (score.greenLights || []); return items.length === 0 ? <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Analysing strengths...</p> : items.map((g, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }}>✓</span><span>{g}</span></div>); })()}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}>
+            <div style={{ fontSize: "2rem", marginBottom: "0.75rem", animation: "pulse 1.2s infinite" }}>🪦</div>
+            <p>{gt.analysing}</p>
+          </div>
+        ) : detail && (
+          <>
+            <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 12, padding: "1.1rem", marginBottom: "1rem" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>{gt.failureAnalysis}</div>
+              <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "2.2rem", fontWeight: 900, color: "#ff6060" }}>{detail.failureScore}</div>
+                  <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)" }}>{gt.failureScore}</div>
+                </div>
+                <div style={{ flex: 1, minWidth: 180 }}>
+                  {[{ l: gt.marketFitRisk, v: detail.marketFitRisk }, { l: gt.burnRateRisk, v: detail.burnRateRisk }, { l: gt.founderRisk, v: detail.founderRisk }].map((item, i) => (
+                    <div key={i} style={{ marginBottom: "0.6rem" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.2rem" }}>
+                        <span style={{ fontSize: "0.73rem", color: "rgba(255,255,255,0.55)" }}>{item.l}</span>
+                        <span style={{ fontSize: "0.73rem", fontWeight: 700, color: "#ff8080" }}>{item.v}</span>
+                      </div>
+                      <div style={{ height: 5, background: "rgba(255,255,255,0.06)", borderRadius: 10 }}>
+                        <div style={{ height: "100%", width: item.v + "%", background: "linear-gradient(90deg,#ef4444,#ff6060)", borderRadius: 10 }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "1rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#ef4444", marginBottom: "0.5rem" }}>⚠️ {vt.redFlags}</div>
-                {(() => { const items = score.summary?.redFlags?.length ? score.summary.redFlags : (score.redFlags || []); return items.length === 0 ? <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Analysing risks...</p> : items.map((r, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#ef4444", flexShrink: 0, marginTop: 2 }}>✗</span><span>{r}</span></div>); })()}
+            </div>
+            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "1rem" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>📅 {gt.timeline}</div>
+              <div style={{ position: "relative" }}>
+                <div style={{ position: "absolute", left: 16, top: 0, bottom: 0, width: 2, background: "linear-gradient(180deg,#7c3aed,#ef4444)" }} />
+                {detail.timeline.map((ev, i) => (
+                  <div key={i} style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem", position: "relative", zIndex: 1 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: i === detail.timeline.length - 1 ? "#ef4444" : "#7c3aed", border: "3px solid #0f0f1a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ fontSize: "0.55rem", color: "#fff", fontWeight: 700 }}>{ev.year}</span>
+                    </div>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "0.5rem 0.85rem", flex: 1 }}>
+                      <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>{ev.year} </span>
+                      <span style={{ fontSize: "0.81rem", color: "rgba(255,255,255,0.8)" }}>{ev.event}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
-              {[[vt.problemVal, score.problemValidation || score.summary?.problemValidation || 60, score.summary?.problemValidationText || ""], [vt.solutionVal, score.solutionValidation || score.summary?.solutionValidation || 55, score.summary?.solutionValidationText || ""], [vt.marketVal, score.marketValidation || score.summary?.marketValidation || 50, score.summary?.marketValidationText || ""]].map(([label, val, text], i) => (
-                <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                    <span style={{ fontSize: "0.73rem", fontWeight: 700, color: "rgba(255,255,255,0.6)" }}>{label}</span>
-                    <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#f59e0b" }}>{val}/100</span>
-                  </div>
-                  <div style={{ height: 4, background: "rgba(255,255,255,0.08)", borderRadius: 10, marginBottom: "0.5rem" }}>
-                    <div style={{ height: "100%", width: val + "%", background: "#f59e0b", borderRadius: 10 }} />
-                  </div>
-                  <p style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.5, margin: 0 }}>{text}</p>
+            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "1rem" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.75rem" }}>⚠️ {gt.rootCauses}</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                {detail.rootCauses.map((c, i) => <span key={i} style={{ fontSize: "0.77rem", background: "rgba(239,68,68,0.08)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(239,68,68,0.2)", padding: "0.3rem 0.75rem", borderRadius: 100 }}>{c}</span>)}
+              </div>
+            </div>
+            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "1rem" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.75rem" }}>✅ {gt.keyLessons}</div>
+              {detail.keyLessons.map((l, i) => (
+                <div key={i} style={{ borderLeft: "3px solid #22c55e", paddingLeft: "0.85rem", marginBottom: "0.75rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#fff", marginBottom: "0.25rem" }}>{i + 1}. {l.title}</div>
+                  <p style={{ fontSize: "0.79rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: 0 }}>{l.desc}</p>
                 </div>
               ))}
             </div>
-            {score.score >= 80 && (
-              <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1.1rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#22c55e", marginBottom: "0.85rem" }}>🚀 {vt.investorReady}</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: "0.6rem" }}>
-                  {VENTURE_FUNDS.map((f, i) => (
-                    <a key={i} href={f.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, padding: "0.6rem" }}>
-                      <div style={{ fontSize: "0.73rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{f.flag} {f.name}</div>
-                      <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.45)" }}>{f.focus}</div>
-                      <div style={{ fontSize: "0.62rem", color: "#22c55e", marginTop: "0.2rem", fontWeight: 600 }}>{f.stage}</div>
-                    </a>
+            {detail.competitorsThatWon?.length > 0 && (
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "1rem" }}>
+                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.75rem" }}>🏆 {gt.competitorsThatWon}</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+                  {detail.competitorsThatWon.map((c, i) => (
+                    <div key={i} style={{ background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.75rem" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#22c55e", marginBottom: "0.2rem" }}>{c.name}</div>
+                      <div style={{ fontSize: "0.67rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.35rem", fontStyle: "italic" }}>{c.outcome}</div>
+                      <p style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.5, margin: 0 }}>{c.why}</p>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
-            {score.score >= 50 && score.score < 80 && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.85rem" }}>
-                {[["📺 YouTube", score.youtube || RESOURCES.youtube, "title", "desc", "url"], ["📖 Books", score.books || RESOURCES.books, "title", "desc", "author"], ["🌍 Study These", score.globalProducts || RESOURCES.globalProducts, "name", "desc", "url"]].map(([heading, items, nameKey, descKey, linkKey], gi) => (
-                  <div key={gi} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "0.9rem" }}>
-                    <div style={{ fontWeight: 700, fontSize: "0.76rem", color: "#f59e0b", marginBottom: "0.6rem" }}>{heading}</div>
-                    {items.map((r, i) => (
-                      gi === 0 || gi === 2 ? (
-                        <a key={i} href={r[linkKey] || r.url || "#"} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6, transition: "background 0.15s" }}
-                          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
-                          onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}>
-                          <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#a78bfa" }}>↗ {r[nameKey]}</div>
-                          <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>{r[descKey]}</div>
+            <div style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "1.1rem" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.5rem" }}>🤔 {gt.couldBePrevented}</div>
+              <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: 0 }}>{detail.couldHaveBeenPrevented}</p>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── IDEA VALIDATOR ──
+function IdeaValidator({ t }) {
+  const vt = t.validator;
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState({ idea: "", industry: "", price: "", budget: "" });
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [score, setScore] = useState(null);
+  const [tab, setTab] = useState("summary");
+  const sf = (k, v) => setForm(x => ({ ...x, [k]: v }));
+
+  const prompts = [
+    f => `Analyse market demand for "${f.idea}" (${f.industry}) in Uzbekistan. Market size, growth trends, consumer behaviour. 4-5 bullet points.`,
+    f => `For "${f.idea}" in Uzbekistan, identify 3 target customer segments with age, income, city, and why they need it.`,
+    f => `Main competitors for "${f.idea}" in Uzbekistan. Name, 2 strengths, 1 weakness each. Max 4.`,
+    f => `Affordability for "${f.idea}" at $${f.price || "unknown"} in Uzbekistan (avg salary $300-500/month). Give clear verdict.`,
+    f => "Score this business idea for Uzbekistan: " + f.idea + " (" + f.industry + ", price $" + (f.price||"?") + ", budget $" + (f.budget||"?") + "). Reply ONLY with valid JSON, no markdown: {score:65,verdict:CAUTION,reason:string,risks:[3 items],nextSteps:[3 items],greenLights:[3 strengths],redFlags:[3 concerns],problemValidation:65,solutionValidation:60,marketValidation:58,executiveSummary:string,youtube:[{title,url,desc}x3],books:[{title,author,desc}x3],globalProducts:[{name,desc,url}x3]}. verdict = GO CAUTION or NOGO.",
+  ];
+
+  const run = async () => {
+    if (!form.idea || !form.industry) return;
+    setStep(1); setResults([]); setScore(null); setLoading(true); setTab("summary");
+    const out = [];
+    for (let i = 0; i < 5; i++) {
+      setStep(i + 1);
+      try {
+        const text = await callAI(prompts[i](form), i === 4 ? 3000 : 800);
+        if (i === 4) {
+          let parsed = null;
+          // Strip markdown fences first
+          let clean = text.replace(/`''json/gi, "").replace(/''`/g, "").trim();
+          // Extract JSON object
+          const jsonStart = clean.indexOf("{");
+          const jsonEnd = clean.lastIndexOf("}");
+          if (jsonStart !== -1 && jsonEnd !== -1) {
+            clean = clean.slice(jsonStart, jsonEnd + 1);
+          }
+          const tries = [
+            () => JSON.parse(clean),
+            () => JSON.parse(text.replace(/`''json|''`/gi, "").trim()),
+            () => { const m = text.match(/\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; },
+          ];
+          for (const fn of tries) {
+            try { parsed = fn(); if (parsed && parsed.score) break; } catch {}
+          }
+          if (!parsed) {
+            parsed = { score: 50, verdict: "CAUTION", reason: "See analysis below.", risks: [], nextSteps: [], summary: { executiveSummary: text.slice(0,300), greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: "", solutionValidationText: "", marketValidationText: "" }, scores: {}, market: {}, financials: {}, roadmap: {} };
+          }
+          parsed.score = parsed.score || 50;
+          parsed.verdict = parsed.verdict || "CAUTION";
+          parsed.reason = parsed.reason || "Analysis complete.";
+          parsed.summary = parsed.summary || { executiveSummary: parsed.reason, greenLights: [], redFlags: [], problemValidation: 60, solutionValidation: 55, marketValidation: 50, problemValidationText: "", solutionValidationText: "", marketValidationText: "" };
+          parsed.scores = parsed.scores || {};
+          parsed.market = parsed.market || {};
+          parsed.financials = parsed.financials || {};
+          parsed.roadmap = parsed.roadmap || {};
+          setScore(parsed);
+          out.push({ title: vt.steps[i], content: parsed.reason });
+          // Save validation to Supabase
+          try {
+            await supabase.from("validations").insert({
+              idea: f.idea,
+              industry: f.industry,
+              price: f.price ? Number(f.price) : null,
+              budget: f.budget ? Number(f.budget) : null,
+              score: parsed.score,
+              verdict: parsed.verdict,
+              reason: parsed.reason,
+              created_at: new Date().toISOString(),
+            });
+          } catch {}
+          // Second call: get detailed market/financials/roadmap
+          try {
+            const detailPrompt = "For startup idea: " + f.idea + " (" + f.industry + ") in Uzbekistan. Reply ONLY with JSON no markdown: {scores:{targetMarketClarity:N,marketTiming:N,marketEntryBarriers:N,competitionLevel:N,problemSolutionFit:N,mvpViability:N,valueProposition:N,initialFeasibility:N,resourceRequirements:N},market:{tam:string,sam:string,som:string,maturity:string,targetRegions:[array],competitors:[{name,type,strengths:[],weaknesses:[],opportunity}]},financials:{startupCosts:string,cac:string,ltv:string,ltvcac:string,breakEven:string,growth:string,revenueModels:[2 items],monetizationStrategy:string},roadmap:{quickWins:[{title,desc,effort:LOW/MED,outcome}],immediate:[3 actions],shortTerm:[3 actions]}}";
+            const detail = await callAI(detailPrompt, 1500);
+            let dp = null;
+            try {
+              let dc = detail.replace(/`''json/gi,"").replace(/''`/g,"").trim();
+              const ds = dc.indexOf("{"); const de = dc.lastIndexOf("}");
+              if (ds !== -1 && de !== -1) dc = dc.slice(ds, de+1);
+              dp = JSON.parse(dc);
+            } catch {}
+            if (dp) {
+              setScore(prev => prev ? { ...prev, scores: dp.scores||{}, market: dp.market||{}, financials: dp.financials||{}, roadmap: dp.roadmap||{} } : prev);
+            }
+          } catch {}
+        } else { out.push({ title: vt.steps[i], content: text }); }
+        setResults([...out]);
+      } catch (err) { out.push({ title: vt.steps[i], content: "Step failed." }); setResults([...out]); }
+    }
+    setLoading(false); setStep(6);
+  };
+
+  const vc = v => v === "GO" ? "#22c55e" : v === "CAUTION" ? "#f59e0b" : "#ef4444";
+  const vl = v => v === "GO" ? vt.goVerdict : v === "CAUTION" ? vt.cautionVerdict : vt.nogoVerdict;
+  const tabs = [["summary", vt.tabSummary], ["scores", vt.tabScores], ["market", vt.tabMarket], ["financials", vt.tabFinancials], ["roadmap", vt.tabRoadmap]];
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0f0f1a" }}>
+      <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "3rem 1.5rem 2rem", textAlign: "center", borderBottom: "1px solid rgba(139,92,246,0.2)" }}>
+        <h1 style={{ fontSize: "clamp(1.5rem,4vw,2.1rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{vt.title}</h1>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{vt.sub}</p>
+      </div>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "2rem 1.5rem" }}>
+        {step === 0 && (
+          <div style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(139,92,246,0.5)", borderRadius: 16, padding: "2rem", maxWidth: 560, margin: "0 auto", boxShadow: "0 0 40px rgba(139,92,246,0.1)" }}>
+            <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: "1.25rem" }}>{vt.step1Title}</h2>
+            <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.ideaLabel}</span>}>
+              <textarea value={form.idea} onChange={e => sf("idea", e.target.value)} placeholder={vt.ideaPh} style={{ ...darkInp(), minHeight: 80, resize: "vertical" }} />
+            </FG>
+            <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.industryLabel}</span>}>
+              <select value={form.industry} onChange={e => sf("industry", e.target.value)} style={darkSel()}>
+                <option value="" style={{ background: "#1a1a2e" }}>{t.form.selectInd}</option>
+                {t.form.industries.map(i => <option key={i} style={{ background: "#1a1a2e" }}>{i}</option>)}
+              </select>
+            </FG>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+              <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.priceLabel}</span>}>
+                <input value={form.price} onChange={e => sf("price", e.target.value)} type="number" placeholder={vt.pricePh} style={darkInp()} />
+              </FG>
+              <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.budgetLabel}</span>}>
+                <input value={form.budget} onChange={e => sf("budget", e.target.value)} type="number" placeholder={vt.budgetPh} style={darkInp()} />
+              </FG>
+            </div>
+            <button onClick={run} disabled={!form.idea || !form.industry} style={{ width: "100%", background: form.idea && form.industry ? "linear-gradient(135deg,#7c3aed,#6d28d9)" : "rgba(255,255,255,0.05)", color: form.idea && form.industry ? "#fff" : "rgba(255,255,255,0.3)", border: "none", borderRadius: 10, padding: "0.9rem", fontWeight: 700, fontSize: "0.95rem", cursor: form.idea && form.industry ? "pointer" : "not-allowed", fontFamily: "Inter,sans-serif", marginTop: "0.5rem" }}>{vt.analyseBtn}</button>
+          </div>
+        )}
+
+        {step >= 1 && step <= 5 && (
+          <div style={{ maxWidth: 560, margin: "0 auto" }}>
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.6rem" }}>
+                <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.84rem" }}>{vt.validatingText}</span>
+                <span style={{ color: "#8b5cf6", fontWeight: 700 }}>{Math.round((step / 5) * 100)}%</span>
+              </div>
+              <div style={{ height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 10, marginBottom: "1rem" }}>
+                <div style={{ height: "100%", width: (step / 5 * 100) + "%", background: "linear-gradient(90deg,#7c3aed,#8b5cf6)", borderRadius: 10, transition: "width 0.5s" }} />
+              </div>
+              {vt.steps.map((s, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.65rem", marginBottom: "0.4rem" }}>
+                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: i < step ? "#22c55e" : i === step - 1 ? "#8b5cf6" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.58rem", flexShrink: 0 }}>{i < step ? "✓" : ""}</div>
+                  <span style={{ fontSize: "0.79rem", color: i < step ? "#22c55e" : i === step - 1 ? "#a78bfa" : "rgba(255,255,255,0.3)" }}>{s}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {results.map((r, i) => (
+                <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "1rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#22c55e", marginBottom: "0.4rem" }}>✓ {r.title}</div>
+                  <DarkMD text={r.content} />
+                </div>
+              ))}
+              {loading && <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "1rem" }}>
+                <span style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.4)", animation: "pulse 1.2s infinite" }}>{vt.steps[step - 1]} — {vt.analysing}</span>
+              </div>}
+            </div>
+          </div>
+        )}
+
+        {step === 6 && (
+          <div style={{ animation: "fadeUp 0.4s ease" }}>
+            {!score && <div style={{ textAlign: "center", padding: "2rem", color: "rgba(255,255,255,0.5)" }}>Analysis complete — processing results...</div>}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{form.idea}</h2>
+                <div style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.45)" }}>{form.industry} · Uzbekistan</div>
+              </div>
+              {score && <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "2.5rem", fontWeight: 900, color: vc(score.verdict) }}>{score.score}</div>
+                  <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)" }}>{vt.scoreLabel}</div>
+                </div>
+              </div>}
+            </div>
+            <div style={{ background: vc(score.verdict) + "15", border: "1px solid " + vc(score.verdict) + "40", borderRadius: 10, padding: "0.85rem 1.1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <span style={{ fontWeight: 700, color: vc(score.verdict) }}>{vl(score.verdict)}</span>
+              <p style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.7)", margin: 0 }}>{score.reason}</p>
+            </div>
+            <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.25rem", background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "0.25rem", flexWrap: "wrap" }}>
+              {tabs.map(([k, label]) => (
+                <button key={k} onClick={() => setTab(k)} style={{ flex: 1, minWidth: 70, background: tab === k ? "rgba(139,92,246,0.3)" : "transparent", color: tab === k ? "#a78bfa" : "rgba(255,255,255,0.45)", border: "1px solid " + (tab === k ? "rgba(139,92,246,0.4)" : "transparent"), borderRadius: 7, padding: "0.4rem 0.4rem", fontSize: "0.73rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
+              ))}
+            </div>
+
+            {tab === "summary" && score.summary && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
+                  <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
+                    {score.executiveSummary || (score.summary?.executiveSummary && !score.summary.executiveSummary.includes(`"score"`) ? score.summary.executiveSummary : null) || score.reason || "Analysis complete."}
+                  </p>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "0.85rem" }}>
+                  <div style={{ background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#22c55e", marginBottom: "0.5rem" }}>✅ {vt.greenLights}</div>
+                    {(() => { const items = score.summary?.greenLights?.length ? score.summary.greenLights : (score.greenLights || []); return items.length === 0 ? <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Analysing strengths...</p> : items.map((g, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }}>✓</span><span>{g}</span></div>); })()}
+                  </div>
+                  <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#ef4444", marginBottom: "0.5rem" }}>⚠️ {vt.redFlags}</div>
+                    {(() => { const items = score.summary?.redFlags?.length ? score.summary.redFlags : (score.redFlags || []); return items.length === 0 ? <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", margin: 0 }}>Analysing risks...</p> : items.map((r, i) => <div key={i} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.35rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4 }}><span style={{ color: "#ef4444", flexShrink: 0, marginTop: 2 }}>✗</span><span>{r}</span></div>); })()}
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
+                  {[[vt.problemVal, score.problemValidation || score.summary?.problemValidation || 60, score.summary?.problemValidationText || ""], [vt.solutionVal, score.solutionValidation || score.summary?.solutionValidation || 55, score.summary?.solutionValidationText || ""], [vt.marketVal, score.marketValidation || score.summary?.marketValidation || 50, score.summary?.marketValidationText || ""]].map(([label, val, text], i) => (
+                    <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                        <span style={{ fontSize: "0.73rem", fontWeight: 700, color: "rgba(255,255,255,0.6)" }}>{label}</span>
+                        <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#f59e0b" }}>{val}/100</span>
+                      </div>
+                      <div style={{ height: 4, background: "rgba(255,255,255,0.08)", borderRadius: 10, marginBottom: "0.5rem" }}>
+                        <div style={{ height: "100%", width: val + "%", background: "#f59e0b", borderRadius: 10 }} />
+                      </div>
+                      <p style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.5, margin: 0 }}>{text}</p>
+                    </div>
+                  ))}
+                </div>
+                {score.score >= 80 && (
+                  <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "1.1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#22c55e", marginBottom: "0.85rem" }}>🚀 {vt.investorReady}</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: "0.6rem" }}>
+                      {VENTURE_FUNDS.map((f, i) => (
+                        <a key={i} href={f.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, padding: "0.6rem" }}>
+                          <div style={{ fontSize: "0.73rem", fontWeight: 700, color: "#fff", marginBottom: "0.2rem" }}>{f.flag} {f.name}</div>
+                          <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.45)" }}>{f.focus}</div>
+                          <div style={{ fontSize: "0.62rem", color: "#22c55e", marginTop: "0.2rem", fontWeight: 600 }}>{f.stage}</div>
                         </a>
-                      ) : (
-                        <div key={i} style={{ marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
-                          <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#fff" }}>{r[nameKey]}</div>
-                          <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>by {r.author || r[descKey]}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {score.score >= 50 && score.score < 80 && (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.85rem" }}>
+                    {[["📺 YouTube", score.youtube || RESOURCES.youtube, "title", "desc", "url"], ["📖 Books", score.books || RESOURCES.books, "title", "desc", "author"], ["🌍 Study These", score.globalProducts || RESOURCES.globalProducts, "name", "desc", "url"]].map(([heading, items, nameKey, descKey, linkKey], gi) => (
+                      <div key={gi} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "0.9rem" }}>
+                        <div style={{ fontWeight: 700, fontSize: "0.76rem", color: "#f59e0b", marginBottom: "0.6rem" }}>{heading}</div>
+                        {items.map((r, i) => (
+                          gi === 0 || gi === 2 ? (
+                            <a key={i} href={r[linkKey] || r.url || "#"} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6, transition: "background 0.15s" }}
+                              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                              onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}>
+                              <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#a78bfa" }}>↗ {r[nameKey]}</div>
+                              <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>{r[descKey]}</div>
+                            </a>
+                          ) : (
+                            <div key={i} style={{ marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
+                              <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#fff" }}>{r[nameKey]}</div>
+                              <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>by {r.author || r[descKey]}</div>
+                            </div>
+                          )
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {tab === "scores" && score.scores && (
+              <div style={{ animation: "fadeUp 0.3s ease", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
+                {[["📈 " + vt.marketFactors, [["targetMarketClarity", vt.targetMarketClarity || "Target Market Clarity"], ["marketTiming", vt.marketTiming || "Market Timing"], ["marketEntryBarriers", vt.marketEntryBarriers || "Market Entry Barriers"], ["competitionLevel", vt.competitionLevel || "Competition Level"], ["problemSolutionFit", vt.problemSolutionFit || "Problem-Solution Fit"]]], ["⚙️ " + vt.execFactors, [["mvpViability", vt.mvpViability || "MVP Viability"], ["valueProposition", vt.valueProposition || "Value Proposition"], ["initialFeasibility", vt.initialFeasibility || "Initial Feasibility"], ["resourceRequirements", vt.resourceRequirements || "Resource Requirements"]]]].map(([heading, fields], gi) => (
+                  <div key={gi} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>{heading}</div>
+                    {fields.map(([key, label]) => (
+                      <div key={key} style={{ marginBottom: "0.7rem" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.2rem" }}>
+                          <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.65)" }}>{label}</span>
+                          <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#f59e0b" }}>{score.scores[key] || 50}/100</span>
                         </div>
-                      )
+                        <div style={{ height: 5, background: "rgba(255,255,255,0.08)", borderRadius: 10 }}>
+                          <div style={{ height: "100%", width: (score.scores[key] || 50) + "%", background: "#f59e0b", borderRadius: 10 }} />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 ))}
               </div>
             )}
-          </div>
-        )}
 
-        {tab === "scores" && score.scores && (
-          <div style={{ animation: "fadeUp 0.3s ease", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
-            {[["📈 " + vt.marketFactors, [["targetMarketClarity", vt.targetMarketClarity || "Target Market Clarity"], ["marketTiming", vt.marketTiming || "Market Timing"], ["marketEntryBarriers", vt.marketEntryBarriers || "Market Entry Barriers"], ["competitionLevel", vt.competitionLevel || "Competition Level"], ["problemSolutionFit", vt.problemSolutionFit || "Problem-Solution Fit"]]], ["⚙️ " + vt.execFactors, [["mvpViability", vt.mvpViability || "MVP Viability"], ["valueProposition", vt.valueProposition || "Value Proposition"], ["initialFeasibility", vt.initialFeasibility || "Initial Feasibility"], ["resourceRequirements", vt.resourceRequirements || "Resource Requirements"]]]].map(([heading, fields], gi) => (
-              <div key={gi} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>{heading}</div>
-                {fields.map(([key, label]) => (
-                  <div key={key} style={{ marginBottom: "0.7rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.2rem" }}>
-                      <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.65)" }}>{label}</span>
-                      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#f59e0b" }}>{score.scores[key] || 50}/100</span>
-                    </div>
-                    <div style={{ height: 5, background: "rgba(255,255,255,0.08)", borderRadius: 10 }}>
-                      <div style={{ height: "100%", width: (score.scores[key] || 50) + "%", background: "#f59e0b", borderRadius: 10 }} />
+            {tab === "market" && score.market && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>🌐 {vt.marketSize}</div>
+                  <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
+                    {[["TAM", score.market.tam, "#7c3aed"], ["SAM", score.market.sam, "#8b5cf6"], ["SOM", score.market.som, "#a78bfa"]].map(([lbl, val, clr]) => (
+                      <div key={lbl} style={{ textAlign: "center", minWidth: 80 }}>
+                        <div style={{ fontSize: "0.68rem", color: clr, fontWeight: 700, marginBottom: "0.2rem" }}>{lbl}</div>
+                        <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff" }}>{val}</div>
+                      </div>
+                    ))}
+                    <span style={{ fontSize: "0.72rem", background: "rgba(139,92,246,0.15)", color: "#a78bfa", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.3)", fontWeight: 600, alignSelf: "center" }}>{score.market.maturity}</span>
+                  </div>
+                </div>
+                {score.market.targetRegions && (
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>📍 {vt.targetRegions}</div>
+                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                      {score.market.targetRegions.map((r, i) => <span key={i} style={{ fontSize: "0.77rem", background: "rgba(139,92,246,0.1)", color: "#a78bfa", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.25)" }}>{r}</span>)}
                     </div>
                   </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === "market" && score.market && (
-          <div style={{ animation: "fadeUp 0.3s ease" }}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>🌐 {vt.marketSize}</div>
-              <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-                {[["TAM", score.market.tam, "#7c3aed"], ["SAM", score.market.sam, "#8b5cf6"], ["SOM", score.market.som, "#a78bfa"]].map(([lbl, val, clr]) => (
-                  <div key={lbl} style={{ textAlign: "center", minWidth: 80 }}>
-                    <div style={{ fontSize: "0.68rem", color: clr, fontWeight: 700, marginBottom: "0.2rem" }}>{lbl}</div>
-                    <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff" }}>{val}</div>
+                )}
+                {score.market.competitors && (
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>🎯 {vt.competitive}</div>
+                    {score.market.competitors.map((c, i) => (
+                      <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.9rem", marginBottom: "0.6rem" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.6rem" }}>
+                          <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#fff" }}>{c.name}</span>
+                          <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.55)", padding: "0.12rem 0.5rem", borderRadius: 100, fontWeight: 600 }}>{c.type}</span>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.6rem" }}>
+                          <div>
+                            <div style={{ fontSize: "0.65rem", color: "#22c55e", fontWeight: 600, marginBottom: "0.25rem" }}>{vt.strengths}</div>
+                            {(c.strengths || []).map((s, j) => <div key={j} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.65)", marginBottom: "0.15rem" }}>+ {s}</div>)}
+                          </div>
+                          <div>
+                            <div style={{ fontSize: "0.65rem", color: "#ef4444", fontWeight: 600, marginBottom: "0.25rem" }}>{vt.weaknesses}</div>
+                            {(c.weaknesses || []).map((w, j) => <div key={j} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.65)", marginBottom: "0.15rem" }}>- {w}</div>)}
+                          </div>
+                        </div>
+                        {c.opportunity && <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.15)", borderRadius: 7, padding: "0.5rem 0.7rem" }}>
+                          <span style={{ fontSize: "0.65rem", color: "#22c55e", fontWeight: 700 }}>{vt.yourOpportunity} </span>
+                          <span style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.65)" }}>{c.opportunity}</span>
+                        </div>}
+                      </div>
+                    ))}
                   </div>
-                ))}
-                <span style={{ fontSize: "0.72rem", background: "rgba(139,92,246,0.15)", color: "#a78bfa", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.3)", fontWeight: 600, alignSelf: "center" }}>{score.market.maturity}</span>
+                )}
               </div>
-            </div>
-            {score.market.targetRegions && (
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>📍 {vt.targetRegions}</div>
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                  {score.market.targetRegions.map((r, i) => <span key={i} style={{ fontSize: "0.77rem", background: "rgba(139,92,246,0.1)", color: "#a78bfa", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.25)" }}>{r}</span>)}
+            )}
+
+            {tab === "financials" && score.financials && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.6rem", marginBottom: "0.85rem" }}>
+                  {[[vt.startupCosts, score.financials.startupCosts, null], ["CAC", score.financials.cac, "#ef4444"], ["LTV", score.financials.ltv, "#22c55e"], ["LTV/CAC", score.financials.ltvcac, "#a78bfa"]].map(([label, val, clr], i) => (
+                    <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
+                      <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 800, color: clr || "rgba(255,255,255,0.85)", lineHeight: 1.3 }}>{val || "—"}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.85rem" }}>
+                  {[[vt.breakEven, score.financials.breakEven || "—"], [vt.growth, score.financials.growth || "—"]].map(([label, val], i) => (
+                    <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
+                      <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
+                      <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff" }}>{val}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>{vt.revenueModels}</div>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.6rem" }}>
+                    {(score.financials.revenueModels || []).map((m, i) => <span key={i} style={{ fontSize: "0.75rem", background: "rgba(139,92,246,0.1)", color: "#a78bfa", padding: "0.25rem 0.7rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.25)" }}>{m}</span>)}
+                  </div>
+                  {score.financials.monetizationStrategy && <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: 0 }}>{score.financials.monetizationStrategy}</p>}
                 </div>
               </div>
             )}
-            {score.market.competitors && (
-              <div>
-                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>🎯 {vt.competitive}</div>
-                {score.market.competitors.map((c, i) => (
-                  <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.9rem", marginBottom: "0.6rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.6rem" }}>
-                      <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#fff" }}>{c.name}</span>
-                      <span style={{ fontSize: "0.62rem", background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.55)", padding: "0.12rem 0.5rem", borderRadius: 100, fontWeight: 600 }}>{c.type}</span>
+
+            {tab === "roadmap" && score.roadmap && (
+              <div style={{ animation: "fadeUp 0.3s ease" }}>
+                {score.roadmap.quickWins && (
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#fff" }}>⚡ {vt.quickWins}</div>
+                      <span style={{ fontSize: "0.64rem", background: "rgba(34,197,94,0.1)", color: "#22c55e", padding: "0.15rem 0.6rem", borderRadius: 100, border: "1px solid rgba(34,197,94,0.25)", fontWeight: 600 }}>{vt.underOneWeek}</span>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.6rem" }}>
-                      <div>
-                        <div style={{ fontSize: "0.65rem", color: "#22c55e", fontWeight: 600, marginBottom: "0.25rem" }}>{vt.strengths}</div>
-                        {(c.strengths || []).map((s, j) => <div key={j} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.65)", marginBottom: "0.15rem" }}>+ {s}</div>)}
+                    {score.roadmap.quickWins.map((qw, i) => (
+                      <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, padding: "0.85rem", marginBottom: "0.6rem" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                            <div style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+                            <span style={{ fontWeight: 600, fontSize: "0.82rem", color: "#fff" }}>{qw.title}</span>
+                          </div>
+                          <span style={{ fontSize: "0.64rem", background: qw.effort === "LOW" ? "rgba(34,197,94,0.1)" : "rgba(245,158,11,0.1)", color: qw.effort === "LOW" ? "#22c55e" : "#f59e0b", padding: "0.12rem 0.45rem", borderRadius: 100, fontWeight: 600, border: "1px solid " + (qw.effort === "LOW" ? "rgba(34,197,94,0.25)" : "rgba(245,158,11,0.25)") }}>{qw.effort}</span>
+                        </div>
+                        <p style={{ fontSize: "0.77rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.5, margin: "0 0 0 1.85rem" }}>{qw.desc}</p>
+                        {qw.outcome && <div style={{ marginLeft: "1.85rem", fontSize: "0.72rem", color: "#a78bfa" }}>→ {qw.outcome}</div>}
                       </div>
-                      <div>
-                        <div style={{ fontSize: "0.65rem", color: "#ef4444", fontWeight: 600, marginBottom: "0.25rem" }}>{vt.weaknesses}</div>
-                        {(c.weaknesses || []).map((w, j) => <div key={j} style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.65)", marginBottom: "0.15rem" }}>- {w}</div>)}
-                      </div>
-                    </div>
-                    {c.opportunity && <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.15)", borderRadius: 7, padding: "0.5rem 0.7rem" }}>
-                      <span style={{ fontSize: "0.65rem", color: "#22c55e", fontWeight: 700 }}>{vt.yourOpportunity} </span>
-                      <span style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.65)" }}>{c.opportunity}</span>
-                    </div>}
+                    ))}
                   </div>
-                ))}
+                )}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
+                  {[[vt.immediate, score.roadmap.immediate || [], "#ef4444", "rgba(239,68,68,0.05)", "rgba(239,68,68,0.2)"], [vt.shortTerm, score.roadmap.shortTerm || [], "#f59e0b", "rgba(245,158,11,0.05)", "rgba(245,158,11,0.2)"]].map(([label, items, clr, bg, border], i) => (
+                    <div key={i} style={{ background: bg, border: "1px solid " + border, borderRadius: 12, padding: "1rem" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.73rem", color: clr, marginBottom: "0.65rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{label}</div>
+                      {items.map((item, j) => <div key={j} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.4rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.7)" }}><span style={{ color: clr, flexShrink: 0 }}>•</span>{item}</div>)}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
-          </div>
-        )}
 
-        {tab === "financials" && score.financials && (
-          <div style={{ animation: "fadeUp 0.3s ease" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.6rem", marginBottom: "0.85rem" }}>
-              {[[vt.startupCosts, score.financials.startupCosts, null], ["CAC", score.financials.cac, "#ef4444"], ["LTV", score.financials.ltv, "#22c55e"], ["LTV/CAC", score.financials.ltvcac, "#a78bfa"]].map(([label, val, clr], i) => (
-                <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
-                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
-                  <div style={{ fontSize: "0.82rem", fontWeight: 800, color: clr || "rgba(255,255,255,0.85)", lineHeight: 1.3 }}>{val || "—"}</div>
+            <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.73rem", color: "rgba(255,255,255,0.35)", marginBottom: "0.75rem", textTransform: "uppercase" }}>{vt.rawAnalysis}</div>
+              {results.slice(0, 4).map((r, i) => (
+                <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 9, padding: "0.75rem", marginBottom: "0.5rem" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.74rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.35rem" }}>{i + 1}. {r.title}</div>
+                  <DarkMD text={r.content} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.85rem" }}>
-              {[[vt.breakEven, score.financials.breakEven || "—"], [vt.growth, score.financials.growth || "—"]].map(([label, val], i) => (
-                <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
-                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff" }}>{val}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>{vt.revenueModels}</div>
-              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.6rem" }}>
-                {(score.financials.revenueModels || []).map((m, i) => <span key={i} style={{ fontSize: "0.75rem", background: "rgba(139,92,246,0.1)", color: "#a78bfa", padding: "0.25rem 0.7rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.25)" }}>{m}</span>)}
-              </div>
-              {score.financials.monetizationStrategy && <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: 0 }}>{score.financials.monetizationStrategy}</p>}
-            </div>
+            <button onClick={() => { setStep(0); setResults([]); setScore(null); setForm({ idea: "", industry: "", price: "", budget: "" }); }} style={{ marginTop: "1.25rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "0.6rem 1.4rem", fontWeight: 600, fontSize: "0.84rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{vt.restart}</button>
           </div>
         )}
-
-        {tab === "roadmap" && score.roadmap && (
-          <div style={{ animation: "fadeUp 0.3s ease" }}>
-            {score.roadmap.quickWins && (
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
-                  <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#fff" }}>⚡ {vt.quickWins}</div>
-                  <span style={{ fontSize: "0.64rem", background: "rgba(34,197,94,0.1)", color: "#22c55e", padding: "0.15rem 0.6rem", borderRadius: 100, border: "1px solid rgba(34,197,94,0.25)", fontWeight: 600 }}>{vt.underOneWeek}</span>
-                </div>
-                {score.roadmap.quickWins.map((qw, i) => (
-                  <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, padding: "0.85rem", marginBottom: "0.6rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                        <div style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
-                        <span style={{ fontWeight: 600, fontSize: "0.82rem", color: "#fff" }}>{qw.title}</span>
-                      </div>
-                      <span style={{ fontSize: "0.64rem", background: qw.effort === "LOW" ? "rgba(34,197,94,0.1)" : "rgba(245,158,11,0.1)", color: qw.effort === "LOW" ? "#22c55e" : "#f59e0b", padding: "0.12rem 0.45rem", borderRadius: 100, fontWeight: 600, border: "1px solid " + (qw.effort === "LOW" ? "rgba(34,197,94,0.25)" : "rgba(245,158,11,0.25)") }}>{qw.effort}</span>
-                    </div>
-                    <p style={{ fontSize: "0.77rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.5, margin: "0 0 0 1.85rem" }}>{qw.desc}</p>
-                    {qw.outcome && <div style={{ marginLeft: "1.85rem", fontSize: "0.72rem", color: "#a78bfa" }}>→ {qw.outcome}</div>}
-                  </div>
-                ))}
-              </div>
-            )}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
-              {[[vt.immediate, score.roadmap.immediate || [], "#ef4444", "rgba(239,68,68,0.05)", "rgba(239,68,68,0.2)"], [vt.shortTerm, score.roadmap.shortTerm || [], "#f59e0b", "rgba(245,158,11,0.05)", "rgba(245,158,11,0.2)"]].map(([label, items, clr, bg, border], i) => (
-                <div key={i} style={{ background: bg, border: "1px solid " + border, borderRadius: 12, padding: "1rem" }}>
-                  <div style={{ fontWeight: 700, fontSize: "0.73rem", color: clr, marginBottom: "0.65rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{label}</div>
-                  {items.map((item, j) => <div key={j} style={{ display: "flex", gap: "0.4rem", marginBottom: "0.4rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.7)" }}><span style={{ color: clr, flexShrink: 0 }}>•</span>{item}</div>)}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ fontWeight: 700, fontSize: "0.73rem", color: "rgba(255,255,255,0.35)", marginBottom: "0.75rem", textTransform: "uppercase" }}>{vt.rawAnalysis}</div>
-          {results.slice(0, 4).map((r, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 9, padding: "0.75rem", marginBottom: "0.5rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.74rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.35rem" }}>{i + 1}. {r.title}</div>
-              <DarkMD text={r.content} />
-            </div>
-          ))}
-        </div>
-        <button onClick={() => { setStep(0); setResults([]); setScore(null); setForm({ idea: "", industry: "", price: "", budget: "" }); }} style={{ marginTop: "1.25rem", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "0.6rem 1.4rem", fontWeight: 600, fontSize: "0.84rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{vt.restart}</button>
       </div>
-    )}
-  </div>
-</div>
-```
-
-);
+    </div>
+  );
 }
+
 
 // ── LEARN HUB ──
 
 // ── LEARN HUB DATA ──
 const LEARN_QUOTES = [
-{ text: “The biggest risk is not taking any risk.”, author: “Mark Zuckerberg”, role: “Founder, Meta”, emoji: “💙” },
-{ text: “I knew that if I failed I wouldn’t regret that, but I might regret not trying.”, author: “Jeff Bezos”, role: “Founder, Amazon”, emoji: “📦” },
-{ text: “It’s fine to celebrate success but it is more important to learn from failure.”, author: “Bill Gates”, role: “Co-Founder, Microsoft”, emoji: “💻” },
-{ text: “Failure is simply the opportunity to begin again, more intelligently.”, author: “Henry Ford”, role: “Founder, Ford Motor”, emoji: “🚗” },
-{ text: “The way to get started is to quit talking and begin doing.”, author: “Walt Disney”, role: “Founder, Disney”, emoji: “🎬” },
-{ text: “If you are not embarrassed by the first version of your product, you launched too late.”, author: “Reid Hoffman”, role: “Co-Founder, LinkedIn”, emoji: “🔗” },
-{ text: “Chase the vision, not the money. The money will end up following you.”, author: “Tony Hsieh”, role: “Founder, Zappos”, emoji: “👟” },
-{ text: “Ideas are easy. Implementation is hard.”, author: “Guy Kawasaki”, role: “Investor & Author”, emoji: “💡” },
+  { text: "The biggest risk is not taking any risk.", author: "Mark Zuckerberg", role: "Founder, Meta", emoji: "💙" },
+  { text: "I knew that if I failed I wouldn`t regret that, but I might regret not trying.", author: "Jeff Bezos", role: "Founder, Amazon", emoji: "📦" },
+  { text: "It`s fine to celebrate success but it is more important to learn from failure.", author: "Bill Gates", role: "Co-Founder, Microsoft", emoji: "💻" },
+  { text: "Failure is simply the opportunity to begin again, more intelligently.", author: "Henry Ford", role: "Founder, Ford Motor", emoji: "🚗" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney", role: "Founder, Disney", emoji: "🎬" },
+  { text: "If you are not embarrassed by the first version of your product, you launched too late.", author: "Reid Hoffman", role: "Co-Founder, LinkedIn", emoji: "🔗" },
+  { text: "Chase the vision, not the money. The money will end up following you.", author: "Tony Hsieh", role: "Founder, Zappos", emoji: "👟" },
+  { text: "Ideas are easy. Implementation is hard.", author: "Guy Kawasaki", role: "Investor & Author", emoji: "💡" },
 ];
 
 const LEARN_GLOSSARY = [
-{ term: “MVP”, full: “Minimum Viable Product”, emoji: “🛠️”, desc: “The simplest version of your product with just enough features to test with real users.”, example: “Dropbox launched with just a demo video. Got 75,000 signups before building anything.” },
-{ term: “PMF”, full: “Product-Market Fit”, emoji: “🎯”, desc: “When your product genuinely solves a real problem and people love it enough to pay and tell others.”, example: “WhatsApp had PMF when users got upset if it went down for 5 minutes.” },
-{ term: “Pitch Deck”, full: “Investor Presentation”, emoji: “📊”, desc: “A 10-15 slide presentation showing investors your problem, solution, market size, team, and funding ask.”, example: “Airbnb’s 2008 pitch deck raised $600k at a $2.5M valuation. It is publicly available online.” },
-{ term: “VC”, full: “Venture Capital”, emoji: “💰”, desc: “Professional investors who give money to startups in exchange for equity. They expect 10x returns.”, example: “Sequoia invested $60M in WhatsApp. When Facebook bought it for $19B they made $3B.” },
-{ term: “Angel Investor”, full: “Angel Investor”, emoji: “😇”, desc: “A wealthy individual who invests their own money in early-stage startups. Less formal than VCs.”, example: “Google’s first investor Andy Bechtolsheim wrote a $100k cheque before Google was even a company.” },
-{ term: “Runway”, full: “Financial Runway”, emoji: “✈️”, desc: “How many months your startup can survive before running out of money. Cash divided by monthly burn.”, example: “If you have $120,000 and spend $10,000 per month, your runway is 12 months.” },
-{ term: “Burn Rate”, full: “Monthly Spend”, emoji: “🔥”, desc: “How much money your startup spends per month. High burn with low revenue means danger.”, example: “Fast.co burned $10M per month with only $600k revenue. They shut down in 2022.” },
-{ term: “Equity”, full: “Ownership Stake”, emoji: “📈”, desc: “The percentage of a company you own. When you take investment you give away equity for cash.”, example: “If your company is worth $1M and you give 10% equity for $100k, you sold 10% of your business.” },
-{ term: “Pivot”, full: “Change Direction”, emoji: “🔄”, desc: “Changing your product or business model based on what you have learned. Not failure — smart adaptation.”, example: “Instagram started as Burbn (check-in app). They pivoted to photos and became a $1B company.” },
-{ term: “Bootstrap”, full: “Self-Funded Growth”, emoji: “👢”, desc: “Building a company using only your own money and revenue — no investors. Slower but you keep control.”, example: “Mailchimp bootstrapped for 12 years before any investment. It sold for $12B.” },
-{ term: “TAM”, full: “Total Addressable Market”, emoji: “🌍”, desc: “The total revenue opportunity if you captured 100% of your market. Used to show investors how big the prize is.”, example: “Global food delivery TAM is $1.4 trillion. Your city’s TAM is $50M.” },
-{ term: “CAC”, full: “Customer Acquisition Cost”, emoji: “🧲”, desc: “How much it costs to get one new paying customer through marketing and sales.”, example: “If you spend $1,000 on ads and get 10 customers, your CAC is $100.” },
-{ term: “LTV”, full: “Customer Lifetime Value”, emoji: “💎”, desc: “Total revenue a customer generates over their entire time with your business.”, example: “Customer pays $20 per month and stays 2 years: LTV = $480.” },
-{ term: “Vesting”, full: “Equity Schedule”, emoji: “⏳”, desc: “A schedule for when founders and employees actually own their equity. Protects against early departures.”, example: “4 years vesting, 1-year cliff: someone who leaves after 6 months gets zero equity.” },
-{ term: “Churn”, full: “Customer Loss Rate”, emoji: “🚪”, desc: “The percentage of customers who stop using your product each month. High churn kills growth.”, example: “100 customers, lose 5 per month = 5% monthly churn = you lose half your customers every year.” },
-{ term: “Due Diligence”, full: “Investor Verification”, emoji: “🔍”, desc: “How investors verify everything about your startup before writing a cheque — financials, team, claims.”, example: “Frank founder faked 4M users for a $175M acquisition. Due diligence eventually exposed it.” },
-{ term: “Term Sheet”, full: “Investment Agreement”, emoji: “📄”, desc: “A document outlining key investment terms: valuation, equity, board seats, investor rights.”, example: “Never sign a term sheet without a startup lawyer. Some clauses can cost you control of your company.” },
-{ term: “Series A / B / C”, full: “Funding Stages”, emoji: “💼”, desc: “Stages of venture fundraising as the company grows. Seed proves idea. A proves growth. B scales. C dominates.”, example: “Uber raised Seed ($200k), Series A ($11M), B ($37M), C ($258M) — each round proving more traction.” },
+  { term: "MVP", full: "Minimum Viable Product", emoji: "🛠️", desc: "The simplest version of your product with just enough features to test with real users.", example: "Dropbox launched with just a demo video. Got 75,000 signups before building anything." },
+  { term: "PMF", full: "Product-Market Fit", emoji: "🎯", desc: "When your product genuinely solves a real problem and people love it enough to pay and tell others.", example: "WhatsApp had PMF when users got upset if it went down for 5 minutes." },
+  { term: "Pitch Deck", full: "Investor Presentation", emoji: "📊", desc: "A 10-15 slide presentation showing investors your problem, solution, market size, team, and funding ask.", example: "Airbnb`s 2008 pitch deck raised $600k at a $2.5M valuation. It is publicly available online." },
+  { term: "VC", full: "Venture Capital", emoji: "💰", desc: "Professional investors who give money to startups in exchange for equity. They expect 10x returns.", example: "Sequoia invested $60M in WhatsApp. When Facebook bought it for $19B they made $3B." },
+  { term: "Angel Investor", full: "Angel Investor", emoji: "😇", desc: "A wealthy individual who invests their own money in early-stage startups. Less formal than VCs.", example: "Google`s first investor Andy Bechtolsheim wrote a $100k cheque before Google was even a company." },
+  { term: "Runway", full: "Financial Runway", emoji: "✈️", desc: "How many months your startup can survive before running out of money. Cash divided by monthly burn.", example: "If you have $120,000 and spend $10,000 per month, your runway is 12 months." },
+  { term: "Burn Rate", full: "Monthly Spend", emoji: "🔥", desc: "How much money your startup spends per month. High burn with low revenue means danger.", example: "Fast.co burned $10M per month with only $600k revenue. They shut down in 2022." },
+  { term: "Equity", full: "Ownership Stake", emoji: "📈", desc: "The percentage of a company you own. When you take investment you give away equity for cash.", example: "If your company is worth $1M and you give 10% equity for $100k, you sold 10% of your business." },
+  { term: "Pivot", full: "Change Direction", emoji: "🔄", desc: "Changing your product or business model based on what you have learned. Not failure — smart adaptation.", example: "Instagram started as Burbn (check-in app). They pivoted to photos and became a $1B company." },
+  { term: "Bootstrap", full: "Self-Funded Growth", emoji: "👢", desc: "Building a company using only your own money and revenue — no investors. Slower but you keep control.", example: "Mailchimp bootstrapped for 12 years before any investment. It sold for $12B." },
+  { term: "TAM", full: "Total Addressable Market", emoji: "🌍", desc: "The total revenue opportunity if you captured 100% of your market. Used to show investors how big the prize is.", example: "Global food delivery TAM is $1.4 trillion. Your city`s TAM is $50M." },
+  { term: "CAC", full: "Customer Acquisition Cost", emoji: "🧲", desc: "How much it costs to get one new paying customer through marketing and sales.", example: "If you spend $1,000 on ads and get 10 customers, your CAC is $100." },
+  { term: "LTV", full: "Customer Lifetime Value", emoji: "💎", desc: "Total revenue a customer generates over their entire time with your business.", example: "Customer pays $20 per month and stays 2 years: LTV = $480." },
+  { term: "Vesting", full: "Equity Schedule", emoji: "⏳", desc: "A schedule for when founders and employees actually own their equity. Protects against early departures.", example: "4 years vesting, 1-year cliff: someone who leaves after 6 months gets zero equity." },
+  { term: "Churn", full: "Customer Loss Rate", emoji: "🚪", desc: "The percentage of customers who stop using your product each month. High churn kills growth.", example: "100 customers, lose 5 per month = 5% monthly churn = you lose half your customers every year." },
+  { term: "Due Diligence", full: "Investor Verification", emoji: "🔍", desc: "How investors verify everything about your startup before writing a cheque — financials, team, claims.", example: "Frank founder faked 4M users for a $175M acquisition. Due diligence eventually exposed it." },
+  { term: "Term Sheet", full: "Investment Agreement", emoji: "📄", desc: "A document outlining key investment terms: valuation, equity, board seats, investor rights.", example: "Never sign a term sheet without a startup lawyer. Some clauses can cost you control of your company." },
+  { term: "Series A / B / C", full: "Funding Stages", emoji: "💼", desc: "Stages of venture fundraising as the company grows. Seed proves idea. A proves growth. B scales. C dominates.", example: "Uber raised Seed ($200k), Series A ($11M), B ($37M), C ($258M) — each round proving more traction." },
 ];
 
 const LEARN_LESSONS = [
-{ n: “01”, title: “Validate Before You Build”, icon: “🧪”, color: “#8b5cf6”, desc: “Talk to 20 potential customers before writing a single line of code. If 5 people pre-pay — you have a business.”, action: “This week: Interview 5 people. Ask how they currently solve the problem and how much they would pay to fix it.” },
-{ n: “02”, title: “Start With the Problem”, icon: “🎯”, color: “#ef4444”, desc: “The best startups start with a painful problem they deeply understand — usually one they personally experienced.”, action: “Write: The specific problem I solve is ___ for ___ people who currently solve it by ___.” },
-{ n: “03”, title: “Revenue Before Investment”, icon: “💰”, color: “#22c55e”, desc: “One paying customer on day 1 is worth more than 6 months of investor meetings. Revenue validates the idea.”, action: “Before pitching investors: Can I charge $1 for this today? If not — you do not have a business yet.” },
-{ n: “04”, title: “Watch Your Unit Economics”, icon: “📊”, color: “#f59e0b”, desc: “If acquiring a customer costs more than they pay you, you will run out of money no matter how fast you grow.”, action: “Calculate: How much does one customer cost? How much do they pay over their lifetime? LTV must be 3x CAC.” },
-{ n: “05”, title: “Hire Slow, Fire Fast”, icon: “👥”, color: “#06b6d4”, desc: “Most startups hire too fast. One great co-founder beats five average employees. Hire when revenue forces you to.”, action: “Before every hire ask: Will this person 10x my revenue? If not — can I outsource it instead?” },
-{ n: “06”, title: “Keep It Simple Until It Works”, icon: “⚡”, color: “#ec4899”, desc: “A simple product that works beats a complex product that almost works. Start with one thing done perfectly.”, action: “Remove features. What is the ONE thing your product must do brilliantly? Build that. Add the rest later.” },
+  { n: "01", title: "Validate Before You Build", icon: "🧪", color: "#8b5cf6", desc: "Talk to 20 potential customers before writing a single line of code. If 5 people pre-pay — you have a business.", action: "This week: Interview 5 people. Ask how they currently solve the problem and how much they would pay to fix it." },
+  { n: "02", title: "Start With the Problem", icon: "🎯", color: "#ef4444", desc: "The best startups start with a painful problem they deeply understand — usually one they personally experienced.", action: "Write: The specific problem I solve is ___ for ___ people who currently solve it by ___." },
+  { n: "03", title: "Revenue Before Investment", icon: "💰", color: "#22c55e", desc: "One paying customer on day 1 is worth more than 6 months of investor meetings. Revenue validates the idea.", action: "Before pitching investors: Can I charge $1 for this today? If not — you do not have a business yet." },
+  { n: "04", title: "Watch Your Unit Economics", icon: "📊", color: "#f59e0b", desc: "If acquiring a customer costs more than they pay you, you will run out of money no matter how fast you grow.", action: "Calculate: How much does one customer cost? How much do they pay over their lifetime? LTV must be 3x CAC." },
+  { n: "05", title: "Hire Slow, Fire Fast", icon: "👥", color: "#06b6d4", desc: "Most startups hire too fast. One great co-founder beats five average employees. Hire when revenue forces you to.", action: "Before every hire ask: Will this person 10x my revenue? If not — can I outsource it instead?" },
+  { n: "06", title: "Keep It Simple Until It Works", icon: "⚡", color: "#ec4899", desc: "A simple product that works beats a complex product that almost works. Start with one thing done perfectly.", action: "Remove features. What is the ONE thing your product must do brilliantly? Build that. Add the rest later." },
 ];
 
 const LEARN_RESOURCES = [
-{ title: “The Lean Startup”, type: “📚 Book”, author: “Eric Ries”, desc: “The bible of startup thinking. Build-Measure-Learn.”, url: “https://amazon.co.uk/s?k=lean+startup” },
-{ title: “Zero to One”, type: “📚 Book”, author: “Peter Thiel”, desc: “Why the best startups build monopolies, not compete.”, url: “https://amazon.co.uk/s?k=zero+to+one+thiel” },
-{ title: “The Mom Test”, type: “📚 Book”, author: “Rob Fitzpatrick”, desc: “How to ask customers the right questions.”, url: “https://amazon.co.uk/s?k=mom+test+fitzpatrick” },
-{ title: “Y Combinator”, type: “📺 YouTube”, author: “YC Startup School”, desc: “Best free startup education in the world.”, url: “https://youtube.com/@ycombinator” },
-{ title: “Alex Hormozi”, type: “📺 YouTube”, author: “Business growth”, desc: “Practical no-fluff business advice.”, url: “https://youtube.com/@AlexHormozi” },
-{ title: “Garry Tan”, type: “📺 YouTube”, author: “YC CEO”, desc: “Fundraising, hiring, founder mindset.”, url: “https://youtube.com/@GarryTan” },
-{ title: “Canva”, type: “🌐 Tool”, author: “Free”, desc: “Make pitch decks and presentations.”, url: “https://canva.com” },
-{ title: “Notion”, type: “🌐 Tool”, author: “Free”, desc: “Business plans, notes, team workspace.”, url: “https://notion.so” },
-{ title: “Google Trends”, type: “🌐 Tool”, author: “Free”, desc: “Check if interest in your idea is growing.”, url: “https://trends.google.com” },
+  { title: "The Lean Startup", type: "📚 Book", author: "Eric Ries", desc: "The bible of startup thinking. Build-Measure-Learn.", url: "https://amazon.co.uk/s?k=lean+startup" },
+  { title: "Zero to One", type: "📚 Book", author: "Peter Thiel", desc: "Why the best startups build monopolies, not compete.", url: "https://amazon.co.uk/s?k=zero+to+one+thiel" },
+  { title: "The Mom Test", type: "📚 Book", author: "Rob Fitzpatrick", desc: "How to ask customers the right questions.", url: "https://amazon.co.uk/s?k=mom+test+fitzpatrick" },
+  { title: "Y Combinator", type: "📺 YouTube", author: "YC Startup School", desc: "Best free startup education in the world.", url: "https://youtube.com/@ycombinator" },
+  { title: "Alex Hormozi", type: "📺 YouTube", author: "Business growth", desc: "Practical no-fluff business advice.", url: "https://youtube.com/@AlexHormozi" },
+  { title: "Garry Tan", type: "📺 YouTube", author: "YC CEO", desc: "Fundraising, hiring, founder mindset.", url: "https://youtube.com/@GarryTan" },
+  { title: "Canva", type: "🌐 Tool", author: "Free", desc: "Make pitch decks and presentations.", url: "https://canva.com" },
+  { title: "Notion", type: "🌐 Tool", author: "Free", desc: "Business plans, notes, team workspace.", url: "https://notion.so" },
+  { title: "Google Trends", type: "🌐 Tool", author: "Free", desc: "Check if interest in your idea is growing.", url: "https://trends.google.com" },
 ];
 
 // ── LEARN HUB PAGE ──
 function LearnHub({ t }) {
-const [qIdx, setQIdx] = useState(0);
-const [openGloss, setOpenGloss] = useState(null);
-const [search, setSearch] = useState(””);
-const [openLesson, setOpenLesson] = useState(null);
+  const [qIdx, setQIdx] = useState(0);
+  const [openGloss, setOpenGloss] = useState(null);
+  const [search, setSearch] = useState("");
+  const [openLesson, setOpenLesson] = useState(null);
 
-useEffect(() => {
-const iv = setInterval(() => setQIdx(i => (i + 1) % LEARN_QUOTES.length), 5000);
-return () => clearInterval(iv);
-}, []);
+  useEffect(() => {
+    const iv = setInterval(() => setQIdx(i => (i + 1) % LEARN_QUOTES.length), 5000);
+    return () => clearInterval(iv);
+  }, []);
 
-const q = LEARN_QUOTES[qIdx];
-const filtered = LEARN_GLOSSARY.filter(g =>
-!search || g.term.toLowerCase().includes(search.toLowerCase()) || g.full.toLowerCase().includes(search.toLowerCase())
-);
+  const q = LEARN_QUOTES[qIdx];
+  const filtered = LEARN_GLOSSARY.filter(g =>
+    !search || g.term.toLowerCase().includes(search.toLowerCase()) || g.full.toLowerCase().includes(search.toLowerCase())
+  );
 
-return (
-<div style={{ minHeight: “100vh”, background: “#f8faf8” }}>
+  return (
+    <div style={{ minHeight: "100vh", background: "#f8faf8" }}>
 
-```
-  {/* Hero */}
-  <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3.5rem 1.5rem", textAlign: "center" }}>
-    <div style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#7ffba0", fontSize: "0.72rem", fontWeight: 700, padding: "0.28rem 1rem", borderRadius: 100, marginBottom: "1rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>📚 Startup School</div>
-    <h1 style={{ fontSize: "clamp(1.7rem,4vw,2.6rem)", fontWeight: 800, color: "#fff", marginBottom: "0.6rem", lineHeight: 1.2 }}>Everything You Need to Know<br /><span style={{ color: "#7ffba0" }}>Before Starting a Business</span></h1>
-    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", maxWidth: 460, margin: "0 auto" }}>Glossary · Billionaire Wisdom · Core Lessons · Books · Tools</p>
-  </div>
+      {/* Hero */}
+      <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3.5rem 1.5rem", textAlign: "center" }}>
+        <div style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#7ffba0", fontSize: "0.72rem", fontWeight: 700, padding: "0.28rem 1rem", borderRadius: 100, marginBottom: "1rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>📚 Startup School</div>
+        <h1 style={{ fontSize: "clamp(1.7rem,4vw,2.6rem)", fontWeight: 800, color: "#fff", marginBottom: "0.6rem", lineHeight: 1.2 }}>Everything You Need to Know<br /><span style={{ color: "#7ffba0" }}>Before Starting a Business</span></h1>
+        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", maxWidth: 460, margin: "0 auto" }}>Glossary · Billionaire Wisdom · Core Lessons · Books · Tools</p>
+      </div>
 
-  {/* Quote Carousel */}
-  <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "2.5rem 1.5rem" }}>
-    <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
-      <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.3)", marginBottom: "1.25rem" }}>💬 Wisdom from the World's Greatest Founders</div>
-      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 16, padding: "2rem 1.75rem", minHeight: 160, display: "flex", flexDirection: "column", justifyContent: "center", animation: "fadeUp 0.4s ease" }}>
-        <p style={{ fontSize: "clamp(0.9rem,2vw,1.1rem)", color: "#fff", lineHeight: 1.7, marginBottom: "1.25rem", fontStyle: "italic" }}>"{q.text}"</p>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.7rem", justifyContent: "center" }}>
-          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem" }}>{q.emoji}</div>
-          <div style={{ textAlign: "left" }}>
-            <div style={{ fontWeight: 700, color: "#fff", fontSize: "0.85rem" }}>{q.author}</div>
-            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>{q.role}</div>
+      {/* Quote Carousel */}
+      <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "2.5rem 1.5rem" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.3)", marginBottom: "1.25rem" }}>💬 Wisdom from the World`s Greatest Founders</div>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 16, padding: "2rem 1.75rem", minHeight: 160, display: "flex", flexDirection: "column", justifyContent: "center", animation: "fadeUp 0.4s ease" }}>
+            <p style={{ fontSize: "clamp(0.9rem,2vw,1.1rem)", color: "#fff", lineHeight: 1.7, marginBottom: "1.25rem", fontStyle: "italic" }}>"{q.text}"</p>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.7rem", justifyContent: "center" }}>
+              <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem" }}>{q.emoji}</div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontWeight: 700, color: "#fff", fontSize: "0.85rem" }}>{q.author}</div>
+                <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>{q.role}</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "0.4rem", justifyContent: "center", marginTop: "0.85rem" }}>
+            {LEARN_QUOTES.map((_, i) => (
+              <div key={i} onClick={() => setQIdx(i)} style={{ width: i === qIdx ? 18 : 7, height: 7, borderRadius: 100, background: i === qIdx ? "#a78bfa" : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "all 0.3s" }} />
+            ))}
           </div>
         </div>
       </div>
-      <div style={{ display: "flex", gap: "0.4rem", justifyContent: "center", marginTop: "0.85rem" }}>
-        {LEARN_QUOTES.map((_, i) => (
-          <div key={i} onClick={() => setQIdx(i)} style={{ width: i === qIdx ? 18 : 7, height: 7, borderRadius: 100, background: i === qIdx ? "#a78bfa" : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "all 0.3s" }} />
-        ))}
-      </div>
-    </div>
-  </div>
 
-  {/* 6 Lessons */}
-  <div style={{ padding: "3rem 1.5rem", background: "#fff" }}>
-    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.35rem" }}>📖 6 Lessons Every Founder Must Learn</h2>
-        <p style={{ color: "#7a9a7a", fontSize: "0.86rem" }}>Before spending a single dollar — understand these</p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(310px,1fr))", gap: "1rem" }}>
-        {LEARN_LESSONS.map((l, i) => (
-          <div key={i} onClick={() => setOpenLesson(openLesson === i ? null : i)}
-            style={{ background: "#f8faf8", border: "1px solid #dceadc", borderLeft: "4px solid " + l.color, borderRadius: 12, padding: "1.25rem", cursor: "pointer", transition: "box-shadow 0.2s" }}
-            onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.07)"}
-            onMouseLeave={e => e.currentTarget.style.boxShadow = "none"}>
-            <div style={{ display: "flex", gap: "0.85rem", alignItems: "flex-start", marginBottom: "0.55rem" }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: l.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem", flexShrink: 0 }}>{l.icon}</div>
-              <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 700, color: l.color, textTransform: "uppercase", letterSpacing: "0.07em" }}>Lesson {l.n}</div>
-                <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0d3a1e", lineHeight: 1.3 }}>{l.title}</div>
-              </div>
-            </div>
-            <p style={{ fontSize: "0.82rem", color: "#5a7a5a", lineHeight: 1.6, marginBottom: "0.4rem" }}>{l.desc}</p>
-            {openLesson === i && (
-              <div style={{ marginTop: "0.6rem", padding: "0.65rem 0.85rem", background: l.color + "12", border: "1px solid " + l.color + "30", borderRadius: 8 }}>
-                <div style={{ fontSize: "0.65rem", fontWeight: 700, color: l.color, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.25rem" }}>⚡ Action</div>
-                <p style={{ fontSize: "0.8rem", color: "#1a2e1a", lineHeight: 1.55, margin: 0 }}>{l.action}</p>
-              </div>
-            )}
-            <div style={{ fontSize: "0.7rem", color: l.color, fontWeight: 600, marginTop: "0.4rem" }}>{openLesson === i ? "▲ Hide" : "▼ Show action step"}</div>
+      {/* 6 Lessons */}
+      <div style={{ padding: "3rem 1.5rem", background: "#fff" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.35rem" }}>📖 6 Lessons Every Founder Must Learn</h2>
+            <p style={{ color: "#7a9a7a", fontSize: "0.86rem" }}>Before spending a single dollar — understand these</p>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-
-  {/* Glossary */}
-  <div style={{ padding: "3rem 1.5rem", background: "#f0fdf4" }}>
-    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
-        <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.35rem" }}>🔤 Startup Glossary</h2>
-        <p style={{ color: "#7a9a7a", fontSize: "0.86rem" }}>18 terms every founder must know — with real examples</p>
-      </div>
-      <div style={{ maxWidth: 440, margin: "0 auto 1.5rem" }}>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search: MVP, VC, pivot..." style={{ width: "100%", boxSizing: "border-box", background: "#fff", border: "2px solid #dceadc", borderRadius: 10, padding: "0.7rem 1rem", fontSize: "0.86rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))", gap: "0.75rem" }}>
-        {filtered.map((g, i) => (
-          <div key={i} onClick={() => setOpenGloss(openGloss === i ? null : i)}
-            style={{ background: "#fff", border: "1px solid " + (openGloss === i ? "#1a5c30" : "#dceadc"), borderRadius: 10, padding: "0.9rem 1rem", cursor: "pointer", transition: "border-color 0.15s" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                <span style={{ fontSize: "1.3rem" }}>{g.emoji}</span>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: "0.88rem", color: "#0d3a1e" }}>{g.term}</div>
-                  <div style={{ fontSize: "0.68rem", color: "#7a9a7a" }}>{g.full}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(310px,1fr))", gap: "1rem" }}>
+            {LEARN_LESSONS.map((l, i) => (
+              <div key={i} onClick={() => setOpenLesson(openLesson === i ? null : i)}
+                style={{ background: "#f8faf8", border: "1px solid #dceadc", borderLeft: "4px solid " + l.color, borderRadius: 12, padding: "1.25rem", cursor: "pointer", transition: "box-shadow 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.07)"}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = "none"}>
+                <div style={{ display: "flex", gap: "0.85rem", alignItems: "flex-start", marginBottom: "0.55rem" }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: l.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem", flexShrink: 0 }}>{l.icon}</div>
+                  <div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 700, color: l.color, textTransform: "uppercase", letterSpacing: "0.07em" }}>Lesson {l.n}</div>
+                    <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0d3a1e", lineHeight: 1.3 }}>{l.title}</div>
+                  </div>
                 </div>
+                <p style={{ fontSize: "0.82rem", color: "#5a7a5a", lineHeight: 1.6, marginBottom: "0.4rem" }}>{l.desc}</p>
+                {openLesson === i && (
+                  <div style={{ marginTop: "0.6rem", padding: "0.65rem 0.85rem", background: l.color + "12", border: "1px solid " + l.color + "30", borderRadius: 8 }}>
+                    <div style={{ fontSize: "0.65rem", fontWeight: 700, color: l.color, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.25rem" }}>⚡ Action</div>
+                    <p style={{ fontSize: "0.8rem", color: "#1a2e1a", lineHeight: 1.55, margin: 0 }}>{l.action}</p>
+                  </div>
+                )}
+                <div style={{ fontSize: "0.7rem", color: l.color, fontWeight: 600, marginTop: "0.4rem" }}>{openLesson === i ? "▲ Hide" : "▼ Show action step"}</div>
               </div>
-              <span style={{ fontSize: "0.72rem", color: "#aaa" }}>{openGloss === i ? "▲" : "▼"}</span>
-            </div>
-            {openGloss === i && (
-              <div style={{ marginTop: "0.65rem", animation: "fadeUp 0.2s ease" }}>
-                <p style={{ fontSize: "0.81rem", color: "#5a7a5a", lineHeight: 1.6, marginBottom: "0.55rem" }}>{g.desc}</p>
-                <div style={{ background: "#f0fdf4", border: "1px solid #c8e8cc", borderRadius: 7, padding: "0.5rem 0.7rem" }}>
-                  <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#166534", textTransform: "uppercase", marginBottom: "0.2rem" }}>📌 Real Example</div>
-                  <p style={{ fontSize: "0.77rem", color: "#14532d", lineHeight: 1.5, margin: 0 }}>{g.example}</p>
-                </div>
-              </div>
-            )}
+            ))}
           </div>
-        ))}
+        </div>
+      </div>
+
+      {/* Glossary */}
+      <div style={{ padding: "3rem 1.5rem", background: "#f0fdf4" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.35rem" }}>🔤 Startup Glossary</h2>
+            <p style={{ color: "#7a9a7a", fontSize: "0.86rem" }}>18 terms every founder must know — with real examples</p>
+          </div>
+          <div style={{ maxWidth: 440, margin: "0 auto 1.5rem" }}>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search: MVP, VC, pivot..." style={{ width: "100%", boxSizing: "border-box", background: "#fff", border: "2px solid #dceadc", borderRadius: 10, padding: "0.7rem 1rem", fontSize: "0.86rem", fontFamily: "Inter,sans-serif", outline: "none" }} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))", gap: "0.75rem" }}>
+            {filtered.map((g, i) => (
+              <div key={i} onClick={() => setOpenGloss(openGloss === i ? null : i)}
+                style={{ background: "#fff", border: "1px solid " + (openGloss === i ? "#1a5c30" : "#dceadc"), borderRadius: 10, padding: "0.9rem 1rem", cursor: "pointer", transition: "border-color 0.15s" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                    <span style={{ fontSize: "1.3rem" }}>{g.emoji}</span>
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: "0.88rem", color: "#0d3a1e" }}>{g.term}</div>
+                      <div style={{ fontSize: "0.68rem", color: "#7a9a7a" }}>{g.full}</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: "0.72rem", color: "#aaa" }}>{openGloss === i ? "▲" : "▼"}</span>
+                </div>
+                {openGloss === i && (
+                  <div style={{ marginTop: "0.65rem", animation: "fadeUp 0.2s ease" }}>
+                    <p style={{ fontSize: "0.81rem", color: "#5a7a5a", lineHeight: 1.6, marginBottom: "0.55rem" }}>{g.desc}</p>
+                    <div style={{ background: "#f0fdf4", border: "1px solid #c8e8cc", borderRadius: 7, padding: "0.5rem 0.7rem" }}>
+                      <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#166534", textTransform: "uppercase", marginBottom: "0.2rem" }}>📌 Real Example</div>
+                      <p style={{ fontSize: "0.77rem", color: "#14532d", lineHeight: 1.5, margin: 0 }}>{g.example}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Resources */}
+      <div style={{ padding: "3rem 1.5rem", background: "#fff" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.35rem" }}>🛠️ Free Resources</h2>
+            <p style={{ color: "#7a9a7a", fontSize: "0.86rem" }}>Books, YouTube channels and tools to get you started</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: "0.85rem" }}>
+            {LEARN_RESOURCES.map((r, i) => (
+              <a key={i} href={r.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 11, padding: "1rem 1.1rem", display: "block", transition: "all 0.15s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#1a5c30"; e.currentTarget.style.boxShadow = "0 3px 14px rgba(26,92,48,0.09)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.boxShadow = "none"; }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.3rem" }}>
+                  <span style={{ fontSize: "0.65rem", fontWeight: 700, background: "#e8f5eb", color: "#1a5c30", padding: "0.1rem 0.5rem", borderRadius: 100, border: "1px solid #b8d8bc" }}>{r.type}</span>
+                  <span style={{ color: "#1a5c30", fontWeight: 700, fontSize: "0.8rem" }}>↗</span>
+                </div>
+                <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0d3a1e", marginBottom: "0.15rem" }}>{r.title}</div>
+                <div style={{ fontSize: "0.7rem", color: "#aaa", marginBottom: "0.25rem" }}>{r.author}</div>
+                <div style={{ fontSize: "0.78rem", color: "#7a9a7a", lineHeight: 1.5 }}>{r.desc}</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "2.5rem 1.5rem", textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>Ready? Test Your Idea Now</h2>
+        <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: "1.25rem", fontSize: "0.88rem" }}>Use the AI Validator to check your business idea against the Uzbekistan market.</p>
+        <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
+          <a href="#" onClick={e => { e.preventDefault(); window.dispatchEvent(new CustomEvent("nav", {detail:"validate"})); }} style={{ textDecoration: "none", background: "#fff", color: "#0d3a1e", borderRadius: 8, padding: "0.65rem 1.4rem", fontWeight: 700, fontSize: "0.88rem", fontFamily: "Inter,sans-serif" }}>🧪 Validate My Idea →</a>
+          <a href="#" onClick={e => { e.preventDefault(); window.dispatchEvent(new CustomEvent("nav", {detail:"graveyard"})); }} style={{ textDecoration: "none", background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.3)", borderRadius: 8, padding: "0.65rem 1.4rem", fontWeight: 600, fontSize: "0.88rem", fontFamily: "Inter,sans-serif" }}>🪦 Browse Graveyard →</a>
+        </div>
       </div>
     </div>
-  </div>
-
-  {/* Resources */}
-  <div style={{ padding: "3rem 1.5rem", background: "#fff" }}>
-    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.35rem" }}>🛠️ Free Resources</h2>
-        <p style={{ color: "#7a9a7a", fontSize: "0.86rem" }}>Books, YouTube channels and tools to get you started</p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: "0.85rem" }}>
-        {LEARN_RESOURCES.map((r, i) => (
-          <a key={i} href={r.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 11, padding: "1rem 1.1rem", display: "block", transition: "all 0.15s" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = "#1a5c30"; e.currentTarget.style.boxShadow = "0 3px 14px rgba(26,92,48,0.09)"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.boxShadow = "none"; }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.3rem" }}>
-              <span style={{ fontSize: "0.65rem", fontWeight: 700, background: "#e8f5eb", color: "#1a5c30", padding: "0.1rem 0.5rem", borderRadius: 100, border: "1px solid #b8d8bc" }}>{r.type}</span>
-              <span style={{ color: "#1a5c30", fontWeight: 700, fontSize: "0.8rem" }}>↗</span>
-            </div>
-            <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0d3a1e", marginBottom: "0.15rem" }}>{r.title}</div>
-            <div style={{ fontSize: "0.7rem", color: "#aaa", marginBottom: "0.25rem" }}>{r.author}</div>
-            <div style={{ fontSize: "0.78rem", color: "#7a9a7a", lineHeight: 1.5 }}>{r.desc}</div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </div>
-
-  {/* CTA */}
-  <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "2.5rem 1.5rem", textAlign: "center" }}>
-    <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>Ready? Test Your Idea Now</h2>
-    <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: "1.25rem", fontSize: "0.88rem" }}>Use the AI Validator to check your business idea against the Uzbekistan market.</p>
-    <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
-      <a href="#" onClick={e => { e.preventDefault(); window.dispatchEvent(new CustomEvent("nav", {detail:"validate"})); }} style={{ textDecoration: "none", background: "#fff", color: "#0d3a1e", borderRadius: 8, padding: "0.65rem 1.4rem", fontWeight: 700, fontSize: "0.88rem", fontFamily: "Inter,sans-serif" }}>🧪 Validate My Idea →</a>
-      <a href="#" onClick={e => { e.preventDefault(); window.dispatchEvent(new CustomEvent("nav", {detail:"graveyard"})); }} style={{ textDecoration: "none", background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.3)", borderRadius: 8, padding: "0.65rem 1.4rem", fontWeight: 600, fontSize: "0.88rem", fontFamily: "Inter,sans-serif" }}>🪦 Browse Graveyard →</a>
-    </div>
-  </div>
-</div>
-```
-
-);
+  );
 }
 
 // ── IT PARK AD ──
 function ItParkAd({ t }) {
-return (
-<div style={{ background: “linear-gradient(135deg,#0a2e1a,#1a5c30)”, borderRadius: 12, padding: “1.25rem”, marginBottom: “1rem”, position: “relative”, overflow: “hidden” }}>
-<div style={{ position: “relative”, zIndex: 1 }}>
-<div style={{ fontSize: “0.6rem”, color: “rgba(255,255,255,0.4)”, fontWeight: 600, textTransform: “uppercase”, letterSpacing: “0.08em”, marginBottom: “0.5rem” }}>{t.blog.sponsoredBy}</div>
-<div style={{ fontSize: “1.1rem”, fontWeight: 800, color: “#fff”, marginBottom: “0.4rem” }}>IT Park 🇺🇿</div>
-<p style={{ fontSize: “0.75rem”, color: “rgba(255,255,255,0.7)”, lineHeight: 1.5, marginBottom: “0.85rem” }}>{t.blog.itparkAd}</p>
-<a href=“https://it-park.uz” target=”_blank” rel=“noreferrer” style={{ display: “inline-block”, background: “#fff”, color: GREEN, fontSize: “0.75rem”, fontWeight: 700, padding: “0.4rem 0.9rem”, borderRadius: 6, textDecoration: “none” }}>{t.blog.itparkCta}</a>
-</div>
-</div>
-);
+  return (
+    <div style={{ background: "linear-gradient(135deg,#0a2e1a,#1a5c30)", borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>{t.blog.sponsoredBy}</div>
+        <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#fff", marginBottom: "0.4rem" }}>IT Park 🇺🇿</div>
+        <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5, marginBottom: "0.85rem" }}>{t.blog.itparkAd}</p>
+        <a href="https://it-park.uz" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "#fff", color: GREEN, fontSize: "0.75rem", fontWeight: 700, padding: "0.4rem 0.9rem", borderRadius: 6, textDecoration: "none" }}>{t.blog.itparkCta}</a>
+      </div>
+    </div>
+  );
 }
 
 // ── COMPETITIONS ──
 function Competitions({ t }) {
-const getDaysLeft = d => { const days = Math.ceil((new Date(d) - new Date()) / 86400000); return days > 0 ? days : 0; };
-return (
-<div style={{ background: “#fff”, border: “1px solid #dceadc”, borderRadius: 12, padding: “1rem” }}>
-<div style={sideTitle()}>{t.blog.competitions}</div>
-{STARTUP_COMPETITIONS.map((c, i) => {
-const days = getDaysLeft(c.deadline);
-return (
-<div key={i} style={{ paddingBottom: “0.75rem”, marginBottom: “0.75rem”, borderBottom: i < STARTUP_COMPETITIONS.length - 1 ? “1px solid #f0f5f0” : “none” }}>
-<div style={{ fontWeight: 700, fontSize: “0.8rem”, color: DARK, marginBottom: “0.2rem” }}>{c.name}</div>
-<div style={{ display: “flex”, justifyContent: “space-between”, marginBottom: “0.3rem” }}>
-<span style={{ fontSize: “0.71rem”, color: “#aaa” }}>{c.location}</span>
-<span style={{ fontSize: “0.71rem”, fontWeight: 700, color: “#22743c” }}>{c.prize}</span>
-</div>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “center” }}>
-<span style={{ fontSize: “0.68rem”, color: days <= 14 ? “#ef4444” : “#aaa”, fontWeight: days <= 14 ? 700 : 400 }}>{days <= 14 ? “🔥 “ : “📅 “}{days} {t.blog.daysLeft}</span>
-<a href={c.url} target=”_blank” rel=“noreferrer” style={{ fontSize: “0.68rem”, fontWeight: 700, color: GREEN, textDecoration: “none”, background: “#e8f5eb”, padding: “0.15rem 0.5rem”, borderRadius: 4 }}>{t.blog.applyNow}</a>
-</div>
-</div>
-);
-})}
-</div>
-);
+  const getDaysLeft = d => { const days = Math.ceil((new Date(d) - new Date()) / 86400000); return days > 0 ? days : 0; };
+  return (
+    <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 12, padding: "1rem" }}>
+      <div style={sideTitle()}>{t.blog.competitions}</div>
+      {STARTUP_COMPETITIONS.map((c, i) => {
+        const days = getDaysLeft(c.deadline);
+        return (
+          <div key={i} style={{ paddingBottom: "0.75rem", marginBottom: "0.75rem", borderBottom: i < STARTUP_COMPETITIONS.length - 1 ? "1px solid #f0f5f0" : "none" }}>
+            <div style={{ fontWeight: 700, fontSize: "0.8rem", color: DARK, marginBottom: "0.2rem" }}>{c.name}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
+              <span style={{ fontSize: "0.71rem", color: "#aaa" }}>{c.location}</span>
+              <span style={{ fontSize: "0.71rem", fontWeight: 700, color: "#22743c" }}>{c.prize}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "0.68rem", color: days <= 14 ? "#ef4444" : "#aaa", fontWeight: days <= 14 ? 700 : 400 }}>{days <= 14 ? "🔥 " : "📅 "}{days} {t.blog.daysLeft}</span>
+              <a href={c.url} target="_blank" rel="noreferrer" style={{ fontSize: "0.68rem", fontWeight: 700, color: GREEN, textDecoration: "none", background: "#e8f5eb", padding: "0.15rem 0.5rem", borderRadius: 4 }}>{t.blog.applyNow}</a>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 // ── SOLUTION PROVIDERS ──
 function SolutionProviders({ t, industry }) {
-const providers = SOLUTION_PROVIDERS[industry] || SOLUTION_PROVIDERS[“Other”];
-return (
-<div style={{ marginTop: “1.25rem”, paddingTop: “1.25rem”, borderTop: “1px solid #f0f0f0” }}>
-<div style={{ fontSize: “0.82rem”, fontWeight: 700, color: “#1a2e1a”, marginBottom: “0.85rem” }}>{t.detail.providers}</div>
-{providers.map((p, i) => (
-<div key={i} style={{ background: “linear-gradient(135deg,#f0fdf4,#f8faf8)”, border: “1px solid #c8e6cc”, borderRadius: 10, padding: “0.85rem 1rem”, display: “flex”, gap: “0.85rem”, alignItems: “flex-start”, marginBottom: “0.6rem” }}>
-<div style={{ width: 36, height: 36, borderRadius: 9, background: GREEN, display: “flex”, alignItems: “center”, justifyContent: “center”, fontSize: “1.1rem”, flexShrink: 0 }}>{p.icon}</div>
-<div style={{ flex: 1 }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “center”, marginBottom: “0.2rem” }}>
-<span style={{ fontWeight: 700, fontSize: “0.82rem”, color: DARK }}>{p.name}</span>
-<span style={{ fontSize: “0.65rem”, background: “#e8f5eb”, color: GREEN, border: “1px solid #b8d8bc”, borderRadius: 100, padding: “0.1rem 0.5rem”, fontWeight: 600 }}>{p.role}</span>
-</div>
-<p style={{ fontSize: “0.77rem”, color: “#7a9a7a”, lineHeight: 1.5, margin: “0 0 0.3rem” }}>{p.desc}</p>
-<a href={“mailto:” + p.contact} style={{ fontSize: “0.73rem”, color: GREEN, fontWeight: 600, textDecoration: “none” }}>📧 {p.contact}</a>
-</div>
-</div>
-))}
-</div>
-);
+  const providers = SOLUTION_PROVIDERS[industry] || SOLUTION_PROVIDERS["Other"];
+  return (
+    <div style={{ marginTop: "1.25rem", paddingTop: "1.25rem", borderTop: "1px solid #f0f0f0" }}>
+      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a2e1a", marginBottom: "0.85rem" }}>{t.detail.providers}</div>
+      {providers.map((p, i) => (
+        <div key={i} style={{ background: "linear-gradient(135deg,#f0fdf4,#f8faf8)", border: "1px solid #c8e6cc", borderRadius: 10, padding: "0.85rem 1rem", display: "flex", gap: "0.85rem", alignItems: "flex-start", marginBottom: "0.6rem" }}>
+          <div style={{ width: 36, height: 36, borderRadius: 9, background: GREEN, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem", flexShrink: 0 }}>{p.icon}</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.2rem" }}>
+              <span style={{ fontWeight: 700, fontSize: "0.82rem", color: DARK }}>{p.name}</span>
+              <span style={{ fontSize: "0.65rem", background: "#e8f5eb", color: GREEN, border: "1px solid #b8d8bc", borderRadius: 100, padding: "0.1rem 0.5rem", fontWeight: 600 }}>{p.role}</span>
+            </div>
+            <p style={{ fontSize: "0.77rem", color: "#7a9a7a", lineHeight: 1.5, margin: "0 0 0.3rem" }}>{p.desc}</p>
+            <a href={"mailto:" + p.contact} style={{ fontSize: "0.73rem", color: GREEN, fontWeight: 600, textDecoration: "none" }}>📧 {p.contact}</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 // ── REVIEWS ──
 function ReviewSection({ t, problemId, user }) {
-const [reviews, setReviews] = useState([]);
-const [rating, setRating] = useState(5);
-const [body, setBody] = useState(””);
-const [submitting, setSubmitting] = useState(false);
-useEffect(() => { supabase.from(“reviews”).select(”*”).eq(“problem_id”, problemId).order(“created_at”, { ascending: false }).then(({ data }) => { if (data) setReviews(data); }); }, [problemId]);
-const avg = reviews.length ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1) : null;
-const submit = async () => {
-if (!body.trim()) return;
-setSubmitting(true);
-await supabase.from(“reviews”).insert({ problem_id: problemId, user_id: user.id, author: user.user_metadata?.name || user.email, rating, body: body.trim() });
-const { data } = await supabase.from(“reviews”).select(”*”).eq(“problem_id”, problemId).order(“created_at”, { ascending: false });
-if (data) setReviews(data);
-setBody(””); setRating(5); setSubmitting(false);
-};
-return (
-<div style={{ marginTop: “1rem”, paddingTop: “1rem”, borderTop: “1px solid #f0f0f0” }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, marginBottom: “0.75rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.82rem”, color: “#1a2e1a” }}>{t.detail.reviews}</div>
-{avg && <span style={{ fontSize: “0.78rem”, color: “#7a9a7a” }}>{“⭐”.repeat(Math.round(avg))} {avg}/5</span>}
-</div>
-{reviews.length === 0 && <p style={{ fontSize: “0.77rem”, color: “#ccc”, marginBottom: “0.75rem” }}>{t.detail.noReviews}</p>}
-<div style={{ maxHeight: 160, overflowY: “auto”, marginBottom: “0.75rem” }}>
-{reviews.map((r, i) => (
-<div key={i} style={{ background: “#fafafa”, borderRadius: 8, padding: “0.6rem 0.8rem”, marginBottom: “0.5rem”, border: “1px solid #f0f0f0” }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, marginBottom: “0.2rem” }}>
-<span style={{ fontSize: “0.75rem”, fontWeight: 600, color: “#1a2e1a” }}>{r.author}</span>
-<span style={{ fontSize: “0.78rem” }}>{“⭐”.repeat(r.rating)}</span>
-</div>
-<p style={{ fontSize: “0.77rem”, color: “#7a9a7a”, lineHeight: 1.5, margin: 0 }}>{r.body}</p>
-</div>
-))}
-</div>
-{user ? (
-<div>
-<div style={{ display: “flex”, gap: “0.3rem”, marginBottom: “0.5rem” }}>
-{[1, 2, 3, 4, 5].map(n => <button key={n} onClick={() => setRating(n)} style={{ background: “none”, border: “none”, cursor: “pointer”, fontSize: “1.25rem”, filter: n <= rating ? “none” : “grayscale(1) opacity(0.3)” }}>⭐</button>)}
-</div>
-<textarea value={body} onChange={e => setBody(e.target.value)} placeholder={t.detail.reviewPh} style={{ …inp(), minHeight: 60, resize: “vertical”, marginBottom: “0.5rem” }} />
-<button onClick={submit} disabled={submitting} style={{ background: GREEN, color: “#fff”, border: “none”, borderRadius: 6, padding: “0.45rem 1rem”, fontWeight: 600, fontSize: “0.79rem”, cursor: “pointer”, fontFamily: “Inter,sans-serif”, opacity: submitting ? 0.6 : 1 }}>{submitting ? “…” : t.detail.submitReview}</button>
-</div>
-) : <p style={{ fontSize: “0.76rem”, color: “#aaa”, fontStyle: “italic” }}>{t.detail.loginReview}</p>}
-</div>
-);
+  const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(5);
+  const [body, setBody] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  useEffect(() => { supabase.from("reviews").select("*").eq("problem_id", problemId).order("created_at", { ascending: false }).then(({ data }) => { if (data) setReviews(data); }); }, [problemId]);
+  const avg = reviews.length ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1) : null;
+  const submit = async () => {
+    if (!body.trim()) return;
+    setSubmitting(true);
+    await supabase.from("reviews").insert({ problem_id: problemId, user_id: user.id, author: user.user_metadata?.name || user.email, rating, body: body.trim() });
+    const { data } = await supabase.from("reviews").select("*").eq("problem_id", problemId).order("created_at", { ascending: false });
+    if (data) setReviews(data);
+    setBody(""); setRating(5); setSubmitting(false);
+  };
+  return (
+    <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid #f0f0f0" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+        <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#1a2e1a" }}>{t.detail.reviews}</div>
+        {avg && <span style={{ fontSize: "0.78rem", color: "#7a9a7a" }}>{"⭐".repeat(Math.round(avg))} {avg}/5</span>}
+      </div>
+      {reviews.length === 0 && <p style={{ fontSize: "0.77rem", color: "#ccc", marginBottom: "0.75rem" }}>{t.detail.noReviews}</p>}
+      <div style={{ maxHeight: 160, overflowY: "auto", marginBottom: "0.75rem" }}>
+        {reviews.map((r, i) => (
+          <div key={i} style={{ background: "#fafafa", borderRadius: 8, padding: "0.6rem 0.8rem", marginBottom: "0.5rem", border: "1px solid #f0f0f0" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.2rem" }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#1a2e1a" }}>{r.author}</span>
+              <span style={{ fontSize: "0.78rem" }}>{"⭐".repeat(r.rating)}</span>
+            </div>
+            <p style={{ fontSize: "0.77rem", color: "#7a9a7a", lineHeight: 1.5, margin: 0 }}>{r.body}</p>
+          </div>
+        ))}
+      </div>
+      {user ? (
+        <div>
+          <div style={{ display: "flex", gap: "0.3rem", marginBottom: "0.5rem" }}>
+            {[1, 2, 3, 4, 5].map(n => <button key={n} onClick={() => setRating(n)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.25rem", filter: n <= rating ? "none" : "grayscale(1) opacity(0.3)" }}>⭐</button>)}
+          </div>
+          <textarea value={body} onChange={e => setBody(e.target.value)} placeholder={t.detail.reviewPh} style={{ ...inp(), minHeight: 60, resize: "vertical", marginBottom: "0.5rem" }} />
+          <button onClick={submit} disabled={submitting} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.45rem 1rem", fontWeight: 600, fontSize: "0.79rem", cursor: "pointer", fontFamily: "Inter,sans-serif", opacity: submitting ? 0.6 : 1 }}>{submitting ? "..." : t.detail.submitReview}</button>
+        </div>
+      ) : <p style={{ fontSize: "0.76rem", color: "#aaa", fontStyle: "italic" }}>{t.detail.loginReview}</p>}
+    </div>
+  );
 }
 
 // ── AI CHAT ──
 function AIChatWidget({ t, problems }) {
-const [open, setOpen] = useState(false);
-const [messages, setMessages] = useState([{ role: “assistant”, content: t.chat.welcome }]);
-const [input, setInput] = useState(””);
-const [loading, setLoading] = useState(false);
-const endRef = useRef(null);
-useEffect(() => { if (open) endRef.current?.scrollIntoView({ behavior: “smooth” }); }, [messages, open]);
-const send = async () => {
-if (!input.trim() || loading) return;
-const userMsg = input.trim();
-setInput(””);
-setMessages(prev => […prev, { role: “user”, content: userMsg }]);
-setLoading(true);
-const context = problems.slice(0, 6).map(p => “Case: "” + p.title + “" (” + p.industry + “, “ + p.country + “)\nLesson: “ + p.lesson).join(”\n\n”);
-try {
-const text = await callAI(“You are an AI business advisor for MistakeMap. Real cases:\n\n” + context + “\n\nUser: “ + userMsg + “\n\nBe concise and practical. Respond in the user’s language.”);
-setMessages(prev => […prev, { role: “assistant”, content: text || “Sorry, try again.” }]);
-} catch { setMessages(prev => […prev, { role: “assistant”, content: “Connection error.” }]); }
-setLoading(false);
-};
-return (
-<>
-<button onClick={() => setOpen(o => !o)} style={{ position: “fixed”, bottom: “1.5rem”, left: “1.5rem”, width: 52, height: 52, borderRadius: “50%”, background: open ? “#444” : “linear-gradient(135deg,#1a5c30,#22743c)”, color: “#fff”, border: “none”, cursor: “pointer”, fontSize: “1.4rem”, zIndex: 300, boxShadow: “0 4px 20px rgba(26,92,48,0.35)”, display: “flex”, alignItems: “center”, justifyContent: “center” }}>{open ? “✕” : “🤖”}</button>
-{open && (
-<div style={{ position: “fixed”, bottom: “5rem”, left: “1.5rem”, width: “min(360px,calc(100vw - 3rem))”, height: 440, background: “#fff”, borderRadius: 16, border: “1px solid #dceadc”, boxShadow: “0 20px 60px rgba(0,0,0,0.15)”, display: “flex”, flexDirection: “column”, overflow: “hidden”, zIndex: 300, animation: “chatSlide 0.25s ease” }}>
-<div style={{ background: “linear-gradient(135deg,#1a5c30,#22743c)”, padding: “0.85rem 1rem” }}>
-<div style={{ fontWeight: 700, fontSize: “0.88rem”, color: “#fff” }}>🤖 {t.chat.title}</div>
-<div style={{ fontSize: “0.68rem”, color: “rgba(255,255,255,0.6)” }}>Powered by Claude AI</div>
-</div>
-<div style={{ flex: 1, overflowY: “auto”, padding: “0.85rem”, display: “flex”, flexDirection: “column”, gap: “0.6rem” }}>
-{messages.map((m, i) => (
-<div key={i} style={{ display: “flex”, justifyContent: m.role === “user” ? “flex-end” : “flex-start” }}>
-<div style={{ maxWidth: “82%”, padding: “0.5rem 0.8rem”, borderRadius: m.role === “user” ? “12px 12px 3px 12px” : “12px 12px 12px 3px”, background: m.role === “user” ? GREEN : “#f0f7f0”, color: m.role === “user” ? “#fff” : “#1a2e1a”, fontSize: “0.8rem”, lineHeight: 1.5 }}>{m.content}</div>
-</div>
-))}
-{loading && <div style={{ display: “flex” }}><div style={{ padding: “0.5rem 0.8rem”, borderRadius: “12px 12px 12px 3px”, background: “#f0f7f0”, fontSize: “0.8rem”, color: “#aaa”, animation: “pulse 1.2s infinite” }}>{t.chat.thinking}</div></div>}
-<div ref={endRef} />
-</div>
-<div style={{ padding: “0.6rem”, borderTop: “1px solid #f0f0f0”, display: “flex”, gap: “0.4rem” }}>
-<input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === “Enter” && send()} placeholder={t.chat.placeholder} style={{ …inp({ fontSize: “0.8rem” }), flex: 1 }} />
-<button onClick={send} disabled={loading} style={{ background: GREEN, color: “#fff”, border: “none”, borderRadius: 7, padding: “0.5rem 0.85rem”, fontWeight: 600, fontSize: “0.78rem”, cursor: “pointer”, fontFamily: “Inter,sans-serif” }}>{t.chat.send}</button>
-</div>
-</div>
-)}
-</>
-);
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([{ role: "assistant", content: t.chat.welcome }]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const endRef = useRef(null);
+  useEffect(() => { if (open) endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, open]);
+  const send = async () => {
+    if (!input.trim() || loading) return;
+    const userMsg = input.trim();
+    setInput("");
+    setMessages(prev => [...prev, { role: "user", content: userMsg }]);
+    setLoading(true);
+    const context = problems.slice(0, 6).map(p => "Case: \"" + p.title + "\" (" + p.industry + ", " + p.country + ")\nLesson: " + p.lesson).join("\n\n");
+    try {
+      const text = await callAI("You are an AI business advisor for MistakeMap. Real cases:\n\n" + context + "\n\nUser: " + userMsg + "\n\nBe concise and practical. Respond in the user`s language.");
+      setMessages(prev => [...prev, { role: "assistant", content: text || "Sorry, try again." }]);
+    } catch { setMessages(prev => [...prev, { role: "assistant", content: "Connection error." }]); }
+    setLoading(false);
+  };
+  return (
+    <>
+      <button onClick={() => setOpen(o => !o)} style={{ position: "fixed", bottom: "1.5rem", left: "1.5rem", width: 52, height: 52, borderRadius: "50%", background: open ? "#444" : "linear-gradient(135deg,#1a5c30,#22743c)", color: "#fff", border: "none", cursor: "pointer", fontSize: "1.4rem", zIndex: 300, boxShadow: "0 4px 20px rgba(26,92,48,0.35)", display: "flex", alignItems: "center", justifyContent: "center" }}>{open ? "✕" : "🤖"}</button>
+      {open && (
+        <div style={{ position: "fixed", bottom: "5rem", left: "1.5rem", width: "min(360px,calc(100vw - 3rem))", height: 440, background: "#fff", borderRadius: 16, border: "1px solid #dceadc", boxShadow: "0 20px 60px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", overflow: "hidden", zIndex: 300, animation: "chatSlide 0.25s ease" }}>
+          <div style={{ background: "linear-gradient(135deg,#1a5c30,#22743c)", padding: "0.85rem 1rem" }}>
+            <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#fff" }}>🤖 {t.chat.title}</div>
+            <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.6)" }}>Powered by Claude AI</div>
+          </div>
+          <div style={{ flex: 1, overflowY: "auto", padding: "0.85rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            {messages.map((m, i) => (
+              <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
+                <div style={{ maxWidth: "82%", padding: "0.5rem 0.8rem", borderRadius: m.role === "user" ? "12px 12px 3px 12px" : "12px 12px 12px 3px", background: m.role === "user" ? GREEN : "#f0f7f0", color: m.role === "user" ? "#fff" : "#1a2e1a", fontSize: "0.8rem", lineHeight: 1.5 }}>{m.content}</div>
+              </div>
+            ))}
+            {loading && <div style={{ display: "flex" }}><div style={{ padding: "0.5rem 0.8rem", borderRadius: "12px 12px 12px 3px", background: "#f0f7f0", fontSize: "0.8rem", color: "#aaa", animation: "pulse 1.2s infinite" }}>{t.chat.thinking}</div></div>}
+            <div ref={endRef} />
+          </div>
+          <div style={{ padding: "0.6rem", borderTop: "1px solid #f0f0f0", display: "flex", gap: "0.4rem" }}>
+            <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()} placeholder={t.chat.placeholder} style={{ ...inp({ fontSize: "0.8rem" }), flex: 1 }} />
+            <button onClick={send} disabled={loading} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 7, padding: "0.5rem 0.85rem", fontWeight: 600, fontSize: "0.78rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.chat.send}</button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
 // ── AUTH MODAL ──
 function AuthModal({ t, onClose, onSuccess }) {
-const [mode, setMode] = useState(“login”);
-const [f, setF] = useState({ email: “”, password: “”, name: “”, company: “”, country: “United Kingdom” });
-const [err, setErr] = useState(””);
-const [loading, setLoading] = useState(false);
-const set = (k, v) => setF(x => ({ …x, [k]: v }));
-const submit = async () => {
-setErr(””); setLoading(true);
-if (mode === “login”) {
-const { error } = await supabase.auth.signInWithPassword({ email: f.email, password: f.password });
-if (error) { setErr(error.message); setLoading(false); return; }
-onSuccess(“login”);
-} else {
-if (!f.name) { setErr(“Name is required.”); setLoading(false); return; }
-const { data, error } = await supabase.auth.signUp({ email: f.email, password: f.password, options: { data: { name: f.name } } });
-if (error) { setErr(error.message); setLoading(false); return; }
-if (data.user) await supabase.from(“profiles”).upsert({ id: data.user.id, name: f.name, company: f.company, country: f.country, is_verified: false });
-onSuccess(“register”);
-}
-setLoading(false);
-};
-return (
-<div style={{ position: “fixed”, inset: 0, background: “rgba(13,58,30,0.45)”, backdropFilter: “blur(4px)”, zIndex: 200, display: “flex”, alignItems: “center”, justifyContent: “center”, padding: “1rem” }} onClick={onClose}>
-<div style={{ background: “#fff”, borderRadius: 16, padding: “2rem”, width: “100%”, maxWidth: 400, border: “1px solid #dceadc”, animation: “slideUp 0.2s ease” }} onClick={e => e.stopPropagation()}>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “center”, marginBottom: “1.25rem” }}>
-<h2 style={{ fontSize: “1.1rem”, fontWeight: 700, color: DARK }}>{mode === “login” ? t.auth.loginTitle : t.auth.regTitle}</h2>
-<button onClick={onClose} style={xBtn()}>✕</button>
-</div>
-{mode === “register” && (<>
-<FG label={t.auth.name}><input value={f.name} onChange={e => set(“name”, e.target.value)} style={inp()} placeholder=“Your full name” /></FG>
-<FG label={t.auth.company}><input value={f.company} onChange={e => set(“company”, e.target.value)} style={inp()} placeholder=“Optional” /></FG>
-<FG label={t.auth.country}><select value={f.country} onChange={e => set(“country”, e.target.value)} style={sel()}><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
-</>)}
-<FG label={t.auth.email}><input value={f.email} onChange={e => set(“email”, e.target.value)} type=“email” style={inp()} placeholder=“you@example.com” /></FG>
-<FG label={t.auth.password}><input value={f.password} onChange={e => set(“password”, e.target.value)} type=“password” style={inp()} placeholder=”••••••••” /></FG>
-{err && <p style={{ fontSize: “0.76rem”, color: “#ef4444”, marginBottom: “0.75rem” }}>{err}</p>}
-{mode === “register” && <p style={{ fontSize: “0.72rem”, color: “#aaa”, marginBottom: “0.75rem” }}>{t.auth.verifyNote}</p>}
-<button onClick={submit} disabled={loading} style={{ width: “100%”, background: GREEN, color: “#fff”, border: “none”, borderRadius: 7, padding: “0.7rem”, fontWeight: 600, fontSize: “0.88rem”, cursor: “pointer”, fontFamily: “Inter,sans-serif”, opacity: loading ? 0.7 : 1 }}>{loading ? “…” : mode === “login” ? t.auth.loginBtn : t.auth.regBtn}</button>
-<button onClick={() => { setMode(m => m === “login” ? “register” : “login”); setErr(””); }} style={{ background: “none”, border: “none”, color: GREEN, fontSize: “0.78rem”, cursor: “pointer”, marginTop: “1rem”, width: “100%”, fontFamily: “Inter,sans-serif” }}>{mode === “login” ? t.auth.switchToReg : t.auth.switchToLogin}</button>
-</div>
-</div>
-);
+  const [mode, setMode] = useState("login");
+  const [f, setF] = useState({ email: "", password: "", name: "", company: "", country: "United Kingdom" });
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const set = (k, v) => setF(x => ({ ...x, [k]: v }));
+  const submit = async () => {
+    setErr(""); setLoading(true);
+    if (mode === "login") {
+      const { error } = await supabase.auth.signInWithPassword({ email: f.email, password: f.password });
+      if (error) { setErr(error.message); setLoading(false); return; }
+      onSuccess("login");
+    } else {
+      if (!f.name) { setErr("Name is required."); setLoading(false); return; }
+      const { data, error } = await supabase.auth.signUp({ email: f.email, password: f.password, options: { data: { name: f.name } } });
+      if (error) { setErr(error.message); setLoading(false); return; }
+      if (data.user) await supabase.from("profiles").upsert({ id: data.user.id, name: f.name, company: f.company, country: f.country, is_verified: false });
+      onSuccess("register");
+    }
+    setLoading(false);
+  };
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(13,58,30,0.45)", backdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={onClose}>
+      <div style={{ background: "#fff", borderRadius: 16, padding: "2rem", width: "100%", maxWidth: 400, border: "1px solid #dceadc", animation: "slideUp 0.2s ease" }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
+          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: DARK }}>{mode === "login" ? t.auth.loginTitle : t.auth.regTitle}</h2>
+          <button onClick={onClose} style={xBtn()}>✕</button>
+        </div>
+        {mode === "register" && (<>
+          <FG label={t.auth.name}><input value={f.name} onChange={e => set("name", e.target.value)} style={inp()} placeholder="Your full name" /></FG>
+          <FG label={t.auth.company}><input value={f.company} onChange={e => set("company", e.target.value)} style={inp()} placeholder="Optional" /></FG>
+          <FG label={t.auth.country}><select value={f.country} onChange={e => set("country", e.target.value)} style={sel()}><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
+        </>)}
+        <FG label={t.auth.email}><input value={f.email} onChange={e => set("email", e.target.value)} type="email" style={inp()} placeholder="you@example.com" /></FG>
+        <FG label={t.auth.password}><input value={f.password} onChange={e => set("password", e.target.value)} type="password" style={inp()} placeholder="••••••••" /></FG>
+        {err && <p style={{ fontSize: "0.76rem", color: "#ef4444", marginBottom: "0.75rem" }}>{err}</p>}
+        {mode === "register" && <p style={{ fontSize: "0.72rem", color: "#aaa", marginBottom: "0.75rem" }}>{t.auth.verifyNote}</p>}
+        <button onClick={submit} disabled={loading} style={{ width: "100%", background: GREEN, color: "#fff", border: "none", borderRadius: 7, padding: "0.7rem", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", fontFamily: "Inter,sans-serif", opacity: loading ? 0.7 : 1 }}>{loading ? "..." : mode === "login" ? t.auth.loginBtn : t.auth.regBtn}</button>
+        <button onClick={() => { setMode(m => m === "login" ? "register" : "login"); setErr(""); }} style={{ background: "none", border: "none", color: GREEN, fontSize: "0.78rem", cursor: "pointer", marginTop: "1rem", width: "100%", fontFamily: "Inter,sans-serif" }}>{mode === "login" ? t.auth.switchToReg : t.auth.switchToLogin}</button>
+      </div>
+    </div>
+  );
 }
 
 // ── FOUNDER SECTION ──
-const FOUNDER_PHOTO = “data:image/jpeg;base64,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”;
+const FOUNDER_PHOTO = "data:image/jpeg;base64,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";
 function FounderSection() {
-return (
-<div style={{ background: “linear-gradient(135deg,#0d3a1e,#1a5c30)”, padding: “4rem 1.5rem” }}>
-<div style={{ maxWidth: 900, margin: “0 auto”, display: “grid”, gridTemplateColumns: “auto 1fr”, gap: “3rem”, alignItems: “center” }}>
-<div>
-<div style={{ width: 160, height: 160, borderRadius: “50%”, overflow: “hidden”, border: “4px solid rgba(255,255,255,0.2)”, boxShadow: “0 20px 60px rgba(0,0,0,0.3)” }}>
-<img src={FOUNDER_PHOTO} alt=“Abdulaziz Ruzmatov” style={{ width: “100%”, height: “100%”, objectFit: “cover” }} />
-</div>
-</div>
-<div>
-<div style={{ fontSize: “0.7rem”, fontWeight: 700, textTransform: “uppercase”, letterSpacing: “0.12em”, color: “rgba(255,255,255,0.4)”, marginBottom: “0.6rem” }}>Built & Founded By</div>
-<h2 style={{ fontSize: “1.6rem”, fontWeight: 800, color: “#fff”, marginBottom: “0.35rem” }}>Abdulaziz Ruzmatov</h2>
-<div style={{ fontSize: “0.84rem”, color: “#7ffba0”, fontWeight: 600, marginBottom: “1rem” }}>Researcher & Ex-Marketing Agency Owner · 🇺🇿 Uzbekistan → 🇬🇧 London</div>
-<p style={{ fontSize: “0.87rem”, color: “rgba(255,255,255,0.72)”, lineHeight: 1.7, maxWidth: 520, marginBottom: “1.25rem” }}>Generated over <strong style={{ color: “#7ffba0” }}>$5M+ in marketing revenue</strong> for businesses across Uzbekistan and the UK. Now based in London, actively researching startup failures in the Uzbekistan market.</p>
-<div style={{ display: “flex”, gap: “0.75rem”, flexWrap: “wrap”, marginBottom: “1rem” }}>
-{[[”$5M+”, “Marketing Revenue”], [“2 Countries”, “UK & Uzbekistan”], [“Active”, “Startup Research”]].map(([val, sub], i) => (
-<div key={i} style={{ background: “rgba(255,255,255,0.08)”, border: “1px solid rgba(255,255,255,0.15)”, borderRadius: 10, padding: “0.6rem 1rem”, textAlign: “center”, minWidth: 90 }}>
-<div style={{ fontWeight: 800, fontSize: “0.95rem”, color: “#fff” }}>{val}</div>
-<div style={{ fontSize: “0.65rem”, color: “rgba(255,255,255,0.45)”, marginTop: “0.1rem” }}>{sub}</div>
-</div>
-))}
-</div>
-<div style={{ fontSize: “0.74rem”, color: “rgba(255,255,255,0.35)” }}>
-Questions? <a href=“mailto:abdulaziz.ruzmatov@northumbria.ac.uk” style={{ color: “#7ffba0”, textDecoration: “none”, fontWeight: 600 }}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
-</div>
-</div>
-</div>
-</div>
-);
+  return (
+    <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "4rem 1.5rem" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "auto 1fr", gap: "3rem", alignItems: "center" }}>
+        <div>
+          <div style={{ width: 160, height: 160, borderRadius: "50%", overflow: "hidden", border: "4px solid rgba(255,255,255,0.2)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+            <img src={FOUNDER_PHOTO} alt="Abdulaziz Ruzmatov" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(255,255,255,0.4)", marginBottom: "0.6rem" }}>Built & Founded By</div>
+          <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#fff", marginBottom: "0.35rem" }}>Abdulaziz Ruzmatov</h2>
+          <div style={{ fontSize: "0.84rem", color: "#7ffba0", fontWeight: 600, marginBottom: "1rem" }}>Researcher & Ex-Marketing Agency Owner · 🇺🇿 Uzbekistan → 🇬🇧 London</div>
+          <p style={{ fontSize: "0.87rem", color: "rgba(255,255,255,0.72)", lineHeight: 1.7, maxWidth: 520, marginBottom: "1.25rem" }}>Generated over <strong style={{ color: "#7ffba0" }}>$5M+ in marketing revenue</strong> for businesses across Uzbekistan and the UK. Now based in London, actively researching startup failures in the Uzbekistan market.</p>
+          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {[["$5M+", "Marketing Revenue"], ["2 Countries", "UK & Uzbekistan"], ["Active", "Startup Research"]].map(([val, sub], i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "0.6rem 1rem", textAlign: "center", minWidth: 90 }}>
+                <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#fff" }}>{val}</div>
+                <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.45)", marginTop: "0.1rem" }}>{sub}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.35)" }}>
+            Questions? <a href="mailto:abdulaziz.ruzmatov@northumbria.ac.uk" style={{ color: "#7ffba0", textDecoration: "none", fontWeight: 600 }}>abdulaziz.ruzmatov@northumbria.ac.uk</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ── COMMENT INPUT ──
 function CommentInput({ t, onPost }) {
-const [val, setVal] = useState(””);
-const post = () => { if (val.trim()) { onPost(val.trim()); setVal(””); } };
-return (
-<div style={{ display: “flex”, gap: “0.5rem”, marginTop: “0.75rem” }}>
-<input value={val} onChange={e => setVal(e.target.value)} onKeyDown={e => e.key === “Enter” && post()} placeholder={t.detail.commentPh} style={{ …inp({ fontSize: “0.8rem” }), flex: 1 }} />
-<button onClick={post} style={{ background: GREEN, color: “#fff”, border: “none”, borderRadius: 6, padding: “0.5rem 0.85rem”, fontWeight: 600, fontSize: “0.79rem”, cursor: “pointer”, fontFamily: “Inter,sans-serif” }}>{t.detail.post}</button>
-</div>
-);
+  const [val, setVal] = useState("");
+  const post = () => { if (val.trim()) { onPost(val.trim()); setVal(""); } };
+  return (
+    <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
+      <input value={val} onChange={e => setVal(e.target.value)} onKeyDown={e => e.key === "Enter" && post()} placeholder={t.detail.commentPh} style={{ ...inp({ fontSize: "0.8rem" }), flex: 1 }} />
+      <button onClick={post} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.5rem 0.85rem", fontWeight: 600, fontSize: "0.79rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.detail.post}</button>
+    </div>
+  );
 }
 
 // ── SUBMIT MODAL ──
 function SubmitModal({ t, onClose, onSubmit, toast }) {
-const [f, setF] = useState({ industry: “”, country: “”, title: “”, problem: “”, lesson: “”, severity: “high”, name: “”, loss_amount: “”, imageFile: null });
-const [preview, setPreview] = useState(null);
-const set = (k, v) => setF(x => ({ …x, [k]: v }));
-const submit = () => { if (!f.industry || !f.country || !f.title || !f.problem || !f.lesson) { toast(t.toast.fill); return; } onSubmit(f); };
-const handleImg = e => { const file = e.target.files[0]; if (!file) return; set(“imageFile”, file); const r = new FileReader(); r.onload = ev => setPreview(ev.target.result); r.readAsDataURL(file); };
-return (
-<div style={{ position: “fixed”, inset: 0, background: “rgba(13,58,30,0.45)”, backdropFilter: “blur(4px)”, zIndex: 200, display: “flex”, alignItems: “center”, justifyContent: “center”, padding: “1rem” }} onClick={onClose}>
-<div style={{ background: “#fff”, borderRadius: 14, padding: “1.75rem”, width: “100%”, maxWidth: 520, maxHeight: “90vh”, overflowY: “auto”, border: “1px solid #dceadc” }} onClick={e => e.stopPropagation()}>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “center”, marginBottom: “1rem” }}>
-<div><h2 style={{ fontSize: “1.05rem”, fontWeight: 700, color: “#0d3a1e” }}>{t.form.title}</h2><p style={{ fontSize: “0.78rem”, color: “#aaa”, marginTop: “0.2rem” }}>{t.form.sub}</p></div>
-<button onClick={onClose} style={xBtn()}>✕</button>
-</div>
-<div style={{ display: “grid”, gridTemplateColumns: “1fr 1fr”, gap: “0.6rem” }}>
-<FG label={t.form.industry}><select value={f.industry} onChange={e => set(“industry”, e.target.value)} style={sel()}><option value="">{t.form.selectInd}</option>{t.form.industries.map(i => <option key={i}>{i}</option>)}</select></FG>
-<FG label={t.form.country}><select value={f.country} onChange={e => set(“country”, e.target.value)} style={sel()}><option value="">{t.form.selectCou}</option><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
-</div>
-<FG label={t.form.ptitle}><input value={f.title} onChange={e => set(“title”, e.target.value)} style={inp()} placeholder=“e.g. Hired too fast before getting a second client” /></FG>
-<FG label={t.form.problem}><textarea value={f.problem} onChange={e => set(“problem”, e.target.value)} style={{ …inp(), minHeight: 80, resize: “vertical” }} /></FG>
-<FG label={t.form.lesson}><textarea value={f.lesson} onChange={e => set(“lesson”, e.target.value)} style={{ …inp(), minHeight: 70, resize: “vertical” }} /></FG>
-<div style={{ display: “grid”, gridTemplateColumns: “1fr 1fr”, gap: “0.6rem” }}>
-<FG label={t.form.impact}><select value={f.severity} onChange={e => set(“severity”, e.target.value)} style={sel()}><option value="high">{t.form.high}</option><option value="medium">{t.form.medium}</option><option value="low">{t.form.low}</option></select></FG>
-<FG label={t.form.loss}><input value={f.loss_amount} onChange={e => set(“loss_amount”, e.target.value)} type=“number” style={inp()} placeholder={t.form.lossph} /></FG>
-</div>
-<FG label={t.form.name}><input value={f.name} onChange={e => set(“name”, e.target.value)} style={inp()} placeholder={t.form.namePh} /></FG>
-<FG label={t.form.image}><input type=“file” accept=“image/*” onChange={handleImg} style={{ fontSize: “0.8rem”, color: “#5a7a5a” }} />{preview && <img src={preview} alt=“preview” style={{ width: “100%”, height: 120, objectFit: “cover”, borderRadius: 7, marginTop: “0.4rem”, border: “1px solid #dceadc” }} />}</FG>
-<div style={{ display: “flex”, justifyContent: “flex-end”, gap: “0.5rem”, marginTop: “0.75rem” }}>
-<button onClick={onClose} style={{ background: “#f0f7f0”, color: “#7a9a7a”, border: “1px solid #dceadc”, borderRadius: 6, padding: “0.5rem 1rem”, fontFamily: “Inter,sans-serif”, fontSize: “0.82rem”, cursor: “pointer” }}>{t.form.cancel}</button>
-<button onClick={submit} style={{ background: GREEN, color: “#fff”, border: “none”, borderRadius: 6, padding: “0.5rem 1.1rem”, fontFamily: “Inter,sans-serif”, fontWeight: 600, fontSize: “0.82rem”, cursor: “pointer” }}>{t.form.publish}</button>
-</div>
-</div>
-</div>
-);
+  const [f, setF] = useState({ industry: "", country: "", title: "", problem: "", lesson: "", severity: "high", name: "", loss_amount: "", imageFile: null });
+  const [preview, setPreview] = useState(null);
+  const set = (k, v) => setF(x => ({ ...x, [k]: v }));
+  const submit = () => { if (!f.industry || !f.country || !f.title || !f.problem || !f.lesson) { toast(t.toast.fill); return; } onSubmit(f); };
+  const handleImg = e => { const file = e.target.files[0]; if (!file) return; set("imageFile", file); const r = new FileReader(); r.onload = ev => setPreview(ev.target.result); r.readAsDataURL(file); };
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(13,58,30,0.45)", backdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={onClose}>
+      <div style={{ background: "#fff", borderRadius: 14, padding: "1.75rem", width: "100%", maxWidth: 520, maxHeight: "90vh", overflowY: "auto", border: "1px solid #dceadc" }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+          <div><h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0d3a1e" }}>{t.form.title}</h2><p style={{ fontSize: "0.78rem", color: "#aaa", marginTop: "0.2rem" }}>{t.form.sub}</p></div>
+          <button onClick={onClose} style={xBtn()}>✕</button>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+          <FG label={t.form.industry}><select value={f.industry} onChange={e => set("industry", e.target.value)} style={sel()}><option value="">{t.form.selectInd}</option>{t.form.industries.map(i => <option key={i}>{i}</option>)}</select></FG>
+          <FG label={t.form.country}><select value={f.country} onChange={e => set("country", e.target.value)} style={sel()}><option value="">{t.form.selectCou}</option><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
+        </div>
+        <FG label={t.form.ptitle}><input value={f.title} onChange={e => set("title", e.target.value)} style={inp()} placeholder="e.g. Hired too fast before getting a second client" /></FG>
+        <FG label={t.form.problem}><textarea value={f.problem} onChange={e => set("problem", e.target.value)} style={{ ...inp(), minHeight: 80, resize: "vertical" }} /></FG>
+        <FG label={t.form.lesson}><textarea value={f.lesson} onChange={e => set("lesson", e.target.value)} style={{ ...inp(), minHeight: 70, resize: "vertical" }} /></FG>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+          <FG label={t.form.impact}><select value={f.severity} onChange={e => set("severity", e.target.value)} style={sel()}><option value="high">{t.form.high}</option><option value="medium">{t.form.medium}</option><option value="low">{t.form.low}</option></select></FG>
+          <FG label={t.form.loss}><input value={f.loss_amount} onChange={e => set("loss_amount", e.target.value)} type="number" style={inp()} placeholder={t.form.lossph} /></FG>
+        </div>
+        <FG label={t.form.name}><input value={f.name} onChange={e => set("name", e.target.value)} style={inp()} placeholder={t.form.namePh} /></FG>
+        <FG label={t.form.image}><input type="file" accept="image/*" onChange={handleImg} style={{ fontSize: "0.8rem", color: "#5a7a5a" }} />{preview && <img src={preview} alt="preview" style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 7, marginTop: "0.4rem", border: "1px solid #dceadc" }} />}</FG>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "0.75rem" }}>
+          <button onClick={onClose} style={{ background: "#f0f7f0", color: "#7a9a7a", border: "1px solid #dceadc", borderRadius: 6, padding: "0.5rem 1rem", fontFamily: "Inter,sans-serif", fontSize: "0.82rem", cursor: "pointer" }}>{t.form.cancel}</button>
+          <button onClick={submit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.5rem 1.1rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.82rem", cursor: "pointer" }}>{t.form.publish}</button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function BlogModal({ t, onClose, onSubmit, toast }) {
-const [f, setF] = useState({ title: “”, body: “”, tag: “Lesson”, author: “”, country: “United Kingdom” });
-const set = (k, v) => setF(x => ({ …x, [k]: v }));
-const submit = () => { if (!f.title || !f.body) { toast(t.toast.fill); return; } onSubmit(f); };
-return (
-<div style={{ position: “fixed”, inset: 0, background: “rgba(13,58,30,0.45)”, backdropFilter: “blur(4px)”, zIndex: 200, display: “flex”, alignItems: “center”, justifyContent: “center”, padding: “1rem” }} onClick={onClose}>
-<div style={{ background: “#fff”, borderRadius: 14, padding: “1.75rem”, width: “100%”, maxWidth: 520, maxHeight: “90vh”, overflowY: “auto”, border: “1px solid #dceadc” }} onClick={e => e.stopPropagation()}>
-<div style={{ display: “flex”, justifyContent: “space-between”, marginBottom: “1rem” }}><h2 style={{ fontSize: “1.05rem”, fontWeight: 700, color: “#0d3a1e” }}>{t.blog.write}</h2><button onClick={onClose} style={xBtn()}>✕</button></div>
-<FG label={t.blog.postTitle}><input value={f.title} onChange={e => set(“title”, e.target.value)} style={inp()} placeholder=“Your post title” /></FG>
-<FG label={t.blog.postBody}><textarea value={f.body} onChange={e => set(“body”, e.target.value)} style={{ …inp(), minHeight: 140, resize: “vertical” }} /></FG>
-<div style={{ display: “grid”, gridTemplateColumns: “1fr 1fr 1fr”, gap: “0.6rem” }}>
-<FG label={t.blog.postTag}><select value={f.tag} onChange={e => set(“tag”, e.target.value)} style={sel()}><option>Lesson</option><option>Research</option><option>Story</option><option>Advice</option></select></FG>
-<FG label={t.form.country}><select value={f.country} onChange={e => set(“country”, e.target.value)} style={sel()}><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
-<FG label={t.form.name}><input value={f.author} onChange={e => set(“author”, e.target.value)} style={inp()} placeholder=“Anonymous” /></FG>
-</div>
-<div style={{ display: “flex”, justifyContent: “flex-end”, gap: “0.5rem”, marginTop: “0.75rem” }}>
-<button onClick={onClose} style={{ background: “#f0f7f0”, color: “#7a9a7a”, border: “1px solid #dceadc”, borderRadius: 6, padding: “0.5rem 1rem”, fontFamily: “Inter,sans-serif”, fontSize: “0.82rem”, cursor: “pointer” }}>{t.form.cancel}</button>
-<button onClick={submit} style={{ background: GREEN, color: “#fff”, border: “none”, borderRadius: 6, padding: “0.5rem 1.1rem”, fontFamily: “Inter,sans-serif”, fontWeight: 600, fontSize: “0.82rem”, cursor: “pointer” }}>{t.blog.publish}</button>
-</div>
-</div>
-</div>
-);
+  const [f, setF] = useState({ title: "", body: "", tag: "Lesson", author: "", country: "United Kingdom" });
+  const set = (k, v) => setF(x => ({ ...x, [k]: v }));
+  const submit = () => { if (!f.title || !f.body) { toast(t.toast.fill); return; } onSubmit(f); };
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(13,58,30,0.45)", backdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={onClose}>
+      <div style={{ background: "#fff", borderRadius: 14, padding: "1.75rem", width: "100%", maxWidth: 520, maxHeight: "90vh", overflowY: "auto", border: "1px solid #dceadc" }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}><h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0d3a1e" }}>{t.blog.write}</h2><button onClick={onClose} style={xBtn()}>✕</button></div>
+        <FG label={t.blog.postTitle}><input value={f.title} onChange={e => set("title", e.target.value)} style={inp()} placeholder="Your post title" /></FG>
+        <FG label={t.blog.postBody}><textarea value={f.body} onChange={e => set("body", e.target.value)} style={{ ...inp(), minHeight: 140, resize: "vertical" }} /></FG>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.6rem" }}>
+          <FG label={t.blog.postTag}><select value={f.tag} onChange={e => set("tag", e.target.value)} style={sel()}><option>Lesson</option><option>Research</option><option>Story</option><option>Advice</option></select></FG>
+          <FG label={t.form.country}><select value={f.country} onChange={e => set("country", e.target.value)} style={sel()}><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
+          <FG label={t.form.name}><input value={f.author} onChange={e => set("author", e.target.value)} style={inp()} placeholder="Anonymous" /></FG>
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "0.75rem" }}>
+          <button onClick={onClose} style={{ background: "#f0f7f0", color: "#7a9a7a", border: "1px solid #dceadc", borderRadius: 6, padding: "0.5rem 1rem", fontFamily: "Inter,sans-serif", fontSize: "0.82rem", cursor: "pointer" }}>{t.form.cancel}</button>
+          <button onClick={submit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.5rem 1.1rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.82rem", cursor: "pointer" }}>{t.blog.publish}</button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ContactForm({ t, toast }) {
-const [f, setF] = useState({ name: “”, email: “”, country: “”, message: “” });
-const set = (k, v) => setF(x => ({ …x, [k]: v }));
-const send = () => { if (!f.name || !f.email || !f.message) { toast(t.toast.fill); return; } setF({ name: “”, email: “”, country: “”, message: “” }); toast(t.toast.contact); };
-return (
-<div style={{ background: “#f8faf8”, border: “1px solid #dceadc”, borderRadius: 12, padding: “1.5rem” }}>
-<h3 style={{ fontWeight: 700, fontSize: “0.95rem”, color: “#0d3a1e”, marginBottom: “0.2rem” }}>{t.contact.formTitle}</h3>
-<p style={{ fontSize: “0.77rem”, color: “#aaa”, marginBottom: “1.1rem” }}>{t.contact.formSub}</p>
-<FG label={t.contact.nameL}><input value={f.name} onChange={e => set(“name”, e.target.value)} style={inp()} placeholder=“Your name” /></FG>
-<FG label={t.contact.emailL}><input value={f.email} onChange={e => set(“email”, e.target.value)} type=“email” style={inp()} placeholder=“your@email.com” /></FG>
-<FG label={t.contact.countryL}><select value={f.country} onChange={e => set(“country”, e.target.value)} style={sel()}><option value="">Select country</option><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
-<FG label={t.contact.msgL}><textarea value={f.message} onChange={e => set(“message”, e.target.value)} style={{ …inp(), minHeight: 90, resize: “vertical” }} /></FG>
-<button onClick={send} style={{ width: “100%”, background: GREEN, color: “#fff”, border: “none”, borderRadius: 6, padding: “0.65rem”, fontFamily: “Inter,sans-serif”, fontWeight: 600, fontSize: “0.84rem”, cursor: “pointer”, marginTop: “0.25rem” }}>{t.contact.send}</button>
-</div>
-);
+  const [f, setF] = useState({ name: "", email: "", country: "", message: "" });
+  const set = (k, v) => setF(x => ({ ...x, [k]: v }));
+  const send = () => { if (!f.name || !f.email || !f.message) { toast(t.toast.fill); return; } setF({ name: "", email: "", country: "", message: "" }); toast(t.toast.contact); };
+  return (
+    <div style={{ background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 12, padding: "1.5rem" }}>
+      <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0d3a1e", marginBottom: "0.2rem" }}>{t.contact.formTitle}</h3>
+      <p style={{ fontSize: "0.77rem", color: "#aaa", marginBottom: "1.1rem" }}>{t.contact.formSub}</p>
+      <FG label={t.contact.nameL}><input value={f.name} onChange={e => set("name", e.target.value)} style={inp()} placeholder="Your name" /></FG>
+      <FG label={t.contact.emailL}><input value={f.email} onChange={e => set("email", e.target.value)} type="email" style={inp()} placeholder="your@email.com" /></FG>
+      <FG label={t.contact.countryL}><select value={f.country} onChange={e => set("country", e.target.value)} style={sel()}><option value="">Select country</option><option>United Kingdom</option><option>Uzbekistan</option></select></FG>
+      <FG label={t.contact.msgL}><textarea value={f.message} onChange={e => set("message", e.target.value)} style={{ ...inp(), minHeight: 90, resize: "vertical" }} /></FG>
+      <button onClick={send} style={{ width: "100%", background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.65rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.84rem", cursor: "pointer", marginTop: "0.25rem" }}>{t.contact.send}</button>
+    </div>
+  );
 }
 
 // ── LIKE COUNTER ──
 function LikeCounter() {
-const BASE = 532;
-const stored = () => { try { return parseInt(localStorage.getItem(“mm_likes”) || BASE); } catch { return BASE; } };
-const [count, setCount] = useState(stored);
-const [animKey, setAnimKey] = useState(0);
-const [ripples, setRipples] = useState([]);
-const [toasts, setToasts] = useState([]);
-const [btnPop, setBtnPop] = useState(false);
-const btnRef = useRef(null);
-const EMOJIS = [“👍”,“🙌”,“🔥”,“✅”,“💚”,“⭐”,“🚀”,“💡”];
+  const BASE = 532;
+  const stored = () => { try { return parseInt(localStorage.getItem("mm_likes") || BASE); } catch { return BASE; } };
+  const [count, setCount] = useState(stored);
+  const [animKey, setAnimKey] = useState(0);
+  const [ripples, setRipples] = useState([]);
+  const [toasts, setToasts] = useState([]);
+  const [btnPop, setBtnPop] = useState(false);
+  const btnRef = useRef(null);
+  const EMOJIS = ["👍","🙌","🔥","✅","💚","⭐","🚀","💡"];
 
-const handleLike = (e) => {
-const rect = btnRef.current.getBoundingClientRect();
-const rid = Date.now();
-setRipples(r => […r, { id: rid, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
-setTimeout(() => setRipples(r => r.filter(i => i.id !== rid)), 900);
-const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-const tid = rid + 1;
-setToasts(t => […t, { id: tid, x: e.clientX - 20, y: e.clientY - 30, emoji }]);
-setTimeout(() => setToasts(t => t.filter(i => i.id !== tid)), 1100);
-setBtnPop(true);
-setTimeout(() => setBtnPop(false), 350);
-const next = count + 1;
-setCount(next);
-setAnimKey(k => k + 1);
-try { localStorage.setItem(“mm_likes”, next); } catch {}
-};
+  const handleLike = (e) => {
+    const rect = btnRef.current.getBoundingClientRect();
+    const rid = Date.now();
+    setRipples(r => [...r, { id: rid, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
+    setTimeout(() => setRipples(r => r.filter(i => i.id !== rid)), 900);
+    const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+    const tid = rid + 1;
+    setToasts(t => [...t, { id: tid, x: e.clientX - 20, y: e.clientY - 30, emoji }]);
+    setTimeout(() => setToasts(t => t.filter(i => i.id !== tid)), 1100);
+    setBtnPop(true);
+    setTimeout(() => setBtnPop(false), 350);
+    const next = count + 1;
+    setCount(next);
+    setAnimKey(k => k + 1);
+    try { localStorage.setItem("mm_likes", next); } catch {}
+  };
 
-return (
-<div style={{ background: “linear-gradient(135deg,#0d3a1e,#1a5c30)”, padding: “3rem 1.5rem”, position: “relative” }}>
-{toasts.map(t => (
-<div key={t.id} style={{ position: “fixed”, left: t.x, top: t.y, pointerEvents: “none”, fontFamily: “Inter,sans-serif”, fontSize: “1rem”, fontWeight: 800, color: “#7ffba0”, animation: “fadeUp 1.1s ease-out forwards”, zIndex: 9999 }}>{t.emoji} +1</div>
-))}
-<div style={{ maxWidth: 520, margin: “0 auto”, textAlign: “center” }}>
-<div style={{ display: “inline-block”, background: “rgba(255,255,255,0.1)”, border: “1px solid rgba(255,255,255,0.2)”, color: “#7ffba0”, fontSize: “0.72rem”, fontWeight: 700, textTransform: “uppercase”, letterSpacing: “0.1em”, padding: “0.28rem 1rem”, borderRadius: 100, marginBottom: “1rem” }}>Community Feedback</div>
-<h2 style={{ fontSize: “clamp(1.3rem,3vw,1.75rem)”, fontWeight: 900, color: “#fff”, marginBottom: “0.5rem” }}>Did you find MistakeMap helpful?</h2>
-<p style={{ color: “rgba(255,255,255,0.6)”, fontSize: “0.86rem”, marginBottom: “2rem” }}>Let us know — every click counts!</p>
-<div key={animKey} style={{ fontSize: “clamp(3.5rem,10vw,5.5rem)”, fontWeight: 900, color: “#fff”, lineHeight: 1, letterSpacing: “-0.04em”, marginBottom: “0.35rem”, animation: animKey > 0 ? “countPop 0.35s ease” : “none” }}>
-{count.toLocaleString()}
-</div>
-<div style={{ fontSize: “0.72rem”, fontWeight: 700, textTransform: “uppercase”, letterSpacing: “0.13em”, color: “rgba(255,255,255,0.4)”, marginBottom: “1.5rem” }}>people found this useful</div>
-<div style={{ height: 5, background: “rgba(255,255,255,0.1)”, borderRadius: 100, overflow: “hidden”, marginBottom: “2rem” }}>
-<div style={{ height: “100%”, width: Math.min(100, count / 10) + “%”, background: “linear-gradient(90deg,#7ffba0,#22c55e)”, borderRadius: 100, transition: “width 0.5s cubic-bezier(0.34,1.56,0.64,1)”, boxShadow: “0 0 10px rgba(127,251,160,0.4)” }} />
-</div>
-<div style={{ position: “relative”, display: “inline-block”, width: “100%”, maxWidth: 400 }}>
-<button ref={btnRef} onClick={handleLike} style={{ width: “100%”, padding: “1.1rem 2rem”, background: “#fff”, border: “none”, borderRadius: 12, cursor: “pointer”, fontFamily: “Inter,sans-serif”, fontSize: “1.05rem”, fontWeight: 800, color: GREEN, position: “relative”, overflow: “hidden”, transition: “transform 0.15s”, transform: btnPop ? “scale(0.95)” : “scale(1)”, boxShadow: “0 6px 28px rgba(0,0,0,0.2)” }}>
-{ripples.map(r => <span key={r.id} style={{ position: “absolute”, left: r.x - 15, top: r.y - 15, width: 30, height: 30, borderRadius: “50%”, background: “rgba(26,92,48,0.15)”, animation: “slideUp 0.9s ease-out forwards”, pointerEvents: “none” }} />)}
-👍 Yes, this is helpful!
-</button>
-</div>
-<p style={{ marginTop: “0.75rem”, fontSize: “0.73rem”, color: “rgba(255,255,255,0.3)” }}>Tap as many times as you like — unlimited ✓</p>
-</div>
-</div>
-);
+  return (
+    <div style={{ background: "linear-gradient(135deg,#0d3a1e,#1a5c30)", padding: "3rem 1.5rem", position: "relative" }}>
+      {toasts.map(t => (
+        <div key={t.id} style={{ position: "fixed", left: t.x, top: t.y, pointerEvents: "none", fontFamily: "Inter,sans-serif", fontSize: "1rem", fontWeight: 800, color: "#7ffba0", animation: "fadeUp 1.1s ease-out forwards", zIndex: 9999 }}>{t.emoji} +1</div>
+      ))}
+      <div style={{ maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#7ffba0", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "0.28rem 1rem", borderRadius: 100, marginBottom: "1rem" }}>Community Feedback</div>
+        <h2 style={{ fontSize: "clamp(1.3rem,3vw,1.75rem)", fontWeight: 900, color: "#fff", marginBottom: "0.5rem" }}>Did you find MistakeMap helpful?</h2>
+        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.86rem", marginBottom: "2rem" }}>Let us know — every click counts!</p>
+        <div key={animKey} style={{ fontSize: "clamp(3.5rem,10vw,5.5rem)", fontWeight: 900, color: "#fff", lineHeight: 1, letterSpacing: "-0.04em", marginBottom: "0.35rem", animation: animKey > 0 ? "countPop 0.35s ease" : "none" }}>
+          {count.toLocaleString()}
+        </div>
+        <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.13em", color: "rgba(255,255,255,0.4)", marginBottom: "1.5rem" }}>people found this useful</div>
+        <div style={{ height: 5, background: "rgba(255,255,255,0.1)", borderRadius: 100, overflow: "hidden", marginBottom: "2rem" }}>
+          <div style={{ height: "100%", width: Math.min(100, count / 10) + "%", background: "linear-gradient(90deg,#7ffba0,#22c55e)", borderRadius: 100, transition: "width 0.5s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 10px rgba(127,251,160,0.4)" }} />
+        </div>
+        <div style={{ position: "relative", display: "inline-block", width: "100%", maxWidth: 400 }}>
+          <button ref={btnRef} onClick={handleLike} style={{ width: "100%", padding: "1.1rem 2rem", background: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "Inter,sans-serif", fontSize: "1.05rem", fontWeight: 800, color: GREEN, position: "relative", overflow: "hidden", transition: "transform 0.15s", transform: btnPop ? "scale(0.95)" : "scale(1)", boxShadow: "0 6px 28px rgba(0,0,0,0.2)" }}>
+            {ripples.map(r => <span key={r.id} style={{ position: "absolute", left: r.x - 15, top: r.y - 15, width: 30, height: 30, borderRadius: "50%", background: "rgba(26,92,48,0.15)", animation: "slideUp 0.9s ease-out forwards", pointerEvents: "none" }} />)}
+            👍 Yes, this is helpful!
+          </button>
+        </div>
+        <p style={{ marginTop: "0.75rem", fontSize: "0.73rem", color: "rgba(255,255,255,0.3)" }}>Tap as many times as you like — unlimited ✓</p>
+      </div>
+    </div>
+  );
 }
 
 // ── MAIN APP ──
 export default function App() {
-const [lang, setLang] = useState(“en”);
-const [page, setPage] = useState(“home”);
-const [problems, setProblems] = useState([]);
-const [comments, setComments] = useState({});
-const [votedIds, setVotedIds] = useState(new Set());
-const [blogs, setBlogs] = useState([]);
-const [curCountry, setCurCountry] = useState(””);
-const [curIndustry, setCurIndustry] = useState(””);
-const [q, setQ] = useState(””);
-const [sort, setSort] = useState(“new”);
-const [sev, setSev] = useState(””);
-const [showForm, setShowForm] = useState(false);
-const [showBlogForm, setShowBlogForm] = useState(false);
-const [showAuth, setShowAuth] = useState(false);
-const [detId, setDetId] = useState(null);
-const [detBlogId, setDetBlogId] = useState(null);
-const [toastMsg, setToastMsg] = useState(null);
-const [loading, setLoading] = useState(true);
-const [user, setUser] = useState(null);
-const [browsePage, setBrowsePage] = useState(1);
-const PER_PAGE = 10;
-const toastTimer = useRef(null);
-const t = T[lang];
+  const [lang, setLang] = useState("en");
+  const [page, setPage] = useState("home");
+  const [problems, setProblems] = useState([]);
+  const [comments, setComments] = useState({});
+  const [votedIds, setVotedIds] = useState(new Set());
+  const [blogs, setBlogs] = useState([]);
+  const [curCountry, setCurCountry] = useState("");
+  const [curIndustry, setCurIndustry] = useState("");
+  const [q, setQ] = useState("");
+  const [sort, setSort] = useState("new");
+  const [sev, setSev] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [detId, setDetId] = useState(null);
+  const [detBlogId, setDetBlogId] = useState(null);
+  const [toastMsg, setToastMsg] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [browsePage, setBrowsePage] = useState(1);
+  const PER_PAGE = 10;
+  const toastTimer = useRef(null);
+  const t = T[lang];
 
-useEffect(() => {
-supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
-const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
-return () => subscription.unsubscribe();
-}, []);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
 
-useEffect(() => { loadAll(); subscribeRT(); }, []);
+  useEffect(() => { loadAll(); subscribeRT(); }, []);
 
-async function loadAll() {
-setLoading(true);
-const [{ data: probs }, { data: blgs }, { data: ups }] = await Promise.all([
-supabase.from(“problems”).select(”*”).order(“created_at”, { ascending: false }),
-supabase.from(“blogs”).select(”*”).order(“created_at”, { ascending: false }),
-supabase.from(“upvotes”).select(“problem_id”).eq(“session_id”, SESSION_ID),
-]);
-if (probs) setProblems(probs);
-if (blgs) setBlogs(blgs);
-if (ups) setVotedIds(new Set(ups.map(u => u.problem_id)));
-setLoading(false);
-}
+  async function loadAll() {
+    setLoading(true);
+    const [{ data: probs }, { data: blgs }, { data: ups }] = await Promise.all([
+      supabase.from("problems").select("*").order("created_at", { ascending: false }),
+      supabase.from("blogs").select("*").order("created_at", { ascending: false }),
+      supabase.from("upvotes").select("problem_id").eq("session_id", SESSION_ID),
+    ]);
+    if (probs) setProblems(probs);
+    if (blgs) setBlogs(blgs);
+    if (ups) setVotedIds(new Set(ups.map(u => u.problem_id)));
+    setLoading(false);
+  }
 
-async function loadComments(id) {
-const { data } = await supabase.from(“comments”).select(”*”).eq(“problem_id”, id).order(“created_at”, { ascending: true });
-if (data) setComments(prev => ({ …prev, [id]: data }));
-}
+  async function loadComments(id) {
+    const { data } = await supabase.from("comments").select("*").eq("problem_id", id).order("created_at", { ascending: true });
+    if (data) setComments(prev => ({ ...prev, [id]: data }));
+  }
 
-useEffect(() => { if (detId) loadComments(detId); }, [detId]);
+  useEffect(() => { if (detId) loadComments(detId); }, [detId]);
 
-function subscribeRT() {
-supabase.channel(“rt-p”).on(“postgres_changes”, { event: “INSERT”, schema: “public”, table: “problems” }, p => setProblems(prev => [p.new, …prev])).on(“postgres_changes”, { event: “UPDATE”, schema: “public”, table: “problems” }, p => setProblems(prev => prev.map(x => x.id === p.new.id ? p.new : x))).subscribe();
-supabase.channel(“rt-b”).on(“postgres_changes”, { event: “INSERT”, schema: “public”, table: “blogs” }, p => setBlogs(prev => [p.new, …prev])).subscribe();
-supabase.channel(“rt-c”).on(“postgres_changes”, { event: “INSERT”, schema: “public”, table: “comments” }, p => { const c = p.new; setComments(prev => ({ …prev, [c.problem_id]: […(prev[c.problem_id] || []), c] })); }).subscribe();
-}
+  function subscribeRT() {
+    supabase.channel("rt-p").on("postgres_changes", { event: "INSERT", schema: "public", table: "problems" }, p => setProblems(prev => [p.new, ...prev])).on("postgres_changes", { event: "UPDATE", schema: "public", table: "problems" }, p => setProblems(prev => prev.map(x => x.id === p.new.id ? p.new : x))).subscribe();
+    supabase.channel("rt-b").on("postgres_changes", { event: "INSERT", schema: "public", table: "blogs" }, p => setBlogs(prev => [p.new, ...prev])).subscribe();
+    supabase.channel("rt-c").on("postgres_changes", { event: "INSERT", schema: "public", table: "comments" }, p => { const c = p.new; setComments(prev => ({ ...prev, [c.problem_id]: [...(prev[c.problem_id] || []), c] })); }).subscribe();
+  }
 
-async function upvote(id, e) {
-if (e) e.stopPropagation();
-const already = votedIds.has(id);
-setProblems(prev => prev.map(p => p.id === id ? { …p, upvotes: p.upvotes + (already ? -1 : 1) } : p));
-setVotedIds(prev => { const n = new Set(prev); already ? n.delete(id) : n.add(id); return n; });
-if (already) { await supabase.from(“upvotes”).delete().match({ problem_id: id, session_id: SESSION_ID }); await supabase.rpc(“decrement_upvotes”, { row_id: id }); }
-else { await supabase.from(“upvotes”).insert({ problem_id: id, session_id: SESSION_ID }); await supabase.rpc(“increment_upvotes”, { row_id: id }); }
-}
+  async function upvote(id, e) {
+    if (e) e.stopPropagation();
+    const already = votedIds.has(id);
+    setProblems(prev => prev.map(p => p.id === id ? { ...p, upvotes: p.upvotes + (already ? -1 : 1) } : p));
+    setVotedIds(prev => { const n = new Set(prev); already ? n.delete(id) : n.add(id); return n; });
+    if (already) { await supabase.from("upvotes").delete().match({ problem_id: id, session_id: SESSION_ID }); await supabase.rpc("decrement_upvotes", { row_id: id }); }
+    else { await supabase.from("upvotes").insert({ problem_id: id, session_id: SESSION_ID }); await supabase.rpc("increment_upvotes", { row_id: id }); }
+  }
 
-async function submitProblem(form) {
-let image_url = null;
-if (form.imageFile) {
-const ext = form.imageFile.name.split(”.”).pop();
-const fileName = Date.now() + “.” + ext;
-const { data: ud } = await supabase.storage.from(“problem-images”).upload(fileName, form.imageFile, { cacheControl: “3600”, upsert: false });
-if (ud) { const { data: url } = supabase.storage.from(“problem-images”).getPublicUrl(fileName); image_url = url.publicUrl; }
-}
-const { error } = await supabase.from(“problems”).insert({ title: form.title, industry: form.industry, country: form.country, problem: form.problem, lesson: form.lesson, severity: form.severity, name: form.name || user?.user_metadata?.name || “Anonymous”, upvotes: 0, loss_amount: form.loss_amount ? Number(form.loss_amount) : null, image_url, user_id: user?.id || null });
-if (error) { showToast(“Error submitting.”); return; }
-setShowForm(false); showToast(t.toast.published);
-}
+  async function submitProblem(form) {
+    let image_url = null;
+    if (form.imageFile) {
+      const ext = form.imageFile.name.split(".").pop();
+      const fileName = Date.now() + "." + ext;
+      const { data: ud } = await supabase.storage.from("problem-images").upload(fileName, form.imageFile, { cacheControl: "3600", upsert: false });
+      if (ud) { const { data: url } = supabase.storage.from("problem-images").getPublicUrl(fileName); image_url = url.publicUrl; }
+    }
+    const { error } = await supabase.from("problems").insert({ title: form.title, industry: form.industry, country: form.country, problem: form.problem, lesson: form.lesson, severity: form.severity, name: form.name || user?.user_metadata?.name || "Anonymous", upvotes: 0, loss_amount: form.loss_amount ? Number(form.loss_amount) : null, image_url, user_id: user?.id || null });
+    if (error) { showToast("Error submitting."); return; }
+    setShowForm(false); showToast(t.toast.published);
+  }
 
-async function submitComment(text) {
-if (!detId || !text.trim()) return;
-await supabase.from(“comments”).insert({ problem_id: detId, author: user?.user_metadata?.name || “Anonymous”, body: text.trim() });
-showToast(t.toast.comment);
-}
+  async function submitComment(text) {
+    if (!detId || !text.trim()) return;
+    await supabase.from("comments").insert({ problem_id: detId, author: user?.user_metadata?.name || "Anonymous", body: text.trim() });
+    showToast(t.toast.comment);
+  }
 
-async function submitBlog(form) {
-const { error } = await supabase.from(“blogs”).insert({ title: form.title, body: form.body, tag: form.tag, author: form.author || “Anonymous”, country: form.country });
-if (error) { showToast(“Error.”); return; }
-setShowBlogForm(false); showToast(t.toast.blogPublished);
-}
+  async function submitBlog(form) {
+    const { error } = await supabase.from("blogs").insert({ title: form.title, body: form.body, tag: form.tag, author: form.author || "Anonymous", country: form.country });
+    if (error) { showToast("Error."); return; }
+    setShowBlogForm(false); showToast(t.toast.blogPublished);
+  }
 
-function showToast(msg) {
-setToastMsg(msg);
-if (toastTimer.current) clearTimeout(toastTimer.current);
-toastTimer.current = setTimeout(() => setToastMsg(null), 3200);
-}
+  function showToast(msg) {
+    setToastMsg(msg);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToastMsg(null), 3200);
+  }
 
-const totalUp = problems.reduce((a, p) => a + (p.upvotes || 0), 0);
-const isVerified = user?.email_confirmed_at != null;
+  const totalUp = problems.reduce((a, p) => a + (p.upvotes || 0), 0);
+  const isVerified = user?.email_confirmed_at != null;
 
-const filtered = problems.filter(p => {
-if (curCountry && p.country !== curCountry) return false;
-if (curIndustry && p.industry !== curIndustry) return false;
-if (sev && p.severity !== sev) return false;
-if (q && !(p.title + p.problem + p.lesson).toLowerCase().includes(q.toLowerCase())) return false;
-return true;
-}).sort((a, b) => sort === “up” ? b.upvotes - a.upvotes : sort === “com” ? (comments[b.id]?.length || 0) - (comments[a.id]?.length || 0) : new Date(b.created_at) - new Date(a.created_at));
+  const filtered = problems.filter(p => {
+    if (curCountry && p.country !== curCountry) return false;
+    if (curIndustry && p.industry !== curIndustry) return false;
+    if (sev && p.severity !== sev) return false;
+    if (q && !(p.title + p.problem + p.lesson).toLowerCase().includes(q.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => sort === "up" ? b.upvotes - a.upvotes : sort === "com" ? (comments[b.id]?.length || 0) - (comments[a.id]?.length || 0) : new Date(b.created_at) - new Date(a.created_at));
 
-const indCounts = (() => { const src = curCountry ? problems.filter(p => p.country === curCountry) : problems; const c = {}; src.forEach(p => { c[p.industry] = (c[p.industry] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]); })();
-const det = problems.find(p => p.id === detId);
-const detComments = detId ? (comments[detId] || []) : [];
-const detBlog = blogs.find(b => b.id === detBlogId);
-const fmtDate = s => new Date(s).toLocaleDateString(“en-GB”, { day: “numeric”, month: “short”, year: “numeric” });
+  const indCounts = (() => { const src = curCountry ? problems.filter(p => p.country === curCountry) : problems; const c = {}; src.forEach(p => { c[p.industry] = (c[p.industry] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]); })();
+  const det = problems.find(p => p.id === detId);
+  const detComments = detId ? (comments[detId] || []) : [];
+  const detBlog = blogs.find(b => b.id === detBlogId);
+  const fmtDate = s => new Date(s).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
-const tagSt = type => ({ fontSize: “0.67rem”, fontWeight: 600, padding: “0.18rem 0.55rem”, borderRadius: 100, border: “1px solid”, …(type === “ind” ? { background: “#e8f5eb”, color: GREEN, borderColor: “#b8d8bc” } : type === “uk” ? { background: “#e8edf8”, color: “#012169”, borderColor: “#b8c8e8” } : type === “uz” ? { background: “#edf8f0”, color: GREEN, borderColor: “#b0ddb8” } : type === “high” ? { background: “#fde8e8”, color: “#b91c1c”, borderColor: “#f8c8c8” } : type === “medium” ? { background: “#fef3cd”, color: “#92400e”, borderColor: “#f8e4a0” } : { background: “#e8f5eb”, color: “#166534”, borderColor: “#c8e8ce” }) });
-const impType = s => s === “high” ? “high” : s === “medium” ? “medium” : “low”;
-const impLabel = s => s === “high” ? “🔴 “ + t.impact.high : s === “medium” ? “🟡 “ + t.impact.medium : “🟢 “ + t.impact.low;
-const ctryTag = c => c === “United Kingdom” ? “uk” : “uz”;
-const ctryLabel = c => c === “United Kingdom” ? “🇬🇧 UK” : “🇺🇿 Uzbekistan”;
+  const tagSt = type => ({ fontSize: "0.67rem", fontWeight: 600, padding: "0.18rem 0.55rem", borderRadius: 100, border: "1px solid", ...(type === "ind" ? { background: "#e8f5eb", color: GREEN, borderColor: "#b8d8bc" } : type === "uk" ? { background: "#e8edf8", color: "#012169", borderColor: "#b8c8e8" } : type === "uz" ? { background: "#edf8f0", color: GREEN, borderColor: "#b0ddb8" } : type === "high" ? { background: "#fde8e8", color: "#b91c1c", borderColor: "#f8c8c8" } : type === "medium" ? { background: "#fef3cd", color: "#92400e", borderColor: "#f8e4a0" } : { background: "#e8f5eb", color: "#166534", borderColor: "#c8e8ce" }) });
+  const impType = s => s === "high" ? "high" : s === "medium" ? "medium" : "low";
+  const impLabel = s => s === "high" ? "🔴 " + t.impact.high : s === "medium" ? "🟡 " + t.impact.medium : "🟢 " + t.impact.low;
+  const ctryTag = c => c === "United Kingdom" ? "uk" : "uz";
+  const ctryLabel = c => c === "United Kingdom" ? "🇬🇧 UK" : "🇺🇿 Uzbekistan";
 
-return (
-<div style={{ fontFamily: “‘Inter’, sans-serif”, background: “#f8faf8”, color: “#1a2e1a”, minHeight: “100vh” }}>
-{/* NAV */}
-<nav style={{ background: “#fff”, borderBottom: “1px solid #dceadc”, padding: “0 1.5rem”, display: “flex”, alignItems: “center”, justifyContent: “space-between”, height: 56, position: “sticky”, top: 0, zIndex: 100, flexWrap: “wrap”, gap: “0.4rem” }}>
-<div onClick={() => setPage(“home”)} style={{ fontWeight: 700, fontSize: “0.95rem”, color: GREEN, cursor: “pointer” }}>
-🗺 MistakeMap <span style={{ color: “#aaa”, fontWeight: 400, fontSize: “0.78rem” }}>· UK & Uzbekistan</span>
-</div>
-<div style={{ display: “flex”, alignItems: “center”, gap: “0.4rem”, flexWrap: “wrap” }}>
-{[[“home”, t.nav.browse], [“graveyard”, t.nav.graveyard], [“learn”, t.nav.learn], [“blog”, t.nav.blog], [“validate”, t.nav.validate], [“contact”, t.nav.contact]].map(([p, label]) => (
-<button key={p} onClick={() => setPage(p)} style={{ background: page === p ? “#e8f5eb” : “transparent”, color: page === p ? GREEN : “#7a9a7a”, border: “none”, padding: “0.35rem 0.6rem”, borderRadius: 6, fontFamily: “Inter,sans-serif”, fontSize: “0.8rem”, fontWeight: 500, cursor: “pointer” }}>{label}</button>
-))}
-<div style={{ display: “flex”, background: “#f0f7f0”, borderRadius: 6, overflow: “hidden”, border: “1px solid #c8dfc8” }}>
-{[“en”, “uz”].map(l => <button key={l} onClick={() => setLang(l)} style={{ background: lang === l ? GREEN : “transparent”, color: lang === l ? “#fff” : “#7a9a7a”, border: “none”, padding: “0.32rem 0.6rem”, fontFamily: “Inter,sans-serif”, fontSize: “0.76rem”, fontWeight: 600, cursor: “pointer” }}>{l === “en” ? “🇬🇧 EN” : “🇺🇿 UZ”}</button>)}
-</div>
-{user ? (
-<div style={{ display: “flex”, alignItems: “center”, gap: “0.35rem” }}>
-<span style={{ fontSize: “0.76rem”, color: DARK, fontWeight: 600 }}>{user.user_metadata?.name || user.email}</span>
-{isVerified ? <span style={{ fontSize: “0.63rem”, background: GREEN, color: “#fff”, padding: “0.06rem 0.38rem”, borderRadius: 100 }}>{t.auth.verified}</span> : <span style={{ fontSize: “0.63rem”, background: “#fff3cd”, color: “#92400e”, border: “1px solid #fde68a”, padding: “0.06rem 0.38rem”, borderRadius: 100 }}>{t.auth.notVerified}</span>}
-<button onClick={async () => { await supabase.auth.signOut(); showToast(t.toast.loggedOut); }} style={{ background: “#f8f8f8”, color: “#7a9a7a”, border: “1px solid #ddd”, borderRadius: 6, padding: “0.32rem 0.6rem”, fontFamily: “Inter,sans-serif”, fontSize: “0.76rem”, cursor: “pointer” }}>{t.nav.logout}</button>
-</div>
-) : <button onClick={() => setShowAuth(true)} style={{ background: “#f0f7f0”, color: GREEN, border: “1px solid #c8dfc8”, borderRadius: 6, padding: “0.32rem 0.65rem”, fontFamily: “Inter,sans-serif”, fontSize: “0.8rem”, fontWeight: 600, cursor: “pointer” }}>{t.nav.login}</button>}
-<button onClick={() => setShowForm(true)} style={{ background: GREEN, color: “#fff”, border: “none”, borderRadius: 6, padding: “0.4rem 0.85rem”, fontFamily: “Inter,sans-serif”, fontWeight: 600, fontSize: “0.8rem”, cursor: “pointer” }}>{t.nav.share}</button>
-</div>
-</nav>
-
-```
-  {/* STATS BAR */}
-  <div style={{ background: GREEN, padding: "0.4rem 1.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "2rem", flexWrap: "wrap" }}>
-    <span style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.7rem", fontWeight: 600 }}>{t.stats.live}</span>
-    {[[problems.length, t.stats.problems], [totalUp, t.stats.upvotes], [2, t.stats.countries]].map(([val, label]) => (
-      <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-        <span style={{ fontWeight: 800, fontSize: "0.9rem", color: "#fff" }}>{val}</span>
-        <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>{label}</span>
-      </div>
-    ))}
-  </div>
-
-  {/* HOME */}
-  {page === "home" && <>
-    <div style={{ background: "linear-gradient(135deg,#1a5c30,#0d3a1e)", padding: "3rem 1.5rem 2.5rem", textAlign: "center" }}>
-      <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: "0.75rem", padding: "0.25rem 0.75rem", borderRadius: 100, marginBottom: "1rem" }}>{t.hero.tag}</div>
-      <h1 style={{ fontSize: "clamp(1.6rem,4vw,2.5rem)", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: "0.75rem" }}>{t.hero.h1a} <span style={{ color: "#7ffba0" }}>{t.hero.h1b}</span> {t.hero.h1c}</h1>
-      <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem", maxWidth: 440, margin: "0 auto 1.5rem", lineHeight: 1.65 }}>{t.hero.sub}</p>
-      <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
-        <button onClick={() => setShowForm(true)} style={{ background: "#fff", color: GREEN, border: "none", borderRadius: 7, padding: "0.6rem 1.4rem", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.hero.cta}</button>
-        <button onClick={() => document.getElementById("problems-section")?.scrollIntoView({ behavior: "smooth" })} style={{ background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.35)", borderRadius: 7, padding: "0.6rem 1.4rem", fontWeight: 600, fontSize: "0.9rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.hero.browse}</button>
-      </div>
-    </div>
-
-    <StartupFailSection t={t} onCta={() => document.getElementById("top-cases")?.scrollIntoView({ behavior: "smooth" })} />
-    <TopCases t={t} problems={problems} onOpen={setDetId} votedIds={votedIds} onUpvote={upvote} />
-
-    <div id="problems-section" style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem", display: "grid", gridTemplateColumns: "210px 1fr 220px", gap: "1.25rem" }}>
-      <aside style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
-          <div style={sideTitle()}>{t.sidebar.country}</div>
-          {[["", t.sidebar.both], ["United Kingdom", t.sidebar.uk], ["Uzbekistan", t.sidebar.uz]].map(([val, label]) => (
-            <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); }}>{label}</FilterBtn>
+  return (
+    <div style={{ fontFamily: "'Inter`, sans-serif", background: "#f8faf8", color: "#1a2e1a", minHeight: "100vh" }}>
+      {/* NAV */}
+      <nav style={{ background: "#fff", borderBottom: "1px solid #dceadc", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56, position: "sticky", top: 0, zIndex: 100, flexWrap: "wrap", gap: "0.4rem" }}>
+        <div onClick={() => setPage("home")} style={{ fontWeight: 700, fontSize: "0.95rem", color: GREEN, cursor: "pointer" }}>
+          🗺 MistakeMap <span style={{ color: "#aaa", fontWeight: 400, fontSize: "0.78rem" }}>· UK & Uzbekistan</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
+          {[["home", t.nav.browse], ["graveyard", t.nav.graveyard], ["learn", t.nav.learn], ["blog", t.nav.blog], ["validate", t.nav.validate], ["contact", t.nav.contact]].map(([p, label]) => (
+            <button key={p} onClick={() => setPage(p)} style={{ background: page === p ? "#e8f5eb" : "transparent", color: page === p ? GREEN : "#7a9a7a", border: "none", padding: "0.35rem 0.6rem", borderRadius: 6, fontFamily: "Inter,sans-serif", fontSize: "0.8rem", fontWeight: 500, cursor: "pointer" }}>{label}</button>
           ))}
-        </div>
-        <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
-          <div style={sideTitle()}>{t.sidebar.industry}</div>
-          <FilterBtn active={curIndustry === ""} onClick={() => setCurIndustry("")}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
-          {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => setCurIndustry(ind)}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
-        </div>
-        <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
-          <div style={sideTitle()}>{t.sidebar.chart}</div>
-          {indCounts.slice(0, 5).map(([ind, cnt]) => (
-            <div key={ind} style={{ marginBottom: "0.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.7rem", color: "#7a9a7a", marginBottom: "0.15rem" }}><span>{ind.split("&")[0].trim()}</span><span>{cnt}</span></div>
-              <div style={{ height: 5, background: "#e8f5eb", borderRadius: 10 }}><div style={{ height: "100%", width: Math.round(cnt / (indCounts[0]?.[1] || 1) * 100) + "%", background: GREEN, borderRadius: 10 }} /></div>
+          <div style={{ display: "flex", background: "#f0f7f0", borderRadius: 6, overflow: "hidden", border: "1px solid #c8dfc8" }}>
+            {["en", "uz"].map(l => <button key={l} onClick={() => setLang(l)} style={{ background: lang === l ? GREEN : "transparent", color: lang === l ? "#fff" : "#7a9a7a", border: "none", padding: "0.32rem 0.6rem", fontFamily: "Inter,sans-serif", fontSize: "0.76rem", fontWeight: 600, cursor: "pointer" }}>{l === "en" ? "🇬🇧 EN" : "🇺🇿 UZ"}</button>)}
+          </div>
+          {user ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+              <span style={{ fontSize: "0.76rem", color: DARK, fontWeight: 600 }}>{user.user_metadata?.name || user.email}</span>
+              {isVerified ? <span style={{ fontSize: "0.63rem", background: GREEN, color: "#fff", padding: "0.06rem 0.38rem", borderRadius: 100 }}>{t.auth.verified}</span> : <span style={{ fontSize: "0.63rem", background: "#fff3cd", color: "#92400e", border: "1px solid #fde68a", padding: "0.06rem 0.38rem", borderRadius: 100 }}>{t.auth.notVerified}</span>}
+              <button onClick={async () => { await supabase.auth.signOut(); showToast(t.toast.loggedOut); }} style={{ background: "#f8f8f8", color: "#7a9a7a", border: "1px solid #ddd", borderRadius: 6, padding: "0.32rem 0.6rem", fontFamily: "Inter,sans-serif", fontSize: "0.76rem", cursor: "pointer" }}>{t.nav.logout}</button>
             </div>
-          ))}
+          ) : <button onClick={() => setShowAuth(true)} style={{ background: "#f0f7f0", color: GREEN, border: "1px solid #c8dfc8", borderRadius: 6, padding: "0.32rem 0.65rem", fontFamily: "Inter,sans-serif", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>{t.nav.login}</button>}
+          <button onClick={() => setShowForm(true)} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "0.4rem 0.85rem", fontFamily: "Inter,sans-serif", fontWeight: 600, fontSize: "0.8rem", cursor: "pointer" }}>{t.nav.share}</button>
         </div>
-      </aside>
+      </nav>
 
-      <div>
-        <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1rem", flexWrap: "wrap" }}>
-          <div style={{ flex: 1, position: "relative", minWidth: 160 }}>
-            <span style={{ position: "absolute", left: "0.7rem", top: "50%", transform: "translateY(-50%)", color: "#aaa", fontSize: "0.78rem" }}>🔍</span>
-            <input value={q} onChange={e => setQ(e.target.value)} placeholder={t.filters.search} style={inp({ paddingLeft: "2.1rem" })} />
-          </div>
-          <select value={sort} onChange={e => setSort(e.target.value)} style={sel()}>
-            <option value="new">{t.filters.newest}</option><option value="up">{t.filters.upvoted}</option><option value="com">{t.filters.discussed}</option>
-          </select>
-          <select value={sev} onChange={e => setSev(e.target.value)} style={sel()}>
-            <option value="">{t.filters.allImp}</option><option value="high">{t.filters.high}</option><option value="medium">{t.filters.medium}</option><option value="low">{t.filters.low}</option>
-          </select>
-        </div>
-
-        {loading ? <div style={{ textAlign: "center", padding: "3rem", color: "#7a9a7a" }}>Loading...</div> : filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "3rem", color: "#aaa" }}>
-            <div style={{ fontSize: "2rem", marginBottom: "0.6rem" }}>🔍</div>
-            <h3 style={{ color: "#5a7a5a", marginBottom: "0.3rem", fontSize: "0.93rem" }}>{t.empty.title}</h3>
-            <p style={{ fontSize: "0.8rem" }}>{t.empty.sub}</p>
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            {filtered.map(p => (
-              <div key={p.id} onClick={() => setDetId(p.id)} style={{ background: "#fff", border: "1px solid #dceadc", borderLeft: "3px solid transparent", borderRadius: 10, padding: "1.1rem 1.25rem", cursor: "pointer", transition: "all 0.15s" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.borderLeftColor = GREEN; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,48,0.08)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.boxShadow = "none"; }}>
-                <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginBottom: "0.55rem" }}>
-                  <span style={tagSt("ind")}>{p.industry}</span>
-                  <span style={tagSt(ctryTag(p.country))}>{ctryLabel(p.country)}</span>
-                  <span style={tagSt(impType(p.severity))}>{impLabel(p.severity)}</span>
-                  {p.is_verified && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#e8f0fe", color: "#1a56db", border: "1px solid #c3d9fe" }}>✓ Verified</span>}
-                  {p.loss_amount && p.loss_amount >= 100000 && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#fde8e8", color: "#b91c1c", border: "1px solid #f8c8c8" }}>💸 ${(p.loss_amount / 1000).toFixed(0)}k</span>}
-                </div>
-                <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0d3a1e", marginBottom: "0.3rem", lineHeight: 1.35 }}>{p.title}</div>
-                <div style={{ fontSize: "0.82rem", color: "#7a9a7a", lineHeight: 1.55, marginBottom: "0.7rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{p.problem}</div>
-                {p.image_url && <img src={p.image_url} alt={p.title} style={{ width: "100%", height: 80, objectFit: "cover", borderRadius: 6, marginBottom: "0.7rem" }} />}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ display: "flex", gap: "0.8rem", fontSize: "0.73rem", color: "#aaa" }}><span>👤 {p.name}</span><span>📅 {fmtDate(p.created_at)}</span></div>
-                  <button onClick={e => upvote(p.id, e)} style={{ display: "flex", alignItems: "center", gap: "0.3rem", background: votedIds.has(p.id) ? GREEN : "#f0f7f0", color: votedIds.has(p.id) ? "#fff" : GREEN, border: "1px solid " + (votedIds.has(p.id) ? GREEN : "#c8dfc8"), borderRadius: 5, padding: "0.28rem 0.65rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>▲ {p.upvotes}</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <aside><Leaderboard t={t} /></aside>
-    </div>
-  </>}
-
-  {/* GRAVEYARD */}
-  {page === "graveyard" && <GraveyardSection t={t} />}
-
-  {/* LEARN */}
-  {page === "learn" && <LearnHub t={t} />}
-
-  {/* BLOG */}
-  {page === "blog" && (
-    <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "240px 1fr", gap: "1.5rem", alignItems: "start" }}>
-      <aside style={{ position: "sticky", top: 70 }}>
-        <ItParkAd t={t} />
-        <Competitions t={t} />
-      </aside>
-      <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem", flexWrap: "wrap", gap: "1rem" }}>
-          <div><h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.25rem" }}>{t.blog.title}</h1><p style={{ color: "#7a9a7a", fontSize: "0.84rem" }}>{t.blog.sub}</p></div>
-          <button onClick={() => setShowBlogForm(true)} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 7, padding: "0.55rem 1.1rem", fontWeight: 600, fontSize: "0.84rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.blog.write}</button>
-        </div>
-        {loading ? <div style={{ textAlign: "center", padding: "2rem", color: "#7a9a7a" }}>Loading...</div> : blogs.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "3rem", color: "#aaa" }}>
-            <div style={{ fontSize: "2rem", marginBottom: "0.6rem" }}>📝</div>
-            <h3 style={{ color: "#5a7a5a", fontSize: "0.93rem", marginBottom: "0.3rem" }}>{t.blog.noPost}</h3>
-            <p style={{ fontSize: "0.8rem" }}>{t.blog.noPostSub}</p>
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {blogs.map(b => (
-              <div key={b.id} onClick={() => setDetBlogId(b.id)} style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1.4rem", cursor: "pointer", transition: "all 0.15s" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,48,0.08)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.boxShadow = "none"; }}>
-                <div style={{ display: "flex", gap: "0.4rem", marginBottom: "0.55rem" }}>
-                  <span style={tagSt("ind")}>{b.tag}</span>
-                  <span style={tagSt(ctryTag(b.country))}>{ctryLabel(b.country)}</span>
-                </div>
-                <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0d3a1e", marginBottom: "0.35rem" }}>{b.title}</h3>
-                <p style={{ fontSize: "0.82rem", color: "#7a9a7a", lineHeight: 1.6, marginBottom: "0.8rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.body}</p>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.73rem", color: "#aaa" }}>✍️ {b.author} · {fmtDate(b.created_at)}</span>
-                  <span style={{ fontSize: "0.75rem", color: GREEN, fontWeight: 600 }}>{t.blog.readMore}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )}
-
-  {/* VALIDATE */}
-  {page === "validate" && <IdeaValidator t={t} />}
-
-  {/* CONTACT */}
-  {page === "contact" && (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}>
-      <div>
-        <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.6rem" }}>{t.contact.title}</h2>
-        <p style={{ fontSize: "0.85rem", color: "#7a9a7a", lineHeight: 1.65, marginBottom: "1.5rem" }}>{t.contact.sub}</p>
-        {[["📧", t.contact.email, t.contact.emailV], ["⏱️", t.contact.resp, t.contact.respV], ["🌍", t.contact.serving, t.contact.servingV]].map(([icon, label, val]) => (
-          <div key={label} style={{ display: "flex", gap: "0.65rem", marginBottom: "0.85rem", alignItems: "center" }}>
-            <div style={{ width: 34, height: 34, background: "#e8f5eb", border: "1px solid #b8d8bc", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem", flexShrink: 0 }}>{icon}</div>
-            <div><strong style={{ display: "block", fontSize: "0.79rem", color: "#1a2e1a" }}>{label}</strong><span style={{ fontSize: "0.79rem", color: "#7a9a7a" }}>{val}</span></div>
+      {/* STATS BAR */}
+      <div style={{ background: GREEN, padding: "0.4rem 1.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "2rem", flexWrap: "wrap" }}>
+        <span style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.7rem", fontWeight: 600 }}>{t.stats.live}</span>
+        {[[problems.length, t.stats.problems], [totalUp, t.stats.upvotes], [2, t.stats.countries]].map(([val, label]) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+            <span style={{ fontWeight: 800, fontSize: "0.9rem", color: "#fff" }}>{val}</span>
+            <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>{label}</span>
           </div>
         ))}
       </div>
-      <ContactForm t={t} toast={showToast} />
-    </div>
-  )}
 
-  {/* PROBLEM DETAIL */}
-  {det && (
-    <Overlay onClick={() => setDetId(null)}>
-      <div style={{ background: "#fff", borderRadius: 14, padding: "1.75rem", width: "100%", maxWidth: 600, border: "1px solid #dceadc", maxHeight: "90vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
-            <span style={tagSt("ind")}>{det.industry}</span>
-            <span style={tagSt(ctryTag(det.country))}>{ctryLabel(det.country)}</span>
-            <span style={tagSt(impType(det.severity))}>{impLabel(det.severity)}</span>
-            {det.is_verified && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#e8f0fe", color: "#1a56db", border: "1px solid #c3d9fe" }}>✓ Verified Story</span>}
+      {/* HOME */}
+      {page === "home" && <>
+        <div style={{ background: "linear-gradient(135deg,#1a5c30,#0d3a1e)", padding: "3rem 1.5rem 2.5rem", textAlign: "center" }}>
+          <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: "0.75rem", padding: "0.25rem 0.75rem", borderRadius: 100, marginBottom: "1rem" }}>{t.hero.tag}</div>
+          <h1 style={{ fontSize: "clamp(1.6rem,4vw,2.5rem)", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: "0.75rem" }}>{t.hero.h1a} <span style={{ color: "#7ffba0" }}>{t.hero.h1b}</span> {t.hero.h1c}</h1>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem", maxWidth: 440, margin: "0 auto 1.5rem", lineHeight: 1.65 }}>{t.hero.sub}</p>
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
+            <button onClick={() => setShowForm(true)} style={{ background: "#fff", color: GREEN, border: "none", borderRadius: 7, padding: "0.6rem 1.4rem", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.hero.cta}</button>
+            <button onClick={() => document.getElementById("problems-section")?.scrollIntoView({ behavior: "smooth" })} style={{ background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,0.35)", borderRadius: 7, padding: "0.6rem 1.4rem", fontWeight: 600, fontSize: "0.9rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.hero.browse}</button>
           </div>
-          <button onClick={() => setDetId(null)} style={xBtn()}>✕</button>
         </div>
-        {det.image_url && <img src={det.image_url} alt={det.title} style={{ width: "100%", height: 180, objectFit: "cover", borderRadius: 9, marginBottom: "1rem" }} />}
-        {det.loss_amount && <div style={{ display: "inline-flex", alignItems: "center", background: "#fde8e8", border: "1px solid #fca5a5", borderRadius: 8, padding: "0.4rem 0.85rem", marginBottom: "0.75rem" }}><span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#b91c1c" }}>{t.detail.lossLabel}: ${det.loss_amount.toLocaleString()}</span></div>}
-        <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0d3a1e", marginBottom: "0.5rem" }}>{det.title}</h2>
-        <p style={{ fontSize: "0.85rem", color: "#7a9a7a", lineHeight: 1.65, marginBottom: "1rem" }}>{det.problem}</p>
-        <div style={{ background: "#f0fdf4", border: "1px solid #a8e6bc", borderRadius: 9, padding: "0.85rem 1rem", marginBottom: "1rem" }}>
-          <div style={{ fontSize: "0.67rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#166534", marginBottom: "0.3rem" }}>{t.detail.lesson}</div>
-          <p style={{ fontSize: "0.85rem", color: "#14532d", lineHeight: 1.6, margin: 0 }}>{det.lesson}</p>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px solid #dceadc" }}>
-          <span style={{ fontSize: "0.76rem", color: "#aaa" }}>👤 {det.name} · {fmtDate(det.created_at)}</span>
-          <button onClick={() => upvote(det.id)} style={{ display: "flex", alignItems: "center", gap: "0.3rem", background: votedIds.has(det.id) ? GREEN : "#f0f7f0", color: votedIds.has(det.id) ? "#fff" : GREEN, border: "1px solid " + (votedIds.has(det.id) ? GREEN : "#c8dfc8"), borderRadius: 5, padding: "0.3rem 0.7rem", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>▲ {det.upvotes}</button>
-        </div>
-        <div style={{ fontSize: "0.81rem", fontWeight: 600, color: "#1a2e1a", marginBottom: "0.7rem" }}>💬 {detComments.length} {t.detail.comments}</div>
-        <div style={{ maxHeight: 160, overflowY: "auto", marginBottom: "0.5rem" }}>
-          {detComments.length === 0 ? <p style={{ fontSize: "0.79rem", color: "#aaa" }}>{t.detail.noComments}</p> : detComments.map((c, i) => (
-            <div key={i} style={{ display: "flex", gap: "0.55rem", marginBottom: "0.6rem" }}>
-              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#e8f5eb", color: GREEN, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{c.author[0]}</div>
-              <div><div style={{ fontSize: "0.77rem", fontWeight: 600, color: "#1a2e1a" }}>{c.author}</div><div style={{ fontSize: "0.79rem", color: "#7a9a7a", lineHeight: 1.5 }}>{c.body}</div></div>
+
+        <StartupFailSection t={t} onCta={() => document.getElementById("top-cases")?.scrollIntoView({ behavior: "smooth" })} />
+        <TopCases t={t} problems={problems} onOpen={setDetId} votedIds={votedIds} onUpvote={upvote} />
+
+        <div id="problems-section" style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem", display: "grid", gridTemplateColumns: "210px 1fr 220px", gap: "1.25rem" }}>
+          <aside style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
+              <div style={sideTitle()}>{t.sidebar.country}</div>
+              {[["", t.sidebar.both], ["United Kingdom", t.sidebar.uk], ["Uzbekistan", t.sidebar.uz]].map(([val, label]) => (
+                <FilterBtn key={val} active={curCountry === val} onClick={() => { setCurCountry(val); setCurIndustry(""); }}>{label}</FilterBtn>
+              ))}
             </div>
-          ))}
+            <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
+              <div style={sideTitle()}>{t.sidebar.industry}</div>
+              <FilterBtn active={curIndustry === ""} onClick={() => setCurIndustry("")}><span style={{ flex: 1 }}>{t.sidebar.all}</span><Pill>{filtered.length}</Pill></FilterBtn>
+              {indCounts.map(([ind, cnt]) => <FilterBtn key={ind} active={curIndustry === ind} onClick={() => setCurIndustry(ind)}><span style={{ flex: 1, fontSize: "0.79rem" }}>{ind}</span><Pill>{cnt}</Pill></FilterBtn>)}
+            </div>
+            <div style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1rem" }}>
+              <div style={sideTitle()}>{t.sidebar.chart}</div>
+              {indCounts.slice(0, 5).map(([ind, cnt]) => (
+                <div key={ind} style={{ marginBottom: "0.5rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.7rem", color: "#7a9a7a", marginBottom: "0.15rem" }}><span>{ind.split("&")[0].trim()}</span><span>{cnt}</span></div>
+                  <div style={{ height: 5, background: "#e8f5eb", borderRadius: 10 }}><div style={{ height: "100%", width: Math.round(cnt / (indCounts[0]?.[1] || 1) * 100) + "%", background: GREEN, borderRadius: 10 }} /></div>
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          <div>
+            <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+              <div style={{ flex: 1, position: "relative", minWidth: 160 }}>
+                <span style={{ position: "absolute", left: "0.7rem", top: "50%", transform: "translateY(-50%)", color: "#aaa", fontSize: "0.78rem" }}>🔍</span>
+                <input value={q} onChange={e => setQ(e.target.value)} placeholder={t.filters.search} style={inp({ paddingLeft: "2.1rem" })} />
+              </div>
+              <select value={sort} onChange={e => setSort(e.target.value)} style={sel()}>
+                <option value="new">{t.filters.newest}</option><option value="up">{t.filters.upvoted}</option><option value="com">{t.filters.discussed}</option>
+              </select>
+              <select value={sev} onChange={e => setSev(e.target.value)} style={sel()}>
+                <option value="">{t.filters.allImp}</option><option value="high">{t.filters.high}</option><option value="medium">{t.filters.medium}</option><option value="low">{t.filters.low}</option>
+              </select>
+            </div>
+
+            {loading ? <div style={{ textAlign: "center", padding: "3rem", color: "#7a9a7a" }}>Loading...</div> : filtered.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "3rem", color: "#aaa" }}>
+                <div style={{ fontSize: "2rem", marginBottom: "0.6rem" }}>🔍</div>
+                <h3 style={{ color: "#5a7a5a", marginBottom: "0.3rem", fontSize: "0.93rem" }}>{t.empty.title}</h3>
+                <p style={{ fontSize: "0.8rem" }}>{t.empty.sub}</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                {filtered.map(p => (
+                  <div key={p.id} onClick={() => setDetId(p.id)} style={{ background: "#fff", border: "1px solid #dceadc", borderLeft: "3px solid transparent", borderRadius: 10, padding: "1.1rem 1.25rem", cursor: "pointer", transition: "all 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.borderLeftColor = GREEN; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,48,0.08)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.boxShadow = "none"; }}>
+                    <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginBottom: "0.55rem" }}>
+                      <span style={tagSt("ind")}>{p.industry}</span>
+                      <span style={tagSt(ctryTag(p.country))}>{ctryLabel(p.country)}</span>
+                      <span style={tagSt(impType(p.severity))}>{impLabel(p.severity)}</span>
+                      {p.is_verified && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#e8f0fe", color: "#1a56db", border: "1px solid #c3d9fe" }}>✓ Verified</span>}
+                      {p.loss_amount && p.loss_amount >= 100000 && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#fde8e8", color: "#b91c1c", border: "1px solid #f8c8c8" }}>💸 ${(p.loss_amount / 1000).toFixed(0)}k</span>}
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0d3a1e", marginBottom: "0.3rem", lineHeight: 1.35 }}>{p.title}</div>
+                    <div style={{ fontSize: "0.82rem", color: "#7a9a7a", lineHeight: 1.55, marginBottom: "0.7rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{p.problem}</div>
+                    {p.image_url && <img src={p.image_url} alt={p.title} style={{ width: "100%", height: 80, objectFit: "cover", borderRadius: 6, marginBottom: "0.7rem" }} />}
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <div style={{ display: "flex", gap: "0.8rem", fontSize: "0.73rem", color: "#aaa" }}><span>👤 {p.name}</span><span>📅 {fmtDate(p.created_at)}</span></div>
+                      <button onClick={e => upvote(p.id, e)} style={{ display: "flex", alignItems: "center", gap: "0.3rem", background: votedIds.has(p.id) ? GREEN : "#f0f7f0", color: votedIds.has(p.id) ? "#fff" : GREEN, border: "1px solid " + (votedIds.has(p.id) ? GREEN : "#c8dfc8"), borderRadius: 5, padding: "0.28rem 0.65rem", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>▲ {p.upvotes}</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <aside><Leaderboard t={t} /></aside>
         </div>
-        <CommentInput t={t} onPost={submitComment} />
-        {det.loss_amount && det.loss_amount >= 3000 && <ReviewSection t={t} problemId={det.id} user={user} />}
-        <SolutionProviders t={t} industry={det.industry} />
-      </div>
-    </Overlay>
-  )}
+      </>}
 
-  {/* BLOG DETAIL */}
-  {detBlog && (
-    <Overlay onClick={() => setDetBlogId(null)}>
-      <div style={{ background: "#fff", borderRadius: 14, padding: "1.75rem", width: "100%", maxWidth: 620, border: "1px solid #dceadc", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-          <div style={{ display: "flex", gap: "0.4rem" }}><span style={tagSt("ind")}>{detBlog.tag}</span><span style={tagSt(ctryTag(detBlog.country))}>{ctryLabel(detBlog.country)}</span></div>
-          <button onClick={() => setDetBlogId(null)} style={xBtn()}>✕</button>
+      {/* GRAVEYARD */}
+      {page === "graveyard" && <GraveyardSection t={t} />}
+
+      {/* LEARN */}
+      {page === "learn" && <LearnHub t={t} />}
+
+      {/* BLOG */}
+      {page === "blog" && (
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "240px 1fr", gap: "1.5rem", alignItems: "start" }}>
+          <aside style={{ position: "sticky", top: 70 }}>
+            <ItParkAd t={t} />
+            <Competitions t={t} />
+          </aside>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem", flexWrap: "wrap", gap: "1rem" }}>
+              <div><h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.25rem" }}>{t.blog.title}</h1><p style={{ color: "#7a9a7a", fontSize: "0.84rem" }}>{t.blog.sub}</p></div>
+              <button onClick={() => setShowBlogForm(true)} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 7, padding: "0.55rem 1.1rem", fontWeight: 600, fontSize: "0.84rem", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{t.blog.write}</button>
+            </div>
+            {loading ? <div style={{ textAlign: "center", padding: "2rem", color: "#7a9a7a" }}>Loading...</div> : blogs.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "3rem", color: "#aaa" }}>
+                <div style={{ fontSize: "2rem", marginBottom: "0.6rem" }}>📝</div>
+                <h3 style={{ color: "#5a7a5a", fontSize: "0.93rem", marginBottom: "0.3rem" }}>{t.blog.noPost}</h3>
+                <p style={{ fontSize: "0.8rem" }}>{t.blog.noPostSub}</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                {blogs.map(b => (
+                  <div key={b.id} onClick={() => setDetBlogId(b.id)} style={{ background: "#fff", border: "1px solid #dceadc", borderRadius: 10, padding: "1.4rem", cursor: "pointer", transition: "all 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,48,0.08)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#dceadc"; e.currentTarget.style.boxShadow = "none"; }}>
+                    <div style={{ display: "flex", gap: "0.4rem", marginBottom: "0.55rem" }}>
+                      <span style={tagSt("ind")}>{b.tag}</span>
+                      <span style={tagSt(ctryTag(b.country))}>{ctryLabel(b.country)}</span>
+                    </div>
+                    <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0d3a1e", marginBottom: "0.35rem" }}>{b.title}</h3>
+                    <p style={{ fontSize: "0.82rem", color: "#7a9a7a", lineHeight: 1.6, marginBottom: "0.8rem", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.body}</p>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "0.73rem", color: "#aaa" }}>✍️ {b.author} · {fmtDate(b.created_at)}</span>
+                      <span style={{ fontSize: "0.75rem", color: GREEN, fontWeight: 600 }}>{t.blog.readMore}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#0d3a1e", marginBottom: "0.4rem" }}>{detBlog.title}</h2>
-        <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "1.25rem" }}>✍️ {detBlog.author} · {fmtDate(detBlog.created_at)}</p>
-        {detBlog.body.split("\n").filter(Boolean).map((line, i) => <p key={i} style={{ fontSize: "0.9rem", color: "#5a7a5a", lineHeight: 1.75, marginBottom: "0.75rem" }}>{line}</p>)}
-      </div>
-    </Overlay>
-  )}
+      )}
 
-  {showForm && <SubmitModal t={t} onClose={() => setShowForm(false)} onSubmit={submitProblem} toast={showToast} />}
-  {showBlogForm && <BlogModal t={t} onClose={() => setShowBlogForm(false)} onSubmit={submitBlog} toast={showToast} />}
-  {showAuth && <AuthModal t={t} onClose={() => setShowAuth(false)} onSuccess={type => { setShowAuth(false); showToast(type === "login" ? t.toast.loginSuccess : t.toast.regSuccess); }} />}
+      {/* VALIDATE */}
+      {page === "validate" && <IdeaValidator t={t} />}
 
-  <LikeCounter />
-  <FounderSection />
-  <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
+      {/* CONTACT */}
+      {page === "contact" && (
+        <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}>
+          <div>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#0d3a1e", marginBottom: "0.6rem" }}>{t.contact.title}</h2>
+            <p style={{ fontSize: "0.85rem", color: "#7a9a7a", lineHeight: 1.65, marginBottom: "1.5rem" }}>{t.contact.sub}</p>
+            {[["📧", t.contact.email, t.contact.emailV], ["⏱️", t.contact.resp, t.contact.respV], ["🌍", t.contact.serving, t.contact.servingV]].map(([icon, label, val]) => (
+              <div key={label} style={{ display: "flex", gap: "0.65rem", marginBottom: "0.85rem", alignItems: "center" }}>
+                <div style={{ width: 34, height: 34, background: "#e8f5eb", border: "1px solid #b8d8bc", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem", flexShrink: 0 }}>{icon}</div>
+                <div><strong style={{ display: "block", fontSize: "0.79rem", color: "#1a2e1a" }}>{label}</strong><span style={{ fontSize: "0.79rem", color: "#7a9a7a" }}>{val}</span></div>
+              </div>
+            ))}
+          </div>
+          <ContactForm t={t} toast={showToast} />
+        </div>
+      )}
 
-  {toastMsg && <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", background: GREEN, color: "#fff", padding: "0.7rem 1.1rem", borderRadius: 8, fontSize: "0.84rem", fontWeight: 500, zIndex: 999, maxWidth: 300, boxShadow: "0 4px 20px rgba(26,92,48,0.25)", animation: "slideUp 0.25s ease" }}>{toastMsg}</div>}
-</div>
-```
+      {/* PROBLEM DETAIL */}
+      {det && (
+        <Overlay onClick={() => setDetId(null)}>
+          <div style={{ background: "#fff", borderRadius: 14, padding: "1.75rem", width: "100%", maxWidth: 600, border: "1px solid #dceadc", maxHeight: "90vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+              <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+                <span style={tagSt("ind")}>{det.industry}</span>
+                <span style={tagSt(ctryTag(det.country))}>{ctryLabel(det.country)}</span>
+                <span style={tagSt(impType(det.severity))}>{impLabel(det.severity)}</span>
+                {det.is_verified && <span style={{ fontSize: "0.67rem", fontWeight: 700, padding: "0.18rem 0.55rem", borderRadius: 100, background: "#e8f0fe", color: "#1a56db", border: "1px solid #c3d9fe" }}>✓ Verified Story</span>}
+              </div>
+              <button onClick={() => setDetId(null)} style={xBtn()}>✕</button>
+            </div>
+            {det.image_url && <img src={det.image_url} alt={det.title} style={{ width: "100%", height: 180, objectFit: "cover", borderRadius: 9, marginBottom: "1rem" }} />}
+            {det.loss_amount && <div style={{ display: "inline-flex", alignItems: "center", background: "#fde8e8", border: "1px solid #fca5a5", borderRadius: 8, padding: "0.4rem 0.85rem", marginBottom: "0.75rem" }}><span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#b91c1c" }}>{t.detail.lossLabel}: ${det.loss_amount.toLocaleString()}</span></div>}
+            <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0d3a1e", marginBottom: "0.5rem" }}>{det.title}</h2>
+            <p style={{ fontSize: "0.85rem", color: "#7a9a7a", lineHeight: 1.65, marginBottom: "1rem" }}>{det.problem}</p>
+            <div style={{ background: "#f0fdf4", border: "1px solid #a8e6bc", borderRadius: 9, padding: "0.85rem 1rem", marginBottom: "1rem" }}>
+              <div style={{ fontSize: "0.67rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#166534", marginBottom: "0.3rem" }}>{t.detail.lesson}</div>
+              <p style={{ fontSize: "0.85rem", color: "#14532d", lineHeight: 1.6, margin: 0 }}>{det.lesson}</p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px solid #dceadc" }}>
+              <span style={{ fontSize: "0.76rem", color: "#aaa" }}>👤 {det.name} · {fmtDate(det.created_at)}</span>
+              <button onClick={() => upvote(det.id)} style={{ display: "flex", alignItems: "center", gap: "0.3rem", background: votedIds.has(det.id) ? GREEN : "#f0f7f0", color: votedIds.has(det.id) ? "#fff" : GREEN, border: "1px solid " + (votedIds.has(det.id) ? GREEN : "#c8dfc8"), borderRadius: 5, padding: "0.3rem 0.7rem", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>▲ {det.upvotes}</button>
+            </div>
+            <div style={{ fontSize: "0.81rem", fontWeight: 600, color: "#1a2e1a", marginBottom: "0.7rem" }}>💬 {detComments.length} {t.detail.comments}</div>
+            <div style={{ maxHeight: 160, overflowY: "auto", marginBottom: "0.5rem" }}>
+              {detComments.length === 0 ? <p style={{ fontSize: "0.79rem", color: "#aaa" }}>{t.detail.noComments}</p> : detComments.map((c, i) => (
+                <div key={i} style={{ display: "flex", gap: "0.55rem", marginBottom: "0.6rem" }}>
+                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#e8f5eb", color: GREEN, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{c.author[0]}</div>
+                  <div><div style={{ fontSize: "0.77rem", fontWeight: 600, color: "#1a2e1a" }}>{c.author}</div><div style={{ fontSize: "0.79rem", color: "#7a9a7a", lineHeight: 1.5 }}>{c.body}</div></div>
+                </div>
+              ))}
+            </div>
+            <CommentInput t={t} onPost={submitComment} />
+            {det.loss_amount && det.loss_amount >= 3000 && <ReviewSection t={t} problemId={det.id} user={user} />}
+            <SolutionProviders t={t} industry={det.industry} />
+          </div>
+        </Overlay>
+      )}
 
-);
+      {/* BLOG DETAIL */}
+      {detBlog && (
+        <Overlay onClick={() => setDetBlogId(null)}>
+          <div style={{ background: "#fff", borderRadius: 14, padding: "1.75rem", width: "100%", maxWidth: 620, border: "1px solid #dceadc", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+              <div style={{ display: "flex", gap: "0.4rem" }}><span style={tagSt("ind")}>{detBlog.tag}</span><span style={tagSt(ctryTag(detBlog.country))}>{ctryLabel(detBlog.country)}</span></div>
+              <button onClick={() => setDetBlogId(null)} style={xBtn()}>✕</button>
+            </div>
+            <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#0d3a1e", marginBottom: "0.4rem" }}>{detBlog.title}</h2>
+            <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "1.25rem" }}>✍️ {detBlog.author} · {fmtDate(detBlog.created_at)}</p>
+            {detBlog.body.split("\n").filter(Boolean).map((line, i) => <p key={i} style={{ fontSize: "0.9rem", color: "#5a7a5a", lineHeight: 1.75, marginBottom: "0.75rem" }}>{line}</p>)}
+          </div>
+        </Overlay>
+      )}
+
+      {showForm && <SubmitModal t={t} onClose={() => setShowForm(false)} onSubmit={submitProblem} toast={showToast} />}
+      {showBlogForm && <BlogModal t={t} onClose={() => setShowBlogForm(false)} onSubmit={submitBlog} toast={showToast} />}
+      {showAuth && <AuthModal t={t} onClose={() => setShowAuth(false)} onSuccess={type => { setShowAuth(false); showToast(type === "login" ? t.toast.loginSuccess : t.toast.regSuccess); }} />}
+
+      <LikeCounter />
+      <FounderSection />
+      <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
+
+      {toastMsg && <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", background: GREEN, color: "#fff", padding: "0.7rem 1.1rem", borderRadius: 8, fontSize: "0.84rem", fontWeight: 500, zIndex: 999, maxWidth: 300, boxShadow: "0 4px 20px rgba(26,92,48,0.25)", animation: "slideUp 0.25s ease" }}>{toastMsg}</div>}
+    </div>
+  );
 }
