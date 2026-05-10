@@ -289,7 +289,7 @@ const SOLUTION_PROVIDERS = {
 // ── HELPERS ──
 function inp(extra = {}) { return { background: "#f8faf8", border: "1px solid #dceadc", borderRadius: 7, padding: "0.6rem 0.8rem", fontFamily: "Inter,sans-serif", fontSize: "0.84rem", color: "#1a2e1a", outline: "none", width: "100%", boxSizing: "border-box", ...extra }; }
 function sel() { return { ...inp(), cursor: "pointer", appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23aaa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.7rem center", paddingRight: "2rem" }; }
-function darkInp() { return { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box" }; }
+function darkInp() { return { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(26,92,48,0.45)", borderRadius: 8, padding: "0.75rem", color: "#fff", fontSize: "0.88rem", fontFamily: "Inter,sans-serif", outline: "none", width: "100%", boxSizing: "border-box" }; }
 function darkSel() { return { ...darkInp(), cursor: "pointer", appearance: "none" }; }
 function xBtn() { return { background: "#f0f7f0", border: "1px solid #dceadc", borderRadius: 6, width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#aaa", fontSize: "0.85rem", flexShrink: 0, fontFamily: "Inter,sans-serif" }; }
 function FG({ label, children }) { return <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", marginBottom: "0.75rem" }}><label style={{ fontSize: "0.77rem", fontWeight: 600, color: "#5a7a5a" }}>{label}</label>{children}</div>; }
@@ -307,6 +307,62 @@ function renderMD(text) {
 }
 function MDText({ text }) { return <div style={{ fontSize: "0.83rem", color: "#5a7a5a", lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || "") }} />; }
 function DarkMD({ text }) { return <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: renderMD(text || "") }} />; }
+
+// ── SITE LIKE COUNTER ──
+function SiteLikeCounter() {
+  const SEED = 548;
+  const [count, setCount] = useState(SEED);
+  const [liked, setLiked] = useState(false);
+  const [burst, setBurst] = useState(false);
+
+  useEffect(() => {
+    const hasLiked = localStorage.getItem("mm_site_liked") === "true";
+    setLiked(hasLiked);
+    supabase.from("site_stats").select("value").eq("key", "likes").single()
+      .then(({ data }) => {
+        if (data?.value) setCount(data.value);
+        else setCount(parseInt(localStorage.getItem("mm_site_count") || String(SEED)));
+      })
+      .catch(() => setCount(parseInt(localStorage.getItem("mm_site_count") || String(SEED))));
+  }, []);
+
+  const handleLike = async () => {
+    if (liked) return;
+    const newCount = count + 1;
+    setCount(newCount);
+    setLiked(true);
+    setBurst(true);
+    setTimeout(() => setBurst(false), 500);
+    localStorage.setItem("mm_site_liked", "true");
+    localStorage.setItem("mm_site_count", String(newCount));
+    try { await supabase.from("site_stats").upsert({ key: "likes", value: newCount }); } catch {}
+  };
+
+  return (
+    <div
+      onClick={handleLike}
+      title={liked ? "Thanks for the love! 💚" : "Like this platform"}
+      style={{
+        position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 998,
+        display: "flex", alignItems: "center", gap: "0.4rem",
+        background: liked ? GREEN : "#fff",
+        border: "1.5px solid " + (liked ? GREEN : "#dceadc"),
+        borderRadius: 100, padding: "0.45rem 0.95rem",
+        cursor: liked ? "default" : "pointer",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+        transition: "all 0.2s",
+        transform: burst ? "scale(1.18)" : "scale(1)",
+        fontFamily: "Inter,sans-serif",
+        userSelect: "none",
+      }}
+    >
+      <span style={{ fontSize: "0.95rem" }}>{liked ? "❤️" : "🤍"}</span>
+      <span style={{ fontSize: "0.79rem", fontWeight: 700, color: liked ? "#fff" : "#1a2e1a", minWidth: 24 }}>
+        {count.toLocaleString()}
+      </span>
+    </div>
+  );
+}
 
 const callAI = async (prompt, maxTok = 1000) => {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -437,7 +493,7 @@ const GRAVE_COLORS = {
   "Bird":"#78350f","Juicero":"#14532d","Beepi":"#1e3a8a","Vine":"#064e3b","HQ Trivia":"#713f12",
   "Pebble":"#1f2937","Fast":"#312e81","IRL":"#831843","Babylon Health":"#0c4a6e",
   "Hyperloop One":"#3b0764","Magic Leap":"#1a2e1a","Munchery":"#7c2d12","Solyndra":"#14532d",
-  "Jawbone":"#312e81","Brandless":"#374151","Webvan":"#1c1917","Pets.com":"#7c3aed",
+  "Jawbone":"#312e81","Brandless":"#374151","Webvan":"#1c1917","Pets.com":"#1a5c30",
   "Rdio":"#7f1d1d","Homejoy":"#052e16","Anki":"#1e1b4b","Faraday Future":"#312e81",
   "Essential Products":"#18181b","Zenefits":"#0c4a6e","Compass Real Estate":"#1a2e1a",
   "Frank":"#1e3a8a","Aereo":"#172554","Quirky":"#92400e","Katerra":"#1c1917",
@@ -576,7 +632,7 @@ Output ONLY valid JSON (no markdown):
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)", zIndex: 400, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "2rem 1rem", overflowY: "auto" }} onClick={onClose}>
-      <div style={{ background: "#0f0f1a", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 16, width: "100%", maxWidth: 700, padding: "2rem", animation: "fadeUp 0.3s ease" }} onClick={e => e.stopPropagation()}>
+      <div style={{ background: "#0a1a0f", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 16, width: "100%", maxWidth: 700, padding: "2rem", animation: "fadeUp 0.3s ease" }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
           <div>
             <div style={{ fontSize: "0.72rem", background: "rgba(239,68,68,0.15)", color: "#ff8080", border: "1px solid rgba(239,68,68,0.3)", padding: "0.2rem 0.65rem", borderRadius: 100, display: "inline-block", marginBottom: "0.5rem", fontWeight: 600 }}>{gt.failedIn} {g.died}</div>
@@ -625,10 +681,10 @@ Output ONLY valid JSON (no markdown):
             <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "1rem" }}>
               <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>📅 {gt.timeline}</div>
               <div style={{ position: "relative" }}>
-                <div style={{ position: "absolute", left: 16, top: 0, bottom: 0, width: 2, background: "linear-gradient(180deg,#7c3aed,#ef4444)" }} />
+                <div style={{ position: "absolute", left: 16, top: 0, bottom: 0, width: 2, background: "linear-gradient(180deg,#1a5c30,#ef4444)" }} />
                 {detail.timeline.map((ev, i) => (
                   <div key={i} style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem", position: "relative", zIndex: 1 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: i === detail.timeline.length - 1 ? "#ef4444" : "#7c3aed", border: "3px solid #0f0f1a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: i === detail.timeline.length - 1 ? "#ef4444" : "#1a5c30", border: "3px solid #0a1a0f", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       <span style={{ fontSize: "0.55rem", color: "#fff", fontWeight: 700 }}>{ev.year}</span>
                     </div>
                     <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "0.5rem 0.85rem", flex: 1 }}>
@@ -668,8 +724,8 @@ Output ONLY valid JSON (no markdown):
                 </div>
               </div>
             )}
-            <div style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "1.1rem" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.5rem" }}>🤔 {gt.couldBePrevented}</div>
+            <div style={{ background: "rgba(26,92,48,0.08)", border: "1px solid rgba(26,92,48,0.3)", borderRadius: 12, padding: "1.1rem" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#7ffba0", marginBottom: "0.5rem" }}>🤔 {gt.couldBePrevented}</div>
               <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: 0 }}>{detail.couldHaveBeenPrevented}</p>
             </div>
           </>
@@ -816,22 +872,22 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
   const tabs = [["summary", vt.tabSummary], ["scores", vt.tabScores], ["market", vt.tabMarket], ["financials", vt.tabFinancials], ["roadmap", vt.tabRoadmap]];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0f0f1a" }}>
-      <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "3rem 1.5rem 2rem", textAlign: "center", borderBottom: "1px solid rgba(139,92,246,0.2)" }}>
+    <div style={{ minHeight: "100vh", background: "#0a1a0f" }}>
+      <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "3rem 1.5rem 2rem", textAlign: "center", borderBottom: "1px solid rgba(26,92,48,0.3)" }}>
         <h1 style={{ fontSize: "clamp(1.5rem,4vw,2.1rem)", fontWeight: 800, color: "#fff", marginBottom: "0.5rem" }}>{vt.title}</h1>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem" }}>{vt.sub}</p>
       </div>
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "2rem 1.5rem" }}>
         {step === 0 && (
-          <div style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(139,92,246,0.5)", borderRadius: 16, padding: "2rem", maxWidth: 560, margin: "0 auto", boxShadow: "0 0 40px rgba(139,92,246,0.1)" }}>
+          <div style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(26,92,48,0.7)", borderRadius: 16, padding: "2rem", maxWidth: 560, margin: "0 auto", boxShadow: "0 0 40px rgba(26,92,48,0.15)" }}>
             <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: "1.25rem" }}>{vt.step1Title}</h2>
             <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.ideaLabel}</span>}>
               <textarea value={form.idea} onChange={e => sf("idea", e.target.value)} placeholder={vt.ideaPh} style={{ ...darkInp(), minHeight: 80, resize: "vertical" }} />
             </FG>
             <FG label={<span style={{ color: "rgba(255,255,255,0.7)" }}>{vt.industryLabel}</span>}>
               <select value={form.industry} onChange={e => sf("industry", e.target.value)} style={darkSel()}>
-                <option value="" style={{ background: "#1a1a2e" }}>{t.form.selectInd}</option>
-                {t.form.industries.map(i => <option key={i} style={{ background: "#1a1a2e" }}>{i}</option>)}
+                <option value="" style={{ background: "#0d1f0d" }}>{t.form.selectInd}</option>
+                {t.form.industries.map(i => <option key={i} style={{ background: "#0d1f0d" }}>{i}</option>)}
               </select>
             </FG>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
@@ -842,24 +898,24 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                 <input value={form.budget} onChange={e => sf("budget", e.target.value)} type="number" placeholder={vt.budgetPh} style={darkInp()} />
               </FG>
             </div>
-            <button onClick={run} disabled={!form.idea || !form.industry} style={{ width: "100%", background: form.idea && form.industry ? "linear-gradient(135deg,#7c3aed,#6d28d9)" : "rgba(255,255,255,0.05)", color: form.idea && form.industry ? "#fff" : "rgba(255,255,255,0.3)", border: "none", borderRadius: 10, padding: "0.9rem", fontWeight: 700, fontSize: "0.95rem", cursor: form.idea && form.industry ? "pointer" : "not-allowed", fontFamily: "Inter,sans-serif", marginTop: "0.5rem" }}>{vt.analyseBtn}</button>
+            <button onClick={run} disabled={!form.idea || !form.industry} style={{ width: "100%", background: form.idea && form.industry ? "linear-gradient(135deg,#1a5c30,#0d3a1e)" : "rgba(255,255,255,0.05)", color: form.idea && form.industry ? "#fff" : "rgba(255,255,255,0.3)", border: "none", borderRadius: 10, padding: "0.9rem", fontWeight: 700, fontSize: "0.95rem", cursor: form.idea && form.industry ? "pointer" : "not-allowed", fontFamily: "Inter,sans-serif", marginTop: "0.5rem" }}>{vt.analyseBtn}</button>
           </div>
         )}
 
         {step >= 1 && step <= 5 && (
           <div style={{ maxWidth: 560, margin: "0 auto" }}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(26,92,48,0.3)", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.6rem" }}>
                 <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.84rem" }}>{vt.validatingText}</span>
-                <span style={{ color: "#8b5cf6", fontWeight: 700 }}>{Math.round((step / 5) * 100)}%</span>
+                <span style={{ color: "#22c55e", fontWeight: 700 }}>{Math.round((step / 5) * 100)}%</span>
               </div>
               <div style={{ height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 10, marginBottom: "1rem" }}>
-                <div style={{ height: "100%", width: (step / 5 * 100) + "%", background: "linear-gradient(90deg,#7c3aed,#8b5cf6)", borderRadius: 10, transition: "width 0.5s" }} />
+                <div style={{ height: "100%", width: (step / 5 * 100) + "%", background: "linear-gradient(90deg,#1a5c30,#22c55e)", borderRadius: 10, transition: "width 0.5s" }} />
               </div>
               {vt.steps.map((s, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.65rem", marginBottom: "0.4rem" }}>
-                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: i < step ? "#22c55e" : i === step - 1 ? "#8b5cf6" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.58rem", flexShrink: 0 }}>{i < step ? "✓" : ""}</div>
-                  <span style={{ fontSize: "0.79rem", color: i < step ? "#22c55e" : i === step - 1 ? "#a78bfa" : "rgba(255,255,255,0.3)" }}>{s}</span>
+                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: i < step ? "#22c55e" : i === step - 1 ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.58rem", flexShrink: 0 }}>{i < step ? "✓" : ""}</div>
+                  <span style={{ fontSize: "0.79rem", color: i < step ? "#22c55e" : i === step - 1 ? "#7ffba0" : "rgba(255,255,255,0.3)" }}>{s}</span>
                 </div>
               ))}
             </div>
@@ -898,7 +954,7 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
             </div>
             <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.25rem", background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "0.25rem", flexWrap: "wrap" }}>
               {tabs.map(([k, label]) => (
-                <button key={k} onClick={() => setTab(k)} style={{ flex: 1, minWidth: 70, background: tab === k ? "rgba(139,92,246,0.3)" : "transparent", color: tab === k ? "#a78bfa" : "rgba(255,255,255,0.45)", border: "1px solid " + (tab === k ? "rgba(139,92,246,0.4)" : "transparent"), borderRadius: 7, padding: "0.4rem 0.4rem", fontSize: "0.73rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
+                <button key={k} onClick={() => setTab(k)} style={{ flex: 1, minWidth: 70, background: tab === k ? "rgba(26,92,48,0.45)" : "transparent", color: tab === k ? "#7ffba0" : "rgba(255,255,255,0.45)", border: "1px solid " + (tab === k ? "rgba(26,92,48,0.55)" : "transparent"), borderRadius: 7, padding: "0.4rem 0.4rem", fontSize: "0.73rem", fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>{label}</button>
               ))}
             </div>
 
@@ -924,7 +980,7 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.85rem" }}>
                   {score.mvpIdea && (
                     <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "0.9rem" }}>
-                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🛠 Simplest MVP</div>
+                      <div style={{ fontSize: "0.67rem", fontWeight: 700, color: "#7ffba0", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem" }}>🛠 Simplest MVP</div>
                       <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5, margin: 0 }}>{score.mvpIdea}</p>
                     </div>
                   )}
@@ -949,7 +1005,7 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                   </div>
                 )}
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
-                  <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#a78bfa", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
+                  <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#7ffba0", marginBottom: "0.6rem" }}>📊 {vt.execSummary}</div>
                   <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
                     {score.executiveSummary || (score.summary?.executiveSummary && !score.summary.executiveSummary.includes('"score"') ? score.summary.executiveSummary : null) || score.reason || "Analysis complete."}
                   </p>
@@ -1002,7 +1058,7 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                             <a key={i} href={r[linkKey] || r.url || "#"} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", marginBottom: "0.4rem", padding: "0.4rem 0.5rem", background: "rgba(255,255,255,0.04)", borderRadius: 6, transition: "background 0.15s" }}
                               onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
                               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}>
-                              <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#a78bfa" }}>↗ {r[nameKey]}</div>
+                              <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#7ffba0" }}>↗ {r[nameKey]}</div>
                               <div style={{ fontSize: "0.66rem", color: "rgba(255,255,255,0.4)" }}>{r[descKey]}</div>
                             </a>
                           ) : (
@@ -1045,20 +1101,20 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.85rem" }}>🌐 {vt.marketSize}</div>
                   <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-                    {[["TAM", score.market.tam, "#7c3aed"], ["SAM", score.market.sam, "#8b5cf6"], ["SOM", score.market.som, "#a78bfa"]].map(([lbl, val, clr]) => (
+                    {[["TAM", score.market.tam, "#1a5c30"], ["SAM", score.market.sam, "#22c55e"], ["SOM", score.market.som, "#7ffba0"]].map(([lbl, val, clr]) => (
                       <div key={lbl} style={{ textAlign: "center", minWidth: 80 }}>
                         <div style={{ fontSize: "0.68rem", color: clr, fontWeight: 700, marginBottom: "0.2rem" }}>{lbl}</div>
                         <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff" }}>{val}</div>
                       </div>
                     ))}
-                    <span style={{ fontSize: "0.72rem", background: "rgba(139,92,246,0.15)", color: "#a78bfa", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.3)", fontWeight: 600, alignSelf: "center" }}>{score.market.maturity}</span>
+                    <span style={{ fontSize: "0.72rem", background: "rgba(26,92,48,0.2)", color: "#7ffba0", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(26,92,48,0.45)", fontWeight: 600, alignSelf: "center" }}>{score.market.maturity}</span>
                   </div>
                 </div>
                 {score.market.targetRegions && (
                   <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1.1rem", marginBottom: "0.85rem" }}>
                     <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>📍 {vt.targetRegions}</div>
                     <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                      {score.market.targetRegions.map((r, i) => <span key={i} style={{ fontSize: "0.77rem", background: "rgba(139,92,246,0.1)", color: "#a78bfa", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.25)" }}>{r}</span>)}
+                      {score.market.targetRegions.map((r, i) => <span key={i} style={{ fontSize: "0.77rem", background: "rgba(26,92,48,0.15)", color: "#7ffba0", padding: "0.25rem 0.75rem", borderRadius: 100, border: "1px solid rgba(26,92,48,0.35)" }}>{r}</span>)}
                     </div>
                   </div>
                 )}
@@ -1095,7 +1151,7 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
             {tab === "financials" && score.financials && (
               <div style={{ animation: "fadeUp 0.3s ease" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.6rem", marginBottom: "0.85rem" }}>
-                  {[[vt.startupCosts, score.financials.startupCosts, null], ["CAC", score.financials.cac, "#ef4444"], ["LTV", score.financials.ltv, "#22c55e"], ["LTV/CAC", score.financials.ltvcac, "#a78bfa"]].map(([label, val, clr], i) => (
+                  {[[vt.startupCosts, score.financials.startupCosts, null], ["CAC", score.financials.cac, "#ef4444"], ["LTV", score.financials.ltv, "#22c55e"], ["LTV/CAC", score.financials.ltvcac, "#7ffba0"]].map(([label, val, clr], i) => (
                     <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "0.85rem", textAlign: "center" }}>
                       <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
                       <div style={{ fontSize: "0.82rem", fontWeight: 800, color: clr || "rgba(255,255,255,0.85)", lineHeight: 1.3 }}>{val || "—"}</div>
@@ -1113,7 +1169,7 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "1rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "rgba(255,255,255,0.6)", marginBottom: "0.6rem" }}>{vt.revenueModels}</div>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.6rem" }}>
-                    {(score.financials.revenueModels || []).map((m, i) => <span key={i} style={{ fontSize: "0.75rem", background: "rgba(139,92,246,0.1)", color: "#a78bfa", padding: "0.25rem 0.7rem", borderRadius: 100, border: "1px solid rgba(139,92,246,0.25)" }}>{m}</span>)}
+                    {(score.financials.revenueModels || []).map((m, i) => <span key={i} style={{ fontSize: "0.75rem", background: "rgba(26,92,48,0.15)", color: "#7ffba0", padding: "0.25rem 0.7rem", borderRadius: 100, border: "1px solid rgba(26,92,48,0.35)" }}>{m}</span>)}
                   </div>
                   {score.financials.monetizationStrategy && <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: 0 }}>{score.financials.monetizationStrategy}</p>}
                 </div>
@@ -1132,13 +1188,13 @@ verdict must be exactly GO, CAUTION, or NOGO.`,
                       <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, padding: "0.85rem", marginBottom: "0.6rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
                           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <div style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+                            <div style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#1a5c30,#0d3a1e)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
                             <span style={{ fontWeight: 600, fontSize: "0.82rem", color: "#fff" }}>{qw.title}</span>
                           </div>
                           <span style={{ fontSize: "0.64rem", background: qw.effort === "LOW" ? "rgba(34,197,94,0.1)" : "rgba(245,158,11,0.1)", color: qw.effort === "LOW" ? "#22c55e" : "#f59e0b", padding: "0.12rem 0.45rem", borderRadius: 100, fontWeight: 600, border: "1px solid " + (qw.effort === "LOW" ? "rgba(34,197,94,0.25)" : "rgba(245,158,11,0.25)") }}>{qw.effort}</span>
                         </div>
                         <p style={{ fontSize: "0.77rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.5, margin: "0 0 0 1.85rem" }}>{qw.desc}</p>
-                        {qw.outcome && <div style={{ marginLeft: "1.85rem", fontSize: "0.72rem", color: "#a78bfa" }}>→ {qw.outcome}</div>}
+                        {qw.outcome && <div style={{ marginLeft: "1.85rem", fontSize: "0.72rem", color: "#7ffba0" }}>→ {qw.outcome}</div>}
                       </div>
                     ))}
                   </div>
@@ -1208,7 +1264,7 @@ const LEARN_GLOSSARY = [
 ];
 
 const LEARN_LESSONS = [
-  { n: "01", title: "Validate Before You Build", icon: "🧪", color: "#8b5cf6", desc: "Talk to 20 potential customers before writing a single line of code. If 5 people pre-pay — you have a business.", action: "This week: Interview 5 people. Ask how they currently solve the problem and how much they would pay to fix it." },
+  { n: "01", title: "Validate Before You Build", icon: "🧪", color: "#22c55e", desc: "Talk to 20 potential customers before writing a single line of code. If 5 people pre-pay — you have a business.", action: "This week: Interview 5 people. Ask how they currently solve the problem and how much they would pay to fix it." },
   { n: "02", title: "Start With the Problem", icon: "🎯", color: "#ef4444", desc: "The best startups start with a painful problem they deeply understand — usually one they personally experienced.", action: "Write: The specific problem I solve is ___ for ___ people who currently solve it by ___." },
   { n: "03", title: "Revenue Before Investment", icon: "💰", color: "#22c55e", desc: "One paying customer on day 1 is worth more than 6 months of investor meetings. Revenue validates the idea.", action: "Before pitching investors: Can I charge $1 for this today? If not — you do not have a business yet." },
   { n: "04", title: "Watch Your Unit Economics", icon: "📊", color: "#f59e0b", desc: "If acquiring a customer costs more than they pay you, you will run out of money no matter how fast you grow.", action: "Calculate: How much does one customer cost? How much do they pay over their lifetime? LTV must be 3x CAC." },
@@ -1256,13 +1312,13 @@ function LearnHub() {
       </div>
 
       {/* Quote Carousel */}
-      <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f0f1a)", padding: "2.5rem 1.5rem" }}>
+      <div style={{ background: "linear-gradient(135deg,#0a1f10,#0d3a1e)", padding: "2.5rem 1.5rem" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.3)", marginBottom: "1.25rem" }}>💬 Wisdom from the World's Greatest Founders</div>
-          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 16, padding: "2rem 1.75rem", minHeight: 160, display: "flex", flexDirection: "column", justifyContent: "center", animation: "fadeUp 0.4s ease" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(26,92,48,0.35)", borderRadius: 16, padding: "2rem 1.75rem", minHeight: 160, display: "flex", flexDirection: "column", justifyContent: "center", animation: "fadeUp 0.4s ease" }}>
             <p style={{ fontSize: "clamp(0.9rem,2vw,1.1rem)", color: "#fff", lineHeight: 1.7, marginBottom: "1.25rem", fontStyle: "italic" }}>"{q.text}"</p>
             <div style={{ display: "flex", alignItems: "center", gap: "0.7rem", justifyContent: "center" }}>
-              <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#6d28d9)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem" }}>{q.emoji}</div>
+              <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg,#1a5c30,#0d3a1e)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem" }}>{q.emoji}</div>
               <div style={{ textAlign: "left" }}>
                 <div style={{ fontWeight: 700, color: "#fff", fontSize: "0.85rem" }}>{q.author}</div>
                 <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>{q.role}</div>
@@ -1271,7 +1327,7 @@ function LearnHub() {
           </div>
           <div style={{ display: "flex", gap: "0.4rem", justifyContent: "center", marginTop: "0.85rem" }}>
             {LEARN_QUOTES.map((_, i) => (
-              <div key={i} onClick={() => setQIdx(i)} style={{ width: i === qIdx ? 18 : 7, height: 7, borderRadius: 100, background: i === qIdx ? "#a78bfa" : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "all 0.3s" }} />
+              <div key={i} onClick={() => setQIdx(i)} style={{ width: i === qIdx ? 18 : 7, height: 7, borderRadius: 100, background: i === qIdx ? "#7ffba0" : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "all 0.3s" }} />
             ))}
           </div>
         </div>
@@ -2158,6 +2214,7 @@ export default function App() {
 
       <FounderSection />
       <AIChatWidget t={t} problems={problems.sort((a, b) => b.upvotes - a.upvotes)} />
+      <SiteLikeCounter />
 
       {toastMsg && <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", background: GREEN, color: "#fff", padding: "0.7rem 1.1rem", borderRadius: 8, fontSize: "0.84rem", fontWeight: 500, zIndex: 999, maxWidth: 300, boxShadow: "0 4px 20px rgba(26,92,48,0.25)", animation: "slideUp 0.25s ease" }}>{toastMsg}</div>}
     </div>
